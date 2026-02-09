@@ -1,0 +1,83 @@
+/* Onboarding - Welcome */
+"onboarding.welcome.title" = "Bem-vindo ao\nStorageCleaner";
+"onboarding.welcome.photos" = "Fotos";
+"onboarding.welcome.icloud" = "iCloud";
+"onboarding.welcome.privacyText" = "O StorageCleaner precisa ter acesso às Fotos para liberar armazenamento. Queremos fornecer transparência e proteger sua privacidade. Ao iniciar, você concorda com nossos";
+"onboarding.welcome.termsOfUse" = "Termos de Uso";
+"onboarding.welcome.privacyPolicy" = "Política de Privacidade";
+"onboarding.welcome.and" = "e nossa";
+"onboarding.welcome.button" = "Começar";
+
+/* Onboarding - Duplicates Tutorial */
+"onboarding.duplicates.title" = "Excluir Fotos\nDuplicadas";
+"onboarding.duplicates.subtitle" = "Elimine fotos duplicadas instantaneamente e recupere seu armazenamento!";
+"onboarding.duplicates.button" = "Próximo";
+
+/* Onboarding - Storage Overview */
+"onboarding.storage.title" = "Otimizar o\nArmazenamento do iPhone";
+"onboarding.storage.subtitle" = "Liberte até 80% do seu armazenamento e tenha mais espaço.";
+"onboarding.storage.iphone" = "iPhone";
+"onboarding.storage.storageFormat" = "%@ GB de %@ GB usados";
+"onboarding.storage.photos" = "Fotos";
+"onboarding.storage.apps" = "Aplicativos";
+"onboarding.storage.ios" = "iOS";
+"onboarding.storage.systemData" = "Dados do Sistema";
+"onboarding.storage.disclaimer" = "*Com base nos dados internos do StorageCleaner";
+"onboarding.storage.button" = "Próximo";
+
+/* Dashboard */
+"dashboard.title" = "Cleanup";
+"dashboard.statsFormat" = "%d arquivos • %@ do armazenamento";
+"dashboard.scanning" = "Escaneando..";
+"dashboard.scanComplete" = "Escaneamento concluído";
+
+/* Dashboard - Categories */
+"dashboard.category.duplicates" = "Duplicata";
+"dashboard.category.similar" = "Similar";
+"dashboard.category.similarVideos" = "Vídeos similares";
+"dashboard.category.similarScreenshots" = "Capturas de tela semelhantes";
+"dashboard.category.screenshots" = "Capturas de tela";
+"dashboard.category.videos" = "Vídeos";
+"dashboard.category.other" = "Outro";
+"dashboard.category.photosCount" = "%d fotos";
+"dashboard.category.videosCount" = "%d vídeos";
+"dashboard.category.sizeFormat" = "(%@)";
+
+/* Settings */
+"settings.title" = "Configurações";
+"settings.unlock" = "Desbloquear acesso ilimitado";
+"settings.unlockSubtitle" = "Aproveite o acesso ilimitado com todos recursos de limpeza.";
+"settings.learnMore" = "Saiba mais";
+"settings.section.support" = "SUPORTE";
+"settings.faq" = "FAQ";
+"settings.emailSupport" = "Suporte por e-mail";
+"settings.restore" = "Restaurar";
+"settings.about" = "Sobre nós";
+"settings.privacy" = "Política de Privacidade";
+"settings.section.social" = "MANTENHA CONTATO";
+"settings.rate" = "Avaliar o app";
+"settings.share" = "Compartilhar o app";
+"settings.instagram" = "Siga-nos no Instagram";
+"settings.versionFormat" = "StorageCleaner versão %@";
+
+/* Permissions */
+"permission.title" = "Acesso às Fotos";
+"permission.waiting" = "Aguardando permissão...";
+"permission.granted" = "Acesso concedido!";
+"permission.denied" = "Acesso negado";
+"permission.deniedExplanation" = "Você pode alterar nas Configurações do iPhone";
+"permission.openSettings" = "Abrir Ajustes";
+"permission.limited" = "Acesso limitado";
+"permission.limitedExplanation" = "Apenas algumas fotos estão acessíveis";
+
+/* Tab Bar */
+"tab.cleaning" = "Limpeza";
+"tab.contacts" = "Contatos";
+"tab.email" = "E-mails";
+"tab.compress" = "Comprimir";
+"tab.comingSoon" = "Em breve";
+
+/* General */
+"general.de" = "de";
+"general.usados" = "usados";
+"general.gb" = "GB";
