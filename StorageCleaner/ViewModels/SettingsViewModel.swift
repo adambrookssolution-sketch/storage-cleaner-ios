@@ -42,13 +42,12 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func openInstagram() {
-        // Placeholder - update with actual Instagram URL
-        let url = URL(string: "https://instagram.com/storagecleaner")!
+        guard let url = URL(string: AppConstants.URLs.instagram) else { return }
         UIApplication.shared.open(url)
     }
 
     func contactSupport() {
-        let email = "support@storagecleaner.app"
+        let email = AppConstants.URLs.supportEmail
         guard let url = URL(string: "mailto:\(email)?subject=StorageCleaner%20Suporte") else { return }
         UIApplication.shared.open(url)
     }

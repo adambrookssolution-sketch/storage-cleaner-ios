@@ -29,6 +29,8 @@ enum AppConstants {
     enum URLs {
         static let privacyPolicy = "https://storagecleaner.app/privacy"
         static let termsOfUse = "https://storagecleaner.app/terms"
+        static let instagram = "https://instagram.com/storagecleaner"
+        static let supportEmail = "support@storagecleaner.app"
     }
 
     enum AppInfo {
