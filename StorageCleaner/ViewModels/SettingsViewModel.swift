@@ -1,5 +1,5 @@
 import SwiftUI
-import StoreKit
+@preconcurrency import StoreKit
 
 /// ViewModel for the settings screen
 @MainActor
@@ -19,7 +19,7 @@ final class SettingsViewModel: ObservableObject {
     func rateApp() {
         if let scene = UIApplication.shared.connectedScenes
             .compactMap({ $0 as? UIWindowScene }).first {
-            SKStoreReviewController.requestReview(in: scene)
+            AppStore.requestReview(in: scene)
         }
     }
 

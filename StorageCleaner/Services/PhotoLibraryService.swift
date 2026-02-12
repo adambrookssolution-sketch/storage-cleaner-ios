@@ -24,7 +24,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         cancelScan()
         progressSubject.send(.scanning(processed: 0, total: 0))
 
-        scanTask = Task.detached(priority: .userInitiated) { [weak self] in
+        scanTask = Task(priority: .userInitiated) { [weak self] in
             guard let self else { return }
             await self.performScan()
         }
@@ -60,8 +60,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             return
         }
 
-        // Step 2: Enumerate in batches
-        var processed = 0
+        // Step 2: Enumerate in batches using Sendable-safe counters
         var totalPhotos = 0
         var totalVideos = 0
         var totalScreenshots = 0
@@ -108,13 +107,12 @@ final class PhotoLibraryService: PhotoLibraryServicing {
                 }
             }
 
-            processed = batchEnd
-
             // Publish progress update (throttled to avoid UI flooding)
+            let currentProcessed = batchEnd
             let batchIndex = batchStart / batchSize
             if batchIndex % updateInterval == 0 || batchEnd == totalCount {
                 await MainActor.run {
-                    self.progressSubject.send(.scanning(processed: processed, total: totalCount))
+                    self.progressSubject.send(.scanning(processed: currentProcessed, total: totalCount))
                 }
             }
         }

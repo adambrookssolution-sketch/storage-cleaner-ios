@@ -39,7 +39,7 @@ struct StorageBarView: View {
                 animatedRatio = ratio
             }
         }
-        .onChange(of: ratio) { newValue in
+        .onChange(of: ratio) { _, newValue in
             withAnimation(.easeInOut(duration: 0.8)) {
                 animatedRatio = newValue
             }
