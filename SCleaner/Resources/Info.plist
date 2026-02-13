@@ -6,6 +6,12 @@
 	<string>O StorageCleaner precisa acessar suas fotos para identificar duplicatas, capturas de tela e vídeos grandes, ajudando você a liberar espaço no seu dispositivo.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>O StorageCleaner precisa salvar fotos otimizadas na sua biblioteca.</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
