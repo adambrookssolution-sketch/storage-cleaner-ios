@@ -14,13 +14,13 @@ enum MediaCategory: String, CaseIterable, Identifiable {
 
     var localizedTitle: String {
         switch self {
-        case .duplicates:          return NSLocalizedString("dashboard.category.duplicates", comment: "")
-        case .similar:             return NSLocalizedString("dashboard.category.similar", comment: "")
-        case .similarVideos:       return NSLocalizedString("dashboard.category.similarVideos", comment: "")
-        case .similarScreenshots:  return NSLocalizedString("dashboard.category.similarScreenshots", comment: "")
-        case .screenshots:         return NSLocalizedString("dashboard.category.screenshots", comment: "")
-        case .videos:              return NSLocalizedString("dashboard.category.videos", comment: "")
-        case .other:               return NSLocalizedString("dashboard.category.other", comment: "")
+        case .duplicates:          return "Duplicata"
+        case .similar:             return "Similar"
+        case .similarVideos:       return "Vídeos similares"
+        case .similarScreenshots:  return "Capturas de tela semelhantes"
+        case .screenshots:         return "Capturas de tela"
+        case .videos:              return "Vídeos"
+        case .other:               return "Outro"
         }
     }
 
