@@ -87,7 +87,7 @@ struct PermissionStepView: View {
                 }
             }
         }
-        .onChange(of: viewModel.permissionStatus) { _, newStatus in
+        .onChange(of: viewModel.permissionStatus) { newStatus in
             if newStatus.hasAccess {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     onPermissionHandled()
