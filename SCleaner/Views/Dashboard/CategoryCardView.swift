@@ -80,11 +80,13 @@ struct CategoryCardView: View {
             thumbnailImage(for: cardData.sampleAssetIds.first)
                 .frame(height: 160)
                 .frame(maxWidth: .infinity)
+                .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
             thumbnailImage(for: cardData.sampleAssetIds.dropFirst().first)
                 .frame(height: 160)
                 .frame(maxWidth: .infinity)
+                .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
@@ -94,6 +96,7 @@ struct CategoryCardView: View {
         thumbnailImage(for: cardData.sampleAssetIds.first)
             .frame(height: 180)
             .frame(maxWidth: .infinity)
+            .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 

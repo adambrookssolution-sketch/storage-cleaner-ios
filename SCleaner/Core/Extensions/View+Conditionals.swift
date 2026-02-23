@@ -16,6 +16,7 @@ extension View {
         self
             .background(Color(.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: AppConstants.UI.cardCornerRadius))
+            .clipped()
             .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
     }
 
