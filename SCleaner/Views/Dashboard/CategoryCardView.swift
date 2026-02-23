@@ -46,13 +46,10 @@ struct CategoryCardView: View {
     @ViewBuilder
     private var thumbnailSection: some View {
         if cardData.isEmpty {
-            // Empty state
             emptyThumbnailView
         } else if cardData.category.showsComparisonLayout {
-            // Comparison layout (2 side-by-side) for duplicates/similar
             comparisonThumbnailView
         } else {
-            // Single large thumbnail
             singleThumbnailView
         }
     }
@@ -76,28 +73,29 @@ struct CategoryCardView: View {
 
     @ViewBuilder
     private var comparisonThumbnailView: some View {
-        HStack(spacing: 8) {
-            thumbnailImage(for: cardData.sampleAssetIds.first)
-                .frame(height: 160)
-                .frame(maxWidth: .infinity)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+        GeometryReader { geo in
+            let itemWidth = (geo.size.width - 8) / 2
+            HStack(spacing: 8) {
+                thumbnailImage(for: cardData.sampleAssetIds.first)
+                    .frame(width: itemWidth, height: 160)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
-            thumbnailImage(for: cardData.sampleAssetIds.dropFirst().first)
-                .frame(height: 160)
-                .frame(maxWidth: .infinity)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                thumbnailImage(for: cardData.sampleAssetIds.dropFirst().first)
+                    .frame(width: itemWidth, height: 160)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
         }
+        .frame(height: 160)
     }
 
     @ViewBuilder
     private var singleThumbnailView: some View {
-        thumbnailImage(for: cardData.sampleAssetIds.first)
-            .frame(height: 180)
-            .frame(maxWidth: .infinity)
-            .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+        GeometryReader { geo in
+            thumbnailImage(for: cardData.sampleAssetIds.first)
+                .frame(width: geo.size.width, height: 180)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .frame(height: 180)
     }
 
     @ViewBuilder
@@ -107,7 +105,6 @@ struct CategoryCardView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
         } else {
-            // Placeholder
             Rectangle()
                 .fill(Color(.systemGray5))
                 .overlay(
