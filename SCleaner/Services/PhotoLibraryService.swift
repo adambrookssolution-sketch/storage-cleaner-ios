@@ -132,6 +132,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         if Task.isCancelled { return }
 
+        print("[PhotoLibrary] Phase 1 done: \(totalPhotos) photos, \(totalVideos) videos, \(totalScreenshots) screenshots, photoAssets=\(photoAssets.count)")
+
         // ═══════════════════════════════════════════════════════════
         // Phase 2: Hash all photo assets
         // ═══════════════════════════════════════════════════════════
@@ -160,6 +162,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             from: hashes,
             excludingDuplicateIds: duplicateIds
         )
+
+        print("[PhotoLibrary] Phase 3 done: \(detectedDuplicates.count) dup groups, \(detectedSimilar.count) similar groups")
 
         // Store results for navigation
         self.duplicateGroups = detectedDuplicates
