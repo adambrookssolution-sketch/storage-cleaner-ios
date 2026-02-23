@@ -123,6 +123,18 @@ struct DashboardView: View {
                 thumbnailService: thumbnailService,
                 deletionService: PhotoDeletionService()
             )
+        case .videos:
+            VideosListView(
+                assets: viewModel.videoAssets,
+                thumbnailService: thumbnailService,
+                deletionService: PhotoDeletionService()
+            )
+        case .screenshots:
+            ScreenshotsListView(
+                assets: viewModel.screenshotAssets,
+                thumbnailService: thumbnailService,
+                deletionService: PhotoDeletionService()
+            )
         default:
             PlaceholderTabView(
                 title: cardData.title,

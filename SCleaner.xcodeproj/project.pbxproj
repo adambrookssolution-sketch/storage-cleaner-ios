@@ -67,6 +67,10 @@
 		BB00006000000060 /* DeletionSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006000000060 /* DeletionSuccessView.swift */; };
 		BB00006400000064 /* SimilarPhotosListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006400000064 /* SimilarPhotosListView.swift */; };
 		BB00006500000065 /* PhotoComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006500000065 /* PhotoComparisonView.swift */; };
+		BB00006600000066 /* VideosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006600000066 /* VideosViewModel.swift */; };
+		BB00006700000067 /* VideosListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006700000067 /* VideosListView.swift */; };
+		BB00006800000068 /* ScreenshotsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006800000068 /* ScreenshotsViewModel.swift */; };
+		BB00006900000069 /* ScreenshotsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006900000069 /* ScreenshotsListView.swift */; };
 		BB00005000000050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00005000000050 /* Assets.xcassets */; };
 		BB00006100000061 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006100000061 /* Photos.framework */; };
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
@@ -134,6 +138,10 @@
 		AA00006000000060 /* DeletionSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionSuccessView.swift; sourceTree = "<group>"; };
 		AA00006400000064 /* SimilarPhotosListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarPhotosListView.swift; sourceTree = "<group>"; };
 		AA00006500000065 /* PhotoComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoComparisonView.swift; sourceTree = "<group>"; };
+		AA00006600000066 /* VideosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosViewModel.swift; sourceTree = "<group>"; };
+		AA00006700000067 /* VideosListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosListView.swift; sourceTree = "<group>"; };
+		AA00006800000068 /* ScreenshotsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsViewModel.swift; sourceTree = "<group>"; };
+		AA00006900000069 /* ScreenshotsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsListView.swift; sourceTree = "<group>"; };
 		AA00005000000050 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA00005100000051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00006100000061 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -269,6 +277,8 @@
 				AA00002400000024 /* SettingsViewModel.swift */,
 				AA00005300000053 /* DuplicatesViewModel.swift */,
 				AA00005400000054 /* SimilarPhotosViewModel.swift */,
+				AA00006600000066 /* VideosViewModel.swift */,
+				AA00006800000068 /* ScreenshotsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -282,6 +292,8 @@
 				CC00008300000083 /* Dashboard */,
 				CC00008600000086 /* Duplicates */,
 				CC00008700000087 /* Similar */,
+				CC00008800000088 /* Videos */,
+				CC00009300000093 /* Screenshots */,
 				CC00008400000084 /* Settings */,
 				CC00008500000085 /* TabBar */,
 			);
@@ -359,6 +371,22 @@
 				AA00006500000065 /* PhotoComparisonView.swift */,
 			);
 			path = Similar;
+			sourceTree = "<group>";
+		};
+		CC00008800000088 /* Videos */ = {
+			isa = PBXGroup;
+			children = (
+				AA00006700000067 /* VideosListView.swift */,
+			);
+			path = Videos;
+			sourceTree = "<group>";
+		};
+		CC00009300000093 /* Screenshots */ = {
+			isa = PBXGroup;
+			children = (
+				AA00006900000069 /* ScreenshotsListView.swift */,
+			);
+			path = Screenshots;
 			sourceTree = "<group>";
 		};
 		CC00008900000089 /* Resources */ = {
@@ -517,6 +545,10 @@
 				BB00006000000060 /* DeletionSuccessView.swift in Sources */,
 				BB00006400000064 /* SimilarPhotosListView.swift in Sources */,
 				BB00006500000065 /* PhotoComparisonView.swift in Sources */,
+				BB00006600000066 /* VideosViewModel.swift in Sources */,
+				BB00006700000067 /* VideosListView.swift in Sources */,
+				BB00006800000068 /* ScreenshotsViewModel.swift in Sources */,
+				BB00006900000069 /* ScreenshotsListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

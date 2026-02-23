@@ -46,17 +46,21 @@ final class HashingService {
                 guard asset.mediaType == .image else { continue }
 
                 let image = await withCheckedContinuation { (continuation: CheckedContinuation<UIImage?, Never>) in
+                    var hasResumed = false
                     manager.requestImage(
                         for: asset,
                         targetSize: CGSize(width: 200, height: 200),
                         contentMode: .aspectFill,
                         options: options
                     ) { image, info in
+                        guard !hasResumed else { return }
                         let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
-                        if !isDegraded {
+                        let isCancelled = (info?[PHImageCancelledKey] as? Bool) ?? false
+                        let error = info?[PHImageErrorKey] as? Error
+                        if !isDegraded || isCancelled || error != nil {
+                            hasResumed = true
                             continuation.resume(returning: image)
                         }
-                        // Skip degraded callback; wait for full quality
                     }
                 }
 

@@ -22,6 +22,11 @@ final class PhotoLibraryService: PhotoLibraryServicing {
     private(set) var duplicateGroups: [DuplicateGroup] = []
     private(set) var similarGroups: [SimilarGroup] = []
 
+    /// All video assets sorted by file size descending (available after scan)
+    private(set) var videoAssets: [PHAsset] = []
+    /// All screenshot assets sorted by date descending (available after scan)
+    private(set) var screenshotAssets: [PHAsset] = []
+
     init(thumbnailService: ThumbnailCacheService) {
         self.thumbnailService = thumbnailService
         self.hashingService = HashingService()
@@ -86,6 +91,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         var videoSamples: [PHAsset] = []
         var photoSamples: [PHAsset] = []
         var photoAssets: [PHAsset] = []  // Collect all photo assets for hashing
+        var allVideoAssets: [PHAsset] = []
+        var allScreenshotAssets: [PHAsset] = []
 
         let batchSize = AppConstants.Storage.scanBatchSize
         let updateInterval = AppConstants.Storage.progressUpdateInterval
@@ -104,12 +111,14 @@ final class PhotoLibraryService: PhotoLibraryServicing {
                     if asset.isVideo {
                         totalVideos += 1
                         videosSize += size
+                        allVideoAssets.append(asset)
                         if videoSamples.count < 4 { videoSamples.append(asset) }
                     } else if asset.isScreenshot {
                         totalScreenshots += 1
                         screenshotsSize += size
                         totalPhotos += 1
                         photosSize += size
+                        allScreenshotAssets.append(asset)
                         if screenshotSamples.count < 4 { screenshotSamples.append(asset) }
                         photoAssets.append(asset)
                     } else if asset.isPhoto {
@@ -131,6 +140,12 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         }
 
         if Task.isCancelled { return }
+
+        // Sort collected assets for detail views
+        self.videoAssets = allVideoAssets.sorted { $0.estimatedFileSize > $1.estimatedFileSize }
+        self.screenshotAssets = allScreenshotAssets.sorted {
+            ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
+        }
 
         print("[PhotoLibrary] Phase 1 done: \(totalPhotos) photos, \(totalVideos) videos, \(totalScreenshots) screenshots, photoAssets=\(photoAssets.count)")
 

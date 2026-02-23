@@ -18,6 +18,10 @@ final class DashboardViewModel: ObservableObject {
     @Published var duplicateGroups: [DuplicateGroup] = []
     @Published var similarGroups: [SimilarGroup] = []
 
+    // M2: All video and screenshot assets for detail views
+    @Published var videoAssets: [PHAsset] = []
+    @Published var screenshotAssets: [PHAsset] = []
+
     /// Notification posted when photos are deleted, triggering a rescan
     static let photosDeletedNotification = Notification.Name("SCleanerPhotosDeleted")
 
@@ -124,6 +128,8 @@ final class DashboardViewModel: ObservableObject {
                     self.totalSizeFormatted = result.formattedTotalSize
                     self.duplicateGroups = self.photoService.duplicateGroups
                     self.similarGroups = self.photoService.similarGroups
+                    self.videoAssets = self.photoService.videoAssets
+                    self.screenshotAssets = self.photoService.screenshotAssets
                     self.buildCategoryData(from: result)
                     self.loadSampleThumbnails()
                     self.storageInfo = self.storageService.getDeviceStorageInfoWithPhotos(
