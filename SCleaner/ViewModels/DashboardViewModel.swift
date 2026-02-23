@@ -14,10 +14,17 @@ final class DashboardViewModel: ObservableObject {
     @Published var categoryData: [CategoryCardData] = []
     @Published var thumbnailCache: [String: UIImage] = [:]
 
+    // M2: Detected groups for navigation to detail views
+    @Published var duplicateGroups: [DuplicateGroup] = []
+    @Published var similarGroups: [SimilarGroup] = []
+
+    /// Notification posted when photos are deleted, triggering a rescan
+    static let photosDeletedNotification = Notification.Name("SCleanerPhotosDeleted")
+
     // MARK: - Dependencies
-    private let photoService: PhotoLibraryService
+    let photoService: PhotoLibraryService
     private let storageService: StorageAnalysisService
-    private let thumbnailService: ThumbnailCacheService
+    let thumbnailService: ThumbnailCacheService
     private let permissionService: PermissionService
     private var cancellables = Set<AnyCancellable>()
 
@@ -71,6 +78,20 @@ final class DashboardViewModel: ObservableObject {
         self.storageService = storageService
         self.thumbnailService = thumbnailService
         self.permissionService = permissionService
+
+        NotificationCenter.default.publisher(for: Self.photosDeletedNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.rescanAfterDeletion()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Re-triggers a full scan after photos have been deleted
+    func rescanAfterDeletion() {
+        scanProgress = .idle
+        thumbnailCache.removeAll()
+        startScan()
     }
 
     // MARK: - Actions
@@ -95,13 +116,16 @@ final class DashboardViewModel: ObservableObject {
                     if self.totalSizeFormatted.isEmpty {
                         self.totalSizeFormatted = "..."
                     }
+                case .hashing:
+                    break // Progress bar handles display
                 case .completed(let result):
                     self.scanResult = result
                     self.totalFileCount = result.totalAssets
                     self.totalSizeFormatted = result.formattedTotalSize
+                    self.duplicateGroups = self.photoService.duplicateGroups
+                    self.similarGroups = self.photoService.similarGroups
                     self.buildCategoryData(from: result)
                     self.loadSampleThumbnails()
-                    // Update storage info with photo library size
                     self.storageInfo = self.storageService.getDeviceStorageInfoWithPhotos(
                         photoLibrarySize: result.photosSizeBytes + result.videosSizeBytes
                     )

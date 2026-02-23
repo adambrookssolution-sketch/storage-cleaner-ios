@@ -1,0 +1,83 @@
+import Photos
+import UIKit
+
+/// Computes perceptual hashes (dHash) for PHAssets in batches with progress reporting.
+/// Target: >500 photos/sec on iPhone 12+.
+final class HashingService {
+    private let imageManager = PHCachingImageManager()
+    private let requestOptions: PHImageRequestOptions
+
+    init() {
+        requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true     // We control threading via Task
+        requestOptions.deliveryMode = .fastFormat
+        requestOptions.resizeMode = .fast
+        requestOptions.isNetworkAccessAllowed = false // Skip iCloud for speed
+    }
+
+    /// Hashes an array of PHAssets, returning PhotoHash structs.
+    /// Only processes images (skips videos).
+    /// - Parameters:
+    ///   - assets: PHAssets to hash
+    ///   - progressHandler: Called with (processed, total) after each batch
+    /// - Returns: Array of PhotoHash for successfully hashed assets
+    func hashAssets(
+        _ assets: [PHAsset],
+        progressHandler: @escaping (Int, Int) -> Void
+    ) async -> [PhotoHash] {
+        let total = assets.count
+        guard total > 0 else { return [] }
+
+        let batchSize = AppConstants.Hashing.hashBatchSize
+        let targetSize = AppConstants.Hashing.hashThumbnailSize
+        var allHashes: [PhotoHash] = []
+        allHashes.reserveCapacity(total)
+
+        for batchStart in stride(from: 0, to: total, by: batchSize) {
+            if Task.isCancelled { break }
+
+            let batchEnd = min(batchStart + batchSize, total)
+            var batchHashes: [PhotoHash] = []
+
+            autoreleasepool {
+                for i in batchStart..<batchEnd {
+                    let asset = assets[i]
+
+                    // Only hash photos
+                    guard asset.mediaType == .image else { continue }
+
+                    // Synchronous thumbnail request (already on background thread)
+                    var resultImage: UIImage?
+                    imageManager.requestImage(
+                        for: asset,
+                        targetSize: targetSize,
+                        contentMode: .aspectFill,
+                        options: requestOptions
+                    ) { image, _ in
+                        resultImage = image
+                    }
+
+                    guard let image = resultImage else { continue }
+
+                    let hashValue = image.dHash()
+                    let photoHash = PhotoHash(
+                        id: asset.localIdentifier,
+                        hash: hashValue,
+                        creationDate: asset.creationDate,
+                        fileSize: asset.estimatedFileSize,
+                        pixelWidth: asset.pixelWidth,
+                        pixelHeight: asset.pixelHeight,
+                        isFavorite: asset.isFavorite,
+                        mediaSubtypes: asset.mediaSubtypes.rawValue
+                    )
+                    batchHashes.append(photoHash)
+                }
+            }
+
+            allHashes.append(contentsOf: batchHashes)
+            progressHandler(min(batchEnd, total), total)
+        }
+
+        return allHashes
+    }
+}

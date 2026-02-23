@@ -3,9 +3,13 @@ import Combine
 import UIKit
 
 /// Core scan engine: fetches all PHAssets, categorizes them, calculates sizes,
+/// computes perceptual hashes, detects duplicates/similar photos,
 /// publishes progress incrementally, and collects sample assets for dashboard thumbnails
 final class PhotoLibraryService: PhotoLibraryServicing {
     private let thumbnailService: ThumbnailCacheService
+    private let hashingService: HashingService
+    private let duplicateDetectionService: DuplicateDetectionService
+    private let similarDetectionService: SimilarPhotoDetectionService
     private var scanTask: Task<Void, Never>?
 
     /// Published scan state
@@ -14,8 +18,15 @@ final class PhotoLibraryService: PhotoLibraryServicing {
     /// Sample assets for dashboard card thumbnails (first 4 per category)
     private(set) var sampleAssets: [MediaCategory: [PHAsset]] = [:]
 
+    /// M2: Detected duplicate and similar groups (available after scan completes)
+    private(set) var duplicateGroups: [DuplicateGroup] = []
+    private(set) var similarGroups: [SimilarGroup] = []
+
     init(thumbnailService: ThumbnailCacheService) {
         self.thumbnailService = thumbnailService
+        self.hashingService = HashingService()
+        self.duplicateDetectionService = DuplicateDetectionService()
+        self.similarDetectionService = SimilarPhotoDetectionService()
     }
 
     // MARK: - PhotoLibraryServicing
@@ -48,7 +59,10 @@ final class PhotoLibraryService: PhotoLibraryServicing {
     // MARK: - Private Scan Logic
 
     private func performScan() async {
-        // Step 1: Fetch ALL assets
+        // ═══════════════════════════════════════════════════════════
+        // Phase 1: Fetch & Categorize all assets
+        // ═══════════════════════════════════════════════════════════
+
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         let allAssets = PHAsset.fetchAssets(with: fetchOptions)
@@ -60,7 +74,6 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             return
         }
 
-        // Step 2: Enumerate in batches using Sendable-safe counters
         var totalPhotos = 0
         var totalVideos = 0
         var totalScreenshots = 0
@@ -69,16 +82,15 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         var videosSize: Int64 = 0
         var screenshotsSize: Int64 = 0
 
-        // Sample assets for dashboard card thumbnails (collect first 4 per category)
         var screenshotSamples: [PHAsset] = []
         var videoSamples: [PHAsset] = []
         var photoSamples: [PHAsset] = []
+        var photoAssets: [PHAsset] = []  // Collect all photo assets for hashing
 
         let batchSize = AppConstants.Storage.scanBatchSize
         let updateInterval = AppConstants.Storage.progressUpdateInterval
 
         for batchStart in stride(from: 0, to: totalCount, by: batchSize) {
-            // Check cancellation
             if Task.isCancelled { return }
 
             let batchEnd = min(batchStart + batchSize, totalCount)
@@ -99,15 +111,16 @@ final class PhotoLibraryService: PhotoLibraryServicing {
                         totalPhotos += 1
                         photosSize += size
                         if screenshotSamples.count < 4 { screenshotSamples.append(asset) }
+                        photoAssets.append(asset)
                     } else if asset.isPhoto {
                         totalPhotos += 1
                         photosSize += size
                         if photoSamples.count < 4 { photoSamples.append(asset) }
+                        photoAssets.append(asset)
                     }
                 }
             }
 
-            // Publish progress update (throttled to avoid UI flooding)
             let currentProcessed = batchEnd
             let batchIndex = batchStart / batchSize
             if batchIndex % updateInterval == 0 || batchEnd == totalCount {
@@ -117,7 +130,51 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             }
         }
 
-        // Store sample assets for dashboard card thumbnails
+        if Task.isCancelled { return }
+
+        // ═══════════════════════════════════════════════════════════
+        // Phase 2: Hash all photo assets
+        // ═══════════════════════════════════════════════════════════
+
+        await MainActor.run {
+            self.progressSubject.send(.hashing(processed: 0, total: photoAssets.count))
+        }
+
+        let hashes = await hashingService.hashAssets(photoAssets) { [weak self] processed, total in
+            guard let self else { return }
+            Task { @MainActor in
+                self.progressSubject.send(.hashing(processed: processed, total: total))
+            }
+        }
+
+        if Task.isCancelled { return }
+
+        // ═══════════════════════════════════════════════════════════
+        // Phase 3: Detect duplicates and similar photos
+        // ═══════════════════════════════════════════════════════════
+
+        let detectedDuplicates = duplicateDetectionService.findDuplicates(from: hashes)
+
+        let duplicateIds = Set(detectedDuplicates.flatMap { $0.photos.map(\.id) })
+        let detectedSimilar = similarDetectionService.findSimilarGroups(
+            from: hashes,
+            excludingDuplicateIds: duplicateIds
+        )
+
+        // Store results for navigation
+        self.duplicateGroups = detectedDuplicates
+        self.similarGroups = detectedSimilar
+
+        // Calculate totals
+        let dupPhotoCount = detectedDuplicates.reduce(0) { $0 + $1.count }
+        let dupSize = detectedDuplicates.reduce(Int64(0)) { $0 + $1.totalSize }
+        let simPhotoCount = detectedSimilar.reduce(0) { $0 + $1.count }
+        let simSize = detectedSimilar.reduce(Int64(0)) { $0 + $1.totalSize }
+
+        // ═══════════════════════════════════════════════════════════
+        // Phase 4: Build results and publish
+        // ═══════════════════════════════════════════════════════════
+
         sampleAssets[.screenshots] = screenshotSamples
         sampleAssets[.similarScreenshots] = Array(screenshotSamples.prefix(2))
         sampleAssets[.videos] = videoSamples
@@ -134,7 +191,13 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             totalSizeBytes: totalSize,
             photosSizeBytes: photosSize,
             videosSizeBytes: videosSize,
-            screenshotsSizeBytes: screenshotsSize
+            screenshotsSizeBytes: screenshotsSize,
+            duplicateGroupCount: detectedDuplicates.count,
+            duplicatePhotoCount: dupPhotoCount,
+            duplicateSizeBytes: dupSize,
+            similarGroupCount: detectedSimilar.count,
+            similarPhotoCount: simPhotoCount,
+            similarSizeBytes: simSize
         )
 
         await MainActor.run {

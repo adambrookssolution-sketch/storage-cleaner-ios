@@ -59,6 +59,8 @@ struct ScanProgressView: View {
             return "Pronto para escanear"
         case .scanning(let processed, let total):
             return "Escaneando… \(processed) de \(total)"
+        case .hashing(let processed, let total):
+            return "Analisando fotos… \(processed) de \(total)"
         case .completed:
             return "Escaneamento concluído"
         case .failed(let message):

@@ -4,6 +4,7 @@ import Foundation
 enum ScanProgress: Equatable {
     case idle
     case scanning(processed: Int, total: Int)
+    case hashing(processed: Int, total: Int)
     case completed(ScanResult)
     case failed(String)
 
@@ -11,6 +12,9 @@ enum ScanProgress: Equatable {
     var progressFraction: Double {
         switch self {
         case .scanning(let processed, let total):
+            guard total > 0 else { return 0 }
+            return Double(processed) / Double(total)
+        case .hashing(let processed, let total):
             guard total > 0 else { return 0 }
             return Double(processed) / Double(total)
         case .completed:
@@ -22,7 +26,15 @@ enum ScanProgress: Equatable {
 
     /// Whether a scan is currently in progress
     var isScanning: Bool {
-        if case .scanning = self { return true }
+        switch self {
+        case .scanning, .hashing: return true
+        default: return false
+        }
+    }
+
+    /// Whether the hash computation phase is active
+    var isHashing: Bool {
+        if case .hashing = self { return true }
         return false
     }
 
@@ -37,6 +49,8 @@ enum ScanProgress: Equatable {
         case (.idle, .idle):
             return true
         case (.scanning(let lp, let lt), .scanning(let rp, let rt)):
+            return lp == rp && lt == rt
+        case (.hashing(let lp, let lt), .hashing(let rp, let rt)):
             return lp == rp && lt == rt
         case (.completed(let lr), .completed(let rr)):
             return lr == rr

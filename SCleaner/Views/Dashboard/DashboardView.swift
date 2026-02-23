@@ -6,12 +6,15 @@ struct DashboardView: View {
     @EnvironmentObject var appState: AppState
     @State private var showSettings = false
 
+    private let thumbnailService: ThumbnailCacheService
+
     init(
         photoService: PhotoLibraryService,
         storageService: StorageAnalysisService,
         thumbnailService: ThumbnailCacheService,
         permissionService: PermissionService
     ) {
+        self.thumbnailService = thumbnailService
         _viewModel = StateObject(wrappedValue: DashboardViewModel(
             photoService: photoService,
             storageService: storageService,
@@ -50,14 +53,17 @@ struct DashboardView: View {
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
-                    // Category cards
+                    // Category cards with navigation
                     if viewModel.scanProgress.isCompleted {
                         LazyVStack(spacing: AppConstants.UI.cardSpacing) {
                             ForEach(viewModel.categoryData) { cardData in
-                                CategoryCardView(
-                                    cardData: cardData,
-                                    thumbnailCache: viewModel.thumbnailCache
-                                )
+                                NavigationLink(destination: destinationView(for: cardData)) {
+                                    CategoryCardView(
+                                        cardData: cardData,
+                                        thumbnailCache: viewModel.thumbnailCache
+                                    )
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                         .padding(.horizontal, AppConstants.UI.horizontalPadding)
@@ -97,6 +103,31 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+    }
+
+    // MARK: - Navigation Destination Builder
+
+    @ViewBuilder
+    private func destinationView(for cardData: DashboardViewModel.CategoryCardData) -> some View {
+        switch cardData.category {
+        case .duplicates:
+            DuplicatesListView(
+                groups: viewModel.duplicateGroups,
+                thumbnailService: thumbnailService,
+                deletionService: PhotoDeletionService()
+            )
+        case .similar:
+            SimilarPhotosListView(
+                groups: viewModel.similarGroups,
+                thumbnailService: thumbnailService,
+                deletionService: PhotoDeletionService()
+            )
+        default:
+            PlaceholderTabView(
+                title: cardData.title,
+                icon: cardData.category.iconName
+            )
         }
     }
 

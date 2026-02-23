@@ -48,6 +48,25 @@
 		BB00003900000039 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00003900000039 /* SettingsView.swift */; };
 		BB00004000000040 /* PlaceholderTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004000000040 /* PlaceholderTabView.swift */; };
 		BB00004100000041 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004100000041 /* MainTabView.swift */; };
+		BB00004200000042 /* PhotoHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004200000042 /* PhotoHash.swift */; };
+		BB00004300000043 /* DuplicateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004300000043 /* DuplicateGroup.swift */; };
+		BB00004400000044 /* SimilarGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004400000044 /* SimilarGroup.swift */; };
+		BB00004500000045 /* DeleteResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004500000045 /* DeleteResult.swift */; };
+		BB00004600000046 /* UIImage+Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004600000046 /* UIImage+Hash.swift */; };
+		BB00004700000047 /* HashingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004700000047 /* HashingService.swift */; };
+		BB00004800000048 /* DuplicateDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004800000048 /* DuplicateDetectionService.swift */; };
+		BB00004900000049 /* SimilarPhotoDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00004900000049 /* SimilarPhotoDetectionService.swift */; };
+		BB00005200000052 /* PhotoDeletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005200000052 /* PhotoDeletionService.swift */; };
+		BB00005300000053 /* DuplicatesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005300000053 /* DuplicatesViewModel.swift */; };
+		BB00005400000054 /* SimilarPhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005400000054 /* SimilarPhotosViewModel.swift */; };
+		BB00005500000055 /* SelectablePhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005500000055 /* SelectablePhotoView.swift */; };
+		BB00005600000056 /* BatchActionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005600000056 /* BatchActionBarView.swift */; };
+		BB00005700000057 /* DuplicateGroupCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005700000057 /* DuplicateGroupCardView.swift */; };
+		BB00005800000058 /* DuplicatesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005800000058 /* DuplicatesListView.swift */; };
+		BB00005900000059 /* DeletionConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00005900000059 /* DeletionConfirmationView.swift */; };
+		BB00006000000060 /* DeletionSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006000000060 /* DeletionSuccessView.swift */; };
+		BB00006400000064 /* SimilarPhotosListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006400000064 /* SimilarPhotosListView.swift */; };
+		BB00006500000065 /* PhotoComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006500000065 /* PhotoComparisonView.swift */; };
 		BB00005000000050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00005000000050 /* Assets.xcassets */; };
 		BB00006100000061 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006100000061 /* Photos.framework */; };
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
@@ -96,6 +115,25 @@
 		AA00003900000039 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA00004000000040 /* PlaceholderTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTabView.swift; sourceTree = "<group>"; };
 		AA00004100000041 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		AA00004200000042 /* PhotoHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHash.swift; sourceTree = "<group>"; };
+		AA00004300000043 /* DuplicateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateGroup.swift; sourceTree = "<group>"; };
+		AA00004400000044 /* SimilarGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarGroup.swift; sourceTree = "<group>"; };
+		AA00004500000045 /* DeleteResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteResult.swift; sourceTree = "<group>"; };
+		AA00004600000046 /* UIImage+Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Hash.swift"; sourceTree = "<group>"; };
+		AA00004700000047 /* HashingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashingService.swift; sourceTree = "<group>"; };
+		AA00004800000048 /* DuplicateDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateDetectionService.swift; sourceTree = "<group>"; };
+		AA00004900000049 /* SimilarPhotoDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarPhotoDetectionService.swift; sourceTree = "<group>"; };
+		AA00005200000052 /* PhotoDeletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDeletionService.swift; sourceTree = "<group>"; };
+		AA00005300000053 /* DuplicatesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicatesViewModel.swift; sourceTree = "<group>"; };
+		AA00005400000054 /* SimilarPhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarPhotosViewModel.swift; sourceTree = "<group>"; };
+		AA00005500000055 /* SelectablePhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectablePhotoView.swift; sourceTree = "<group>"; };
+		AA00005600000056 /* BatchActionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchActionBarView.swift; sourceTree = "<group>"; };
+		AA00005700000057 /* DuplicateGroupCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateGroupCardView.swift; sourceTree = "<group>"; };
+		AA00005800000058 /* DuplicatesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicatesListView.swift; sourceTree = "<group>"; };
+		AA00005900000059 /* DeletionConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionConfirmationView.swift; sourceTree = "<group>"; };
+		AA00006000000060 /* DeletionSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionSuccessView.swift; sourceTree = "<group>"; };
+		AA00006400000064 /* SimilarPhotosListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarPhotosListView.swift; sourceTree = "<group>"; };
+		AA00006500000065 /* PhotoComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoComparisonView.swift; sourceTree = "<group>"; };
 		AA00005000000050 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA00005100000051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00006100000061 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -176,6 +214,7 @@
 				AA00000600000006 /* View+Conditionals.swift */,
 				AA00000700000007 /* PHAsset+Helpers.swift */,
 				AA00000800000008 /* FileManager+Storage.swift */,
+				AA00004600000046 /* UIImage+Hash.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -199,6 +238,10 @@
 				AA00001500000015 /* ScanProgress.swift */,
 				AA00001600000016 /* ScanResult.swift */,
 				AA00001700000017 /* MediaItem.swift */,
+				AA00004200000042 /* PhotoHash.swift */,
+				AA00004300000043 /* DuplicateGroup.swift */,
+				AA00004400000044 /* SimilarGroup.swift */,
+				AA00004500000045 /* DeleteResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -210,6 +253,10 @@
 				AA00001900000019 /* StorageAnalysisService.swift */,
 				AA00002000000020 /* ThumbnailCacheService.swift */,
 				AA00002100000021 /* PhotoLibraryService.swift */,
+				AA00004700000047 /* HashingService.swift */,
+				AA00004800000048 /* DuplicateDetectionService.swift */,
+				AA00004900000049 /* SimilarPhotoDetectionService.swift */,
+				AA00005200000052 /* PhotoDeletionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -220,6 +267,8 @@
 				AA00002200000022 /* DashboardViewModel.swift */,
 				AA00002300000023 /* OnboardingViewModel.swift */,
 				AA00002400000024 /* SettingsViewModel.swift */,
+				AA00005300000053 /* DuplicatesViewModel.swift */,
+				AA00005400000054 /* SimilarPhotosViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -231,6 +280,8 @@
 				CC00008100000081 /* Components */,
 				CC00008200000082 /* Onboarding */,
 				CC00008300000083 /* Dashboard */,
+				CC00008600000086 /* Duplicates */,
+				CC00008700000087 /* Similar */,
 				CC00008400000084 /* Settings */,
 				CC00008500000085 /* TabBar */,
 			);
@@ -243,6 +294,8 @@
 				AA00002600000026 /* PrimaryButtonStyle.swift */,
 				AA00002700000027 /* ProgressDotsView.swift */,
 				AA00002800000028 /* StorageBarView.swift */,
+				AA00005500000055 /* SelectablePhotoView.swift */,
+				AA00005600000056 /* BatchActionBarView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -286,6 +339,26 @@
 				AA00004100000041 /* MainTabView.swift */,
 			);
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		CC00008600000086 /* Duplicates */ = {
+			isa = PBXGroup;
+			children = (
+				AA00005700000057 /* DuplicateGroupCardView.swift */,
+				AA00005800000058 /* DuplicatesListView.swift */,
+				AA00005900000059 /* DeletionConfirmationView.swift */,
+				AA00006000000060 /* DeletionSuccessView.swift */,
+			);
+			path = Duplicates;
+			sourceTree = "<group>";
+		};
+		CC00008700000087 /* Similar */ = {
+			isa = PBXGroup;
+			children = (
+				AA00006400000064 /* SimilarPhotosListView.swift */,
+				AA00006500000065 /* PhotoComparisonView.swift */,
+			);
+			path = Similar;
 			sourceTree = "<group>";
 		};
 		CC00008900000089 /* Resources */ = {
@@ -425,6 +498,25 @@
 				BB00003900000039 /* SettingsView.swift in Sources */,
 				BB00004000000040 /* PlaceholderTabView.swift in Sources */,
 				BB00004100000041 /* MainTabView.swift in Sources */,
+				BB00004200000042 /* PhotoHash.swift in Sources */,
+				BB00004300000043 /* DuplicateGroup.swift in Sources */,
+				BB00004400000044 /* SimilarGroup.swift in Sources */,
+				BB00004500000045 /* DeleteResult.swift in Sources */,
+				BB00004600000046 /* UIImage+Hash.swift in Sources */,
+				BB00004700000047 /* HashingService.swift in Sources */,
+				BB00004800000048 /* DuplicateDetectionService.swift in Sources */,
+				BB00004900000049 /* SimilarPhotoDetectionService.swift in Sources */,
+				BB00005200000052 /* PhotoDeletionService.swift in Sources */,
+				BB00005300000053 /* DuplicatesViewModel.swift in Sources */,
+				BB00005400000054 /* SimilarPhotosViewModel.swift in Sources */,
+				BB00005500000055 /* SelectablePhotoView.swift in Sources */,
+				BB00005600000056 /* BatchActionBarView.swift in Sources */,
+				BB00005700000057 /* DuplicateGroupCardView.swift in Sources */,
+				BB00005800000058 /* DuplicatesListView.swift in Sources */,
+				BB00005900000059 /* DeletionConfirmationView.swift in Sources */,
+				BB00006000000060 /* DeletionSuccessView.swift in Sources */,
+				BB00006400000064 /* SimilarPhotosListView.swift in Sources */,
+				BB00006500000065 /* PhotoComparisonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,7 +583,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -547,7 +639,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -579,7 +671,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -611,7 +703,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

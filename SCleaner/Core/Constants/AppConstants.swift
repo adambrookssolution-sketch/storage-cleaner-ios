@@ -33,6 +33,15 @@ enum AppConstants {
         static let supportEmail = "support@storagecleaner.app"
     }
 
+    enum Hashing {
+        static let hashImageWidth = 9
+        static let hashImageHeight = 8
+        static let duplicateThreshold = 10   // Hamming distance <= 10 = duplicate
+        static let similarThreshold = 20     // Hamming distance 11-20 = similar
+        static let hashBatchSize = 50
+        static let hashThumbnailSize = CGSize(width: 72, height: 72)
+    }
+
     enum AppInfo {
         static let appName = "StorageCleaner"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"

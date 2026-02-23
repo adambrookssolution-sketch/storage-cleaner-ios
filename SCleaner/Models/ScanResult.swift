@@ -11,15 +11,22 @@ struct ScanResult: Equatable {
     let videosSizeBytes: Int64
     let screenshotsSizeBytes: Int64
 
+    // M2: Duplicate and similar detection results
+    let duplicateGroupCount: Int
+    let duplicatePhotoCount: Int
+    let duplicateSizeBytes: Int64
+    let similarGroupCount: Int
+    let similarPhotoCount: Int
+    let similarSizeBytes: Int64
+
     /// Category count/size pairs for dashboard display
-    /// In M1, duplicates/similar counts are zero (detection comes in M2)
     var categoryCounts: [MediaCategory: (count: Int, sizeBytes: Int64)] {
         var result: [MediaCategory: (Int, Int64)] = [:]
         result[.screenshots] = (totalScreenshots, screenshotsSizeBytes)
         result[.videos] = (totalVideos, videosSizeBytes)
-        // M1 placeholders — detection logic comes in M2
-        result[.duplicates] = (0, 0)
-        result[.similar] = (0, 0)
+        // M2: Real duplicate/similar data
+        result[.duplicates] = (duplicatePhotoCount, duplicateSizeBytes)
+        result[.similar] = (similarPhotoCount, similarSizeBytes)
         result[.similarVideos] = (0, 0)
         result[.similarScreenshots] = (0, 0)
         let otherPhotos = max(0, totalPhotos - totalScreenshots)
@@ -32,6 +39,17 @@ struct ScanResult: Equatable {
         totalSizeBytes.formattedSize
     }
 
+    // Compare only scalar fields (exclude large arrays from equality)
+    static func == (lhs: ScanResult, rhs: ScanResult) -> Bool {
+        lhs.totalAssets == rhs.totalAssets &&
+        lhs.totalPhotos == rhs.totalPhotos &&
+        lhs.totalVideos == rhs.totalVideos &&
+        lhs.totalScreenshots == rhs.totalScreenshots &&
+        lhs.totalSizeBytes == rhs.totalSizeBytes &&
+        lhs.duplicateGroupCount == rhs.duplicateGroupCount &&
+        lhs.similarGroupCount == rhs.similarGroupCount
+    }
+
     static let empty = ScanResult(
         totalAssets: 0,
         totalPhotos: 0,
@@ -40,6 +58,12 @@ struct ScanResult: Equatable {
         totalSizeBytes: 0,
         photosSizeBytes: 0,
         videosSizeBytes: 0,
-        screenshotsSizeBytes: 0
+        screenshotsSizeBytes: 0,
+        duplicateGroupCount: 0,
+        duplicatePhotoCount: 0,
+        duplicateSizeBytes: 0,
+        similarGroupCount: 0,
+        similarPhotoCount: 0,
+        similarSizeBytes: 0
     )
 }
