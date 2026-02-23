@@ -9,10 +9,10 @@ final class HashingService {
 
     init() {
         requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true     // We control threading via Task
-        requestOptions.deliveryMode = .fastFormat
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .opportunistic
         requestOptions.resizeMode = .fast
-        requestOptions.isNetworkAccessAllowed = false // Skip iCloud for speed
+        requestOptions.isNetworkAccessAllowed = false
     }
 
     /// Hashes an array of PHAssets, returning PhotoHash structs.
@@ -55,7 +55,7 @@ final class HashingService {
                     var resultImage: UIImage?
                     imageManager.requestImage(
                         for: asset,
-                        targetSize: targetSize,
+                        targetSize: CGSize(width: 200, height: 200),
                         contentMode: .aspectFill,
                         options: requestOptions
                     ) { image, info in
