@@ -135,6 +135,10 @@ struct DashboardView: View {
                 thumbnailService: thumbnailService,
                 deletionService: PhotoDeletionService()
             )
+        case .downloads:
+            DownloadsListView()
+        case .trashBin:
+            TrashBinListView()
         default:
             PlaceholderTabView(
                 title: cardData.title,

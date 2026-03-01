@@ -3,7 +3,14 @@ import SwiftUI
 /// Full-screen success view shown after photos are deleted.
 struct DeletionSuccessView: View {
     let result: DeleteResult
+    let itemLabel: String
     let onDismiss: () -> Void
+
+    init(result: DeleteResult, itemLabel: String = "fotos", onDismiss: @escaping () -> Void) {
+        self.result = result
+        self.itemLabel = itemLabel
+        self.onDismiss = onDismiss
+    }
 
     @State private var showCheckmark = false
 
@@ -25,7 +32,7 @@ struct DeletionSuccessView: View {
             }
 
             VStack(spacing: 8) {
-                Text("\(result.deletedCount) fotos excluídas")
+                Text("\(result.deletedCount) \(itemLabel) excluídos")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(ColorTokens.primaryText)
 
@@ -35,7 +42,7 @@ struct DeletionSuccessView: View {
             }
 
             if result.failedCount > 0 {
-                Text("\(result.failedCount) fotos não puderam ser excluídas")
+                Text("\(result.failedCount) \(itemLabel) não puderam ser excluídos")
                     .font(.system(size: 14))
                     .foregroundColor(ColorTokens.warningOrange)
             }

@@ -42,6 +42,19 @@ enum AppConstants {
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
     }
 
+    enum Downloads {
+        static let minimumFileSizeBytes: Int64 = 10 * 1_048_576 // 10 MB
+        static let staleMonths = 6
+        static let bookmarkKey = "SCleaner_DownloadsFolderBookmark"
+    }
+
+    enum TrashBin {
+        static let purgeAfterDays = 30
+        static let directoryName = "TrashBin"
+        static let manifestFileName = "manifest.json"
+        static let maxTrashSizeWarningBytes: Int64 = 1_073_741_824 // 1 GB
+    }
+
     enum AppInfo {
         static let appName = "StorageCleaner"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"

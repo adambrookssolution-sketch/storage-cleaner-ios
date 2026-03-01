@@ -4,8 +4,23 @@ import SwiftUI
 struct DeletionConfirmationView: View {
     let selectedCount: Int
     let savedBytes: Int64
+    let itemLabel: String
     let onConfirm: () -> Void
     let onCancel: () -> Void
+
+    init(
+        selectedCount: Int,
+        savedBytes: Int64,
+        itemLabel: String = "fotos",
+        onConfirm: @escaping () -> Void,
+        onCancel: @escaping () -> Void
+    ) {
+        self.selectedCount = selectedCount
+        self.savedBytes = savedBytes
+        self.itemLabel = itemLabel
+        self.onConfirm = onConfirm
+        self.onCancel = onCancel
+    }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -15,18 +30,18 @@ struct DeletionConfirmationView: View {
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.destructiveRed)
 
-            Text("Excluir \(selectedCount) fotos?")
+            Text("Excluir \(selectedCount) \(itemLabel)?")
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Libere \(savedBytes.formattedSize) de espaço.\nAs fotos serão movidas para Apagados Recentemente por 30 dias.")
+            Text("Libere \(savedBytes.formattedSize) de espaço.\nOs \(itemLabel) serão movidos para a Lixeira por 30 dias.")
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
 
             VStack(spacing: 12) {
-                Button("Excluir fotos") {
+                Button("Excluir \(itemLabel)") {
                     onConfirm()
                 }
                 .buttonStyle(PrimaryButtonStyle(backgroundColor: ColorTokens.destructiveRed))

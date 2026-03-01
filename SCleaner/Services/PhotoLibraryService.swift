@@ -216,7 +216,11 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             duplicateSizeBytes: dupSize,
             similarGroupCount: detectedSimilar.count,
             similarPhotoCount: simPhotoCount,
-            similarSizeBytes: simSize
+            similarSizeBytes: simSize,
+            downloadFileCount: 0,
+            downloadSizeBytes: 0,
+            trashFileCount: TrashBinService.shared.totalTrashCount,
+            trashSizeBytes: TrashBinService.shared.totalTrashSize
         )
 
         await MainActor.run {

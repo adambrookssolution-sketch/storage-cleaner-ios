@@ -24,6 +24,7 @@ final class DashboardViewModel: ObservableObject {
 
     /// Notification posted when photos are deleted, triggering a rescan
     static let photosDeletedNotification = Notification.Name("SCleanerPhotosDeleted")
+    static let trashUpdatedNotification = Notification.Name("SCleanerTrashUpdated")
 
     // MARK: - Dependencies
     let photoService: PhotoLibraryService
@@ -48,6 +49,8 @@ final class DashboardViewModel: ObservableObject {
             switch category {
             case .videos, .similarVideos:
                 countStr = "\(count) vídeos"
+            case .downloads, .trashBin:
+                countStr = "\(count) arquivos"
             default:
                 countStr = "\(count) fotos"
             }
@@ -61,6 +64,8 @@ final class DashboardViewModel: ObservableObject {
             switch category {
             case .videos, .similarVideos:
                 countStr = "\(count) vídeos"
+            case .downloads, .trashBin:
+                countStr = "\(count) arquivos"
             default:
                 countStr = "\(count) fotos"
             }
@@ -87,6 +92,13 @@ final class DashboardViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.rescanAfterDeletion()
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Self.trashUpdatedNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateTrashData()
             }
             .store(in: &cancellables)
     }
@@ -162,6 +174,21 @@ final class DashboardViewModel: ObservableObject {
                 count: data.count,
                 sizeBytes: data.sizeBytes,
                 sampleAssetIds: Array(samples.prefix(4))
+            )
+        }
+    }
+
+    private func updateTrashData() {
+        let trashService = TrashBinService.shared
+        trashService.refresh()
+        if let idx = categoryData.firstIndex(where: { $0.category == .trashBin }) {
+            categoryData[idx] = CategoryCardData(
+                id: MediaCategory.trashBin.rawValue,
+                category: .trashBin,
+                title: MediaCategory.trashBin.localizedTitle,
+                count: trashService.totalTrashCount,
+                sizeBytes: trashService.totalTrashSize,
+                sampleAssetIds: []
             )
         }
     }

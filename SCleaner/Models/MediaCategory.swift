@@ -8,6 +8,8 @@ enum MediaCategory: String, CaseIterable, Identifiable {
     case similarScreenshots
     case screenshots
     case videos
+    case downloads
+    case trashBin
     case other
 
     var id: String { rawValue }
@@ -20,6 +22,8 @@ enum MediaCategory: String, CaseIterable, Identifiable {
         case .similarScreenshots:  return "Capturas de tela semelhantes"
         case .screenshots:         return "Capturas de tela"
         case .videos:              return "Vídeos"
+        case .downloads:           return "Downloads"
+        case .trashBin:            return "Lixeira"
         case .other:               return "Outro"
         }
     }
@@ -41,6 +45,8 @@ enum MediaCategory: String, CaseIterable, Identifiable {
         case .similarScreenshots:  return "rectangle.on.rectangle"
         case .screenshots:         return "camera.viewfinder"
         case .videos:              return "video.fill"
+        case .downloads:           return "arrow.down.circle.fill"
+        case .trashBin:            return "trash.fill"
         case .other:               return "folder.fill"
         }
     }
@@ -54,12 +60,14 @@ enum MediaCategory: String, CaseIterable, Identifiable {
         case .similarScreenshots:  return Color(hex: "8E8E93")
         case .screenshots:         return Color(hex: "5856D6")
         case .videos:              return ColorTokens.primaryBlue
+        case .downloads:           return ColorTokens.warningOrange
+        case .trashBin:            return ColorTokens.destructiveRed
         case .other:               return Color(hex: "8E8E93")
         }
     }
 
     /// Display order on dashboard
     static var dashboardOrder: [MediaCategory] {
-        [.duplicates, .similar, .similarVideos, .similarScreenshots, .screenshots, .videos, .other]
+        [.duplicates, .similar, .similarVideos, .similarScreenshots, .screenshots, .videos, .downloads, .trashBin, .other]
     }
 }

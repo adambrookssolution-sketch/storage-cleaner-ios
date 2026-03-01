@@ -71,6 +71,21 @@
 		BB00006700000067 /* VideosListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006700000067 /* VideosListView.swift */; };
 		BB00006800000068 /* ScreenshotsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006800000068 /* ScreenshotsViewModel.swift */; };
 		BB00006900000069 /* ScreenshotsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006900000069 /* ScreenshotsListView.swift */; };
+		BB00007000000070 /* DownloadedFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007000000070 /* DownloadedFile.swift */; };
+		BB00007100000071 /* TrashedFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007100000071 /* TrashedFile.swift */; };
+		BB00007200000072 /* TrashBinManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007200000072 /* TrashBinManifest.swift */; };
+		BB00007300000073 /* DownloadsScanResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007300000073 /* DownloadsScanResult.swift */; };
+		BB00007400000074 /* DownloadsScanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007400000074 /* DownloadsScanService.swift */; };
+		BB00007500000075 /* TrashBinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007500000075 /* TrashBinService.swift */; };
+		BB00007600000076 /* FileDeletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007600000076 /* FileDeletionService.swift */; };
+		BB00007700000077 /* DownloadsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007700000077 /* DownloadsViewModel.swift */; };
+		BB00007800000078 /* TrashBinViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007800000078 /* TrashBinViewModel.swift */; };
+		BB00007900000079 /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007900000079 /* DocumentPickerView.swift */; };
+		BB00008000000080 /* FileItemCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008000000080 /* FileItemCardView.swift */; };
+		BB00008100000081 /* DownloadsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008100000081 /* DownloadsListView.swift */; };
+		BB00008200000082 /* TrashItemCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008200000082 /* TrashItemCardView.swift */; };
+		BB00008300000083 /* TrashBinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008300000083 /* TrashBinListView.swift */; };
+		BB00008400000084 /* RestoreSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008400000084 /* RestoreSuccessView.swift */; };
 		BB00005000000050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00005000000050 /* Assets.xcassets */; };
 		BB00006100000061 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006100000061 /* Photos.framework */; };
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
@@ -142,6 +157,21 @@
 		AA00006700000067 /* VideosListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosListView.swift; sourceTree = "<group>"; };
 		AA00006800000068 /* ScreenshotsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsViewModel.swift; sourceTree = "<group>"; };
 		AA00006900000069 /* ScreenshotsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsListView.swift; sourceTree = "<group>"; };
+		AA00007000000070 /* DownloadedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedFile.swift; sourceTree = "<group>"; };
+		AA00007100000071 /* TrashedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashedFile.swift; sourceTree = "<group>"; };
+		AA00007200000072 /* TrashBinManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashBinManifest.swift; sourceTree = "<group>"; };
+		AA00007300000073 /* DownloadsScanResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsScanResult.swift; sourceTree = "<group>"; };
+		AA00007400000074 /* DownloadsScanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsScanService.swift; sourceTree = "<group>"; };
+		AA00007500000075 /* TrashBinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashBinService.swift; sourceTree = "<group>"; };
+		AA00007600000076 /* FileDeletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDeletionService.swift; sourceTree = "<group>"; };
+		AA00007700000077 /* DownloadsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewModel.swift; sourceTree = "<group>"; };
+		AA00007800000078 /* TrashBinViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashBinViewModel.swift; sourceTree = "<group>"; };
+		AA00007900000079 /* DocumentPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
+		AA00008000000080 /* FileItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemCardView.swift; sourceTree = "<group>"; };
+		AA00008100000081 /* DownloadsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsListView.swift; sourceTree = "<group>"; };
+		AA00008200000082 /* TrashItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashItemCardView.swift; sourceTree = "<group>"; };
+		AA00008300000083 /* TrashBinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashBinListView.swift; sourceTree = "<group>"; };
+		AA00008400000084 /* RestoreSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreSuccessView.swift; sourceTree = "<group>"; };
 		AA00005000000050 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA00005100000051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00006100000061 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -250,6 +280,10 @@
 				AA00004300000043 /* DuplicateGroup.swift */,
 				AA00004400000044 /* SimilarGroup.swift */,
 				AA00004500000045 /* DeleteResult.swift */,
+				AA00007000000070 /* DownloadedFile.swift */,
+				AA00007100000071 /* TrashedFile.swift */,
+				AA00007200000072 /* TrashBinManifest.swift */,
+				AA00007300000073 /* DownloadsScanResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -265,6 +299,9 @@
 				AA00004800000048 /* DuplicateDetectionService.swift */,
 				AA00004900000049 /* SimilarPhotoDetectionService.swift */,
 				AA00005200000052 /* PhotoDeletionService.swift */,
+				AA00007400000074 /* DownloadsScanService.swift */,
+				AA00007500000075 /* TrashBinService.swift */,
+				AA00007600000076 /* FileDeletionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -279,6 +316,8 @@
 				AA00005400000054 /* SimilarPhotosViewModel.swift */,
 				AA00006600000066 /* VideosViewModel.swift */,
 				AA00006800000068 /* ScreenshotsViewModel.swift */,
+				AA00007700000077 /* DownloadsViewModel.swift */,
+				AA00007800000078 /* TrashBinViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -294,6 +333,8 @@
 				CC00008700000087 /* Similar */,
 				CC00008800000088 /* Videos */,
 				CC00009300000093 /* Screenshots */,
+				CC00009400000094 /* Downloads */,
+				CC00009500000095 /* TrashBin */,
 				CC00008400000084 /* Settings */,
 				CC00008500000085 /* TabBar */,
 			);
@@ -308,6 +349,7 @@
 				AA00002800000028 /* StorageBarView.swift */,
 				AA00005500000055 /* SelectablePhotoView.swift */,
 				AA00005600000056 /* BatchActionBarView.swift */,
+				AA00008400000084 /* RestoreSuccessView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -387,6 +429,25 @@
 				AA00006900000069 /* ScreenshotsListView.swift */,
 			);
 			path = Screenshots;
+			sourceTree = "<group>";
+		};
+		CC00009400000094 /* Downloads */ = {
+			isa = PBXGroup;
+			children = (
+				AA00007900000079 /* DocumentPickerView.swift */,
+				AA00008000000080 /* FileItemCardView.swift */,
+				AA00008100000081 /* DownloadsListView.swift */,
+			);
+			path = Downloads;
+			sourceTree = "<group>";
+		};
+		CC00009500000095 /* TrashBin */ = {
+			isa = PBXGroup;
+			children = (
+				AA00008200000082 /* TrashItemCardView.swift */,
+				AA00008300000083 /* TrashBinListView.swift */,
+			);
+			path = TrashBin;
 			sourceTree = "<group>";
 		};
 		CC00008900000089 /* Resources */ = {
@@ -549,6 +610,21 @@
 				BB00006700000067 /* VideosListView.swift in Sources */,
 				BB00006800000068 /* ScreenshotsViewModel.swift in Sources */,
 				BB00006900000069 /* ScreenshotsListView.swift in Sources */,
+				BB00007000000070 /* DownloadedFile.swift in Sources */,
+				BB00007100000071 /* TrashedFile.swift in Sources */,
+				BB00007200000072 /* TrashBinManifest.swift in Sources */,
+				BB00007300000073 /* DownloadsScanResult.swift in Sources */,
+				BB00007400000074 /* DownloadsScanService.swift in Sources */,
+				BB00007500000075 /* TrashBinService.swift in Sources */,
+				BB00007600000076 /* FileDeletionService.swift in Sources */,
+				BB00007700000077 /* DownloadsViewModel.swift in Sources */,
+				BB00007800000078 /* TrashBinViewModel.swift in Sources */,
+				BB00007900000079 /* DocumentPickerView.swift in Sources */,
+				BB00008000000080 /* FileItemCardView.swift in Sources */,
+				BB00008100000081 /* DownloadsListView.swift in Sources */,
+				BB00008200000082 /* TrashItemCardView.swift in Sources */,
+				BB00008300000083 /* TrashBinListView.swift in Sources */,
+				BB00008400000084 /* RestoreSuccessView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

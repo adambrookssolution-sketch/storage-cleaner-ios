@@ -19,6 +19,12 @@ struct ScanResult: Equatable {
     let similarPhotoCount: Int
     let similarSizeBytes: Int64
 
+    // M3: Downloads and trash data
+    let downloadFileCount: Int
+    let downloadSizeBytes: Int64
+    let trashFileCount: Int
+    let trashSizeBytes: Int64
+
     /// Category count/size pairs for dashboard display
     var categoryCounts: [MediaCategory: (count: Int, sizeBytes: Int64)] {
         var result: [MediaCategory: (Int, Int64)] = [:]
@@ -29,6 +35,8 @@ struct ScanResult: Equatable {
         result[.similar] = (similarPhotoCount, similarSizeBytes)
         result[.similarVideos] = (0, 0)
         result[.similarScreenshots] = (0, 0)
+        result[.downloads] = (downloadFileCount, downloadSizeBytes)
+        result[.trashBin] = (trashFileCount, trashSizeBytes)
         let otherPhotos = max(0, totalPhotos - totalScreenshots)
         let otherSize = max(0, photosSizeBytes - screenshotsSizeBytes)
         result[.other] = (otherPhotos, otherSize)
@@ -47,7 +55,9 @@ struct ScanResult: Equatable {
         lhs.totalScreenshots == rhs.totalScreenshots &&
         lhs.totalSizeBytes == rhs.totalSizeBytes &&
         lhs.duplicateGroupCount == rhs.duplicateGroupCount &&
-        lhs.similarGroupCount == rhs.similarGroupCount
+        lhs.similarGroupCount == rhs.similarGroupCount &&
+        lhs.downloadFileCount == rhs.downloadFileCount &&
+        lhs.trashFileCount == rhs.trashFileCount
     }
 
     static let empty = ScanResult(
@@ -64,6 +74,10 @@ struct ScanResult: Equatable {
         duplicateSizeBytes: 0,
         similarGroupCount: 0,
         similarPhotoCount: 0,
-        similarSizeBytes: 0
+        similarSizeBytes: 0,
+        downloadFileCount: 0,
+        downloadSizeBytes: 0,
+        trashFileCount: 0,
+        trashSizeBytes: 0
     )
 }
