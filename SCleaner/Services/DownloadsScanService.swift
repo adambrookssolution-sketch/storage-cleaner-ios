@@ -7,7 +7,7 @@ final class DownloadsScanService {
 
     func saveBookmark(for url: URL) throws {
         let bookmarkData = try url.bookmarkData(
-            options: .minimalBookmark,
+            options: [],
             includingResourceValuesForKeys: nil,
             relativeTo: nil
         )
@@ -25,7 +25,10 @@ final class DownloadsScanService {
         ) else { return nil }
 
         if isStale {
-            try? saveBookmark(for: url)
+            if url.startAccessingSecurityScopedResource() {
+                try? saveBookmark(for: url)
+                url.stopAccessingSecurityScopedResource()
+            }
         }
         return url
     }
@@ -35,7 +38,7 @@ final class DownloadsScanService {
     }
 
     var hasStoredBookmark: Bool {
-        resolveBookmark() != nil
+        UserDefaults.standard.data(forKey: AppConstants.Downloads.bookmarkKey) != nil
     }
 
     // MARK: - Scanning

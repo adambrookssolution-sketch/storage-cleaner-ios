@@ -78,7 +78,11 @@ final class TrashBinService: ObservableObject {
             saveManifest()
             return true
         } catch {
-            try? fileManager.removeItem(at: destinationURL)
+            // Clean up partial copy if the delete failed
+            if fileManager.fileExists(atPath: destinationURL.path),
+               fileManager.fileExists(atPath: file.fileURL.path) {
+                try? fileManager.removeItem(at: destinationURL)
+            }
             return false
         }
     }
@@ -150,14 +154,22 @@ final class TrashBinService: ObservableObject {
 
         let filesToDelete = manifest.files.filter { ids.contains($0.id) }
         for file in filesToDelete {
-            if permanentlyDelete(trashedFile: file) {
+            let storedName = file.storedFileName
+            let fileURL = trashBinURL.appendingPathComponent(storedName)
+            do {
+                if fileManager.fileExists(atPath: fileURL.path) {
+                    try fileManager.removeItem(at: fileURL)
+                }
                 deletedCount += 1
                 savedBytes += file.fileSize
                 deletedIds.insert(file.id)
-            } else {
+            } catch {
                 failedCount += 1
             }
         }
+
+        manifest.files.removeAll { deletedIds.contains($0.id) }
+        saveManifest()
 
         return DeleteResult(
             requestedCount: ids.count,
@@ -175,8 +187,13 @@ final class TrashBinService: ObservableObject {
         guard !expired.isEmpty else { return }
 
         for file in expired {
-            _ = permanentlyDelete(trashedFile: file)
+            let storedName = file.storedFileName
+            let fileURL = trashBinURL.appendingPathComponent(storedName)
+            if fileManager.fileExists(atPath: fileURL.path) {
+                try? fileManager.removeItem(at: fileURL)
+            }
         }
+        manifest.files.removeAll { $0.isExpired }
         manifest.lastPurgeDate = Date()
         saveManifest()
     }

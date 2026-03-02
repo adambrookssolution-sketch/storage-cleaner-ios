@@ -10,12 +10,13 @@ final class FileDeletionService {
         self.trashBinService = trashBinService
     }
 
-    func deleteFiles(files: [DownloadedFile], folderBookmark: Data?) -> DeleteResult {
+    func deleteFiles(files: [DownloadedFile], folderBookmark: Data?, folderURL: URL? = nil) -> DeleteResult {
         var deletedCount = 0
         var failedCount = 0
         var savedBytes: Int64 = 0
         var deletedIds = Set<String>()
 
+        // Security-scoped access is managed by the caller (DownloadsViewModel.executeDelete)
         for file in files {
             if trashBinService.moveToTrash(file: file, folderBookmark: folderBookmark) {
                 deletedCount += 1

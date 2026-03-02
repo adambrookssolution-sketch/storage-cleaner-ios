@@ -66,6 +66,10 @@ final class DownloadsViewModel: ObservableObject {
             self.folderURL = url
             self.hasFolder = true
             self.folderName = url.lastPathComponent
+            // Store bookmark immediately so it's available for deletion/restore
+            if let bookmarkData = UserDefaults.standard.data(forKey: AppConstants.Downloads.bookmarkKey) {
+                self.folderBookmark = bookmarkData
+            }
             Task { await scanFolder() }
         } catch {
             errorMessage = "Não foi possível salvar o acesso à pasta."

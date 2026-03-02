@@ -54,7 +54,7 @@ struct TrashBinListView: View {
                 itemLabel: "arquivos",
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
-                    viewModel.executePermanentDelete()
+                    Task { await viewModel.executePermanentDelete() }
                 },
                 onCancel: { viewModel.showDeleteConfirmation = false }
             )
@@ -175,7 +175,7 @@ struct TrashBinListView: View {
                 Spacer()
 
                 // Restore button
-                Button(action: { viewModel.executeRestore() }) {
+                Button(action: { Task { await viewModel.executeRestore() } }) {
                     Text("Restaurar")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)

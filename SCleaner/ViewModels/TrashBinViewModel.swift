@@ -59,12 +59,14 @@ final class TrashBinViewModel: ObservableObject {
         selectedIds.removeAll()
     }
 
-    func executePermanentDelete() {
+    func executePermanentDelete() async {
         isProcessing = true
 
-        let result = trashBinService.permanentlyDeleteMultiple(ids: selectedIds)
-        deleteResult = result
+        let ids = selectedIds
+        let service = trashBinService
+        let result = await Task.detached { service.permanentlyDeleteMultiple(ids: ids) }.value
 
+        deleteResult = result
         trashedFiles = trashBinService.manifest.files
         selectedIds.removeAll()
         showDeleteSuccess = true
@@ -76,15 +78,17 @@ final class TrashBinViewModel: ObservableObject {
         )
     }
 
-    func executeRestore() {
+    func executeRestore() async {
         isProcessing = true
         var successCount = 0
         var failCount = 0
 
         let filesToRestore = trashedFiles.filter { selectedIds.contains($0.id) }
+        let service = trashBinService
 
         for file in filesToRestore {
-            if trashBinService.restoreFromTrash(trashedFile: file) {
+            let ok = await Task.detached { service.restoreFromTrash(trashedFile: file) }.value
+            if ok {
                 successCount += 1
             } else {
                 failCount += 1
@@ -103,10 +107,12 @@ final class TrashBinViewModel: ObservableObject {
         )
     }
 
-    func emptyTrash() {
+    func emptyTrash() async {
         isProcessing = true
         let allIds = Set(trashedFiles.map(\.id))
-        let result = trashBinService.permanentlyDeleteMultiple(ids: allIds)
+        let service = trashBinService
+        let result = await Task.detached { service.permanentlyDeleteMultiple(ids: allIds) }.value
+
         deleteResult = result
         trashedFiles = []
         selectedIds.removeAll()
