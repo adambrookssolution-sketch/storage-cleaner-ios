@@ -36,6 +36,9 @@ final class ScreenshotsViewModel: ObservableObject {
         self.assets = assets
         self.thumbnailService = thumbnailService
         self.deletionService = deletionService
+
+        // Pre-select all screenshots by default
+        self.selectedIds = Set(assets.map(\.localIdentifier))
     }
 
     func toggleSelection(assetId: String) {

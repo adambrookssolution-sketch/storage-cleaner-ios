@@ -63,6 +63,8 @@ struct VideosListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
+                itemLabel: "vídeos",
+                destination: .photoLibrary,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
                     Task { await viewModel.executeDelete() }
@@ -75,25 +77,30 @@ struct VideosListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result) {
+                DeletionSuccessView(result: result, itemLabel: "vídeos", destination: .photoLibrary) {
                     viewModel.showDeleteSuccess = false
                 }
             }
         }
         .overlay {
             if viewModel.isDeleting {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .overlay(
-                        VStack(spacing: 12) {
-                            ProgressView()
-                                .scaleEffect(1.2)
-                                .tint(.white)
-                            Text("Excluindo...")
-                                .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                    )
+                ZStack {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(.white)
+                        Text("Excluindo \(viewModel.totalSelectedCount) vídeos...")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                        Text("O iOS solicitará sua confirmação.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding(30)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                }
             }
         }
     }
@@ -195,13 +202,31 @@ struct VideosListView: View {
     // MARK: - Header
 
     private var headerView: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("\(viewModel.totalVideoCount) vídeos encontrados")
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
             Text("Tamanho total: \(viewModel.totalSize.formattedSize)")
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
+
+            if viewModel.totalSelectedCount > 0 {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.down.circle.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTokens.successGreen)
+                    Text("Economize \(viewModel.totalPotentialSavings.formattedSize) excluindo \(viewModel.totalSelectedCount) vídeo(s)")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(ColorTokens.successGreen)
+                }
+                .padding(.top, 2)
+            }
+
+            if !viewModel.assets.isEmpty && viewModel.selectedIds.count > 0 {
+                Text("Os 15 vídeos mais pesados foram pré-selecionados.")
+                    .font(.system(size: 12))
+                    .foregroundColor(ColorTokens.tertiaryText)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)

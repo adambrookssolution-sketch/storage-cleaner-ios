@@ -52,6 +52,7 @@ struct TrashBinListView: View {
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
                 itemLabel: "arquivos",
+                destination: .permanent,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
                     Task { await viewModel.executePermanentDelete() }
@@ -62,7 +63,7 @@ struct TrashBinListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "arquivos") {
+                DeletionSuccessView(result: result, itemLabel: "arquivos", destination: .permanent) {
                     viewModel.showDeleteSuccess = false
                 }
             }

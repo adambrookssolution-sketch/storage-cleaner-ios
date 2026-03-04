@@ -4,15 +4,33 @@ import SwiftUI
 struct DeletionSuccessView: View {
     let result: DeleteResult
     let itemLabel: String
+    let destination: DeletionDestination
     let onDismiss: () -> Void
 
-    init(result: DeleteResult, itemLabel: String = "fotos", onDismiss: @escaping () -> Void) {
+    init(
+        result: DeleteResult,
+        itemLabel: String = "fotos",
+        destination: DeletionDestination = .photoLibrary,
+        onDismiss: @escaping () -> Void
+    ) {
         self.result = result
         self.itemLabel = itemLabel
+        self.destination = destination
         self.onDismiss = onDismiss
     }
 
     @State private var showCheckmark = false
+
+    private var guidanceText: String? {
+        switch destination {
+        case .photoLibrary:
+            return "Você pode recuperar as \(itemLabel) em Fotos > Álbuns > Apagados Recentemente por até 30 dias."
+        case .appTrashBin:
+            return "Os \(itemLabel) foram movidos para a Lixeira do app. Você pode restaurá-los em até 30 dias."
+        case .permanent:
+            return nil
+        }
+    }
 
     var body: some View {
         VStack(spacing: 32) {
@@ -45,6 +63,25 @@ struct DeletionSuccessView: View {
                 Text("\(result.failedCount) \(itemLabel) não puderam ser excluídos")
                     .font(.system(size: 14))
                     .foregroundColor(ColorTokens.warningOrange)
+            }
+
+            if let guidance = guidanceText {
+                HStack(spacing: 10) {
+                    Image(systemName: "info.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundColor(ColorTokens.primaryBlue)
+
+                    Text(guidance)
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTokens.secondaryText)
+                        .multilineTextAlignment(.leading)
+                }
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(ColorTokens.primaryBlue.opacity(0.08))
+                )
+                .padding(.horizontal, AppConstants.UI.horizontalPadding)
             }
 
             Spacer()

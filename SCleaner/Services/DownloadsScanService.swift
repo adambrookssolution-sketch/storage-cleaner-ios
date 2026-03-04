@@ -78,8 +78,15 @@ final class DownloadsScanService {
             let modDate = values.contentModificationDate ?? Date.distantPast
             let createDate = values.creationDate
 
+            // Use relative path from folder as stable ID (survives rescans)
+            let relativePath = fileURL.path.replacingOccurrences(
+                of: folderURL.path,
+                with: ""
+            )
+            let stableId = relativePath.isEmpty ? fileURL.lastPathComponent : relativePath
+
             let file = DownloadedFile(
-                id: UUID().uuidString,
+                id: stableId,
                 fileName: fileName,
                 fileExtension: ext,
                 fileURL: fileURL,

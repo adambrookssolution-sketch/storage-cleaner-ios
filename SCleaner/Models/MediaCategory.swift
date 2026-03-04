@@ -66,8 +66,8 @@ enum MediaCategory: String, CaseIterable, Identifiable {
         }
     }
 
-    /// Display order on dashboard
+    /// Display order on dashboard (similarVideos and similarScreenshots hidden until V2)
     static var dashboardOrder: [MediaCategory] {
-        [.duplicates, .similar, .similarVideos, .similarScreenshots, .screenshots, .videos, .downloads, .trashBin, .other]
+        [.duplicates, .similar, .screenshots, .videos, .downloads, .trashBin]
     }
 }

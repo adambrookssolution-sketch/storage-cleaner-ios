@@ -6,18 +6,28 @@ struct StorageOverviewStepView: View {
     @ObservedObject var viewModel: OnboardingViewModel
     let onContinue: () -> Void
 
-    /// Storage category breakdown (estimated proportions)
+    /// Storage category breakdown using real device data
+    /// Photos ratio is real when available; "Outros" groups everything else iOS doesn't expose.
     private var storageCategories: [(name: String, color: Color, ratio: CGFloat)] {
         let info = viewModel.storageInfo
         let usageRatio = info.usageRatio
-        let photosRatio = info.photoLibraryRatio > 0 ? info.photoLibraryRatio : usageRatio * 0.55
-        let remaining = max(0, usageRatio - photosRatio)
-        return [
-            ("Fotos", ColorTokens.destructiveRed, photosRatio),
-            ("Aplicativos", ColorTokens.warningOrange, remaining * 0.45),
-            ("iOS", Color(.systemGray3), remaining * 0.35),
-            ("Dados do Sistema", Color(.systemGray5), remaining * 0.20),
-        ]
+        let photosRatio = info.photoLibraryRatio > 0 ? info.photoLibraryRatio : 0
+        let othersRatio = max(0, usageRatio - photosRatio)
+        let freeRatio = max(0, 1.0 - usageRatio)
+
+        var categories: [(String, Color, CGFloat)] = []
+
+        if photosRatio > 0 {
+            categories.append(("Fotos", ColorTokens.destructiveRed, photosRatio))
+        }
+        if othersRatio > 0 {
+            categories.append(("Apps e dados", ColorTokens.warningOrange, othersRatio))
+        }
+        if freeRatio > 0 {
+            categories.append(("Disponível", Color(.systemGray5), freeRatio))
+        }
+
+        return categories
     }
 
     var body: some View {
@@ -93,7 +103,7 @@ struct StorageOverviewStepView: View {
             Spacer()
 
             // Disclaimer
-            Text("*Com base nos dados internos do StorageCleaner")
+            Text("*Com base nos dados reais do dispositivo")
                 .font(.system(size: 11))
                 .foregroundColor(ColorTokens.tertiaryText)
 

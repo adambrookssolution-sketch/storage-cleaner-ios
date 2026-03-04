@@ -31,9 +31,22 @@ struct CategoryCardView: View {
             Spacer().frame(height: 12)
 
             // Badge
-            if !cardData.isEmpty {
+            if !cardData.isEmpty && !needsSetup {
                 badgeView
                     .padding(.horizontal, 16)
+            } else if needsSetup {
+                HStack(spacing: 6) {
+                    Image(systemName: "folder.badge.plus")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.white)
+                    Text("Selecionar pasta")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(ColorTokens.warningOrange))
+                .padding(.horizontal, 16)
             }
 
             Spacer().frame(height: 16)
@@ -45,13 +58,17 @@ struct CategoryCardView: View {
 
     @ViewBuilder
     private var thumbnailSection: some View {
-        if cardData.isEmpty {
+        if cardData.isEmpty || needsSetup {
             emptyThumbnailView
         } else if cardData.category.showsComparisonLayout {
             comparisonThumbnailView
         } else {
             singleThumbnailView
         }
+    }
+
+    private var needsSetup: Bool {
+        cardData.category == .downloads && cardData.count == -1
     }
 
     @ViewBuilder
@@ -64,9 +81,15 @@ struct CategoryCardView: View {
                     Image(systemName: cardData.category.iconName)
                         .font(.system(size: 36))
                         .foregroundColor(cardData.category.iconColor.opacity(0.5))
-                    Text("Nenhum item encontrado")
-                        .font(.system(size: 13))
-                        .foregroundColor(ColorTokens.tertiaryText)
+                    if needsSetup {
+                        Text("Toque para selecionar a pasta")
+                            .font(.system(size: 13))
+                            .foregroundColor(ColorTokens.primaryBlue)
+                    } else {
+                        Text("Nenhum item encontrado")
+                            .font(.system(size: 13))
+                            .foregroundColor(ColorTokens.tertiaryText)
+                    }
                 }
             )
     }

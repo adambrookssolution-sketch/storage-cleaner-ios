@@ -33,9 +33,14 @@ final class VideosViewModel: ObservableObject {
         thumbnailService: ThumbnailCacheService,
         deletionService: PhotoDeletionService
     ) {
-        self.assets = assets
+        // Sort by estimated file size descending (heaviest first)
+        self.assets = assets.sorted { $0.estimatedFileSize > $1.estimatedFileSize }
         self.thumbnailService = thumbnailService
         self.deletionService = deletionService
+
+        // Pre-select top 15 heaviest videos as recommendation
+        let topHeaviest = self.assets.prefix(15)
+        self.selectedIds = Set(topHeaviest.map(\.localIdentifier))
     }
 
     func toggleSelection(assetId: String) {

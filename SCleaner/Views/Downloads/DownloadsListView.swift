@@ -82,6 +82,7 @@ struct DownloadsListView: View {
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
                 itemLabel: "arquivos",
+                destination: .appTrashBin,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
                     Task { await viewModel.executeDelete() }
@@ -92,7 +93,7 @@ struct DownloadsListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "arquivos") {
+                DeletionSuccessView(result: result, itemLabel: "arquivos", destination: .appTrashBin) {
                     viewModel.showDeleteSuccess = false
                 }
             }

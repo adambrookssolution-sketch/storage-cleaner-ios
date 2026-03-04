@@ -71,6 +71,8 @@ struct ScreenshotsListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
+                itemLabel: "capturas de tela",
+                destination: .photoLibrary,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
                     Task { await viewModel.executeDelete() }
@@ -83,25 +85,30 @@ struct ScreenshotsListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result) {
+                DeletionSuccessView(result: result, itemLabel: "capturas de tela", destination: .photoLibrary) {
                     viewModel.showDeleteSuccess = false
                 }
             }
         }
         .overlay {
             if viewModel.isDeleting {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .overlay(
-                        VStack(spacing: 12) {
-                            ProgressView()
-                                .scaleEffect(1.2)
-                                .tint(.white)
-                            Text("Excluindo...")
-                                .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                    )
+                ZStack {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(.white)
+                        Text("Excluindo \(viewModel.totalSelectedCount) capturas de tela...")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                        Text("O iOS solicitará sua confirmação.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding(30)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                }
             }
         }
     }
@@ -174,13 +181,31 @@ struct ScreenshotsListView: View {
     // MARK: - Header
 
     private var headerView: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("\(viewModel.totalScreenshotCount) capturas de tela")
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
             Text("Tamanho total: \(viewModel.totalSize.formattedSize)")
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
+
+            if viewModel.totalSelectedCount > 0 {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.down.circle.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTokens.successGreen)
+                    Text("Economize \(viewModel.totalPotentialSavings.formattedSize) excluindo \(viewModel.totalSelectedCount) captura(s)")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(ColorTokens.successGreen)
+                }
+                .padding(.top, 2)
+            }
+
+            if viewModel.totalSelectedCount == viewModel.totalScreenshotCount && viewModel.totalScreenshotCount > 0 {
+                Text("Todas as capturas de tela foram pré-selecionadas.")
+                    .font(.system(size: 12))
+                    .foregroundColor(ColorTokens.tertiaryText)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)

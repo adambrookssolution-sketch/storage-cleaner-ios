@@ -61,9 +61,10 @@ final class TrashBinService: ObservableObject {
         let destinationURL = trashBinURL.appendingPathComponent(storedName)
 
         do {
+            // 1. Copy file to trash directory
             try fileManager.copyItem(at: file.fileURL, to: destinationURL)
-            try fileManager.removeItem(at: file.fileURL)
 
+            // 2. Save manifest BEFORE deleting original (crash-safe: worst case = duplicate, not data loss)
             let trashedFile = TrashedFile(
                 id: trashedId,
                 originalFileName: file.fileName,
@@ -73,15 +74,20 @@ final class TrashBinService: ObservableObject {
                 deletionDate: Date(),
                 fileType: file.fileType.rawValue
             )
-
             manifest.files.append(trashedFile)
             saveManifest()
+
+            // 3. Delete original file
+            try fileManager.removeItem(at: file.fileURL)
+
             return true
         } catch {
-            // Clean up partial copy if the delete failed
+            // Clean up: if copy succeeded but delete failed, remove the copy and revert manifest
             if fileManager.fileExists(atPath: destinationURL.path),
                fileManager.fileExists(atPath: file.fileURL.path) {
                 try? fileManager.removeItem(at: destinationURL)
+                manifest.files.removeAll { $0.id == trashedId }
+                saveManifest()
             }
             return false
         }

@@ -83,18 +83,23 @@ struct DuplicatesListView: View {
         }
         .overlay {
             if viewModel.isDeleting {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .overlay(
-                        VStack(spacing: 12) {
-                            ProgressView()
-                                .scaleEffect(1.2)
-                                .tint(.white)
-                            Text("Excluindo...")
-                                .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                    )
+                ZStack {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(.white)
+                        Text("Excluindo \(viewModel.totalSelectedCount) fotos...")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                        Text("O iOS solicitará sua confirmação.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding(30)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                }
             }
         }
     }

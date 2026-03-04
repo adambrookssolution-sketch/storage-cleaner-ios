@@ -147,6 +147,8 @@ final class DashboardViewModel: ObservableObject {
                     self.storageInfo = self.storageService.getDeviceStorageInfoWithPhotos(
                         photoLibrarySize: result.photosSizeBytes + result.videosSizeBytes
                     )
+                    // Also scan downloads folder if configured
+                    Task { await self.updateDownloadsData() }
                 default:
                     break
                 }
@@ -174,6 +176,36 @@ final class DashboardViewModel: ObservableObject {
                 count: data.count,
                 sizeBytes: data.sizeBytes,
                 sampleAssetIds: Array(samples.prefix(4))
+            )
+        }
+    }
+
+    private func updateDownloadsData() async {
+        let scanService = DownloadsScanService()
+        guard let folderURL = scanService.resolveBookmark() else {
+            // No folder configured - show "Configurar" hint on card
+            if let idx = categoryData.firstIndex(where: { $0.category == .downloads }) {
+                categoryData[idx] = CategoryCardData(
+                    id: MediaCategory.downloads.rawValue,
+                    category: .downloads,
+                    title: MediaCategory.downloads.localizedTitle,
+                    count: -1,
+                    sizeBytes: 0,
+                    sampleAssetIds: []
+                )
+            }
+            return
+        }
+
+        let result = await scanService.scanFolder(at: folderURL)
+        if let idx = categoryData.firstIndex(where: { $0.category == .downloads }) {
+            categoryData[idx] = CategoryCardData(
+                id: MediaCategory.downloads.rawValue,
+                category: .downloads,
+                title: MediaCategory.downloads.localizedTitle,
+                count: result.totalFiles,
+                sizeBytes: result.totalSizeBytes,
+                sampleAssetIds: []
             )
         }
     }
