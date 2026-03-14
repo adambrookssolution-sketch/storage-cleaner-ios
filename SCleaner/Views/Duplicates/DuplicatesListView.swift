@@ -54,12 +54,30 @@ struct DuplicatesListView: View {
                 BatchActionBarView(
                     selectedCount: viewModel.totalSelectedCount,
                     potentialSavings: viewModel.totalPotentialSavings,
-                    onDelete: { viewModel.showDeleteConfirmation = true }
+                    onDelete: { viewModel.confirmDeletion() }
                 )
+            }
+
+            // Limit message overlay
+            if let msg = viewModel.limitMessage {
+                VStack {
+                    Spacer()
+                    Text(msg)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(ColorTokens.warningOrange.cornerRadius(10))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 90)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .navigationTitle("Duplicatas")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $viewModel.showPaywall) {
+            PaywallView()
+        }
         .sheet(isPresented: $viewModel.showDeleteConfirmation) {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,

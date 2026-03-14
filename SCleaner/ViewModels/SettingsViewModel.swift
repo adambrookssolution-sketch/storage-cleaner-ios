@@ -52,9 +52,17 @@ final class SettingsViewModel: ObservableObject {
         UIApplication.shared.open(url)
     }
 
+    @Published var showRestoreAlert = false
+    @Published var restoreAlertMessage = ""
+
     func restorePurchases() {
-        // M4: RevenueCat restore implementation
-        // M1: No-op — will be connected in Milestone 4
+        Task {
+            let success = await SubscriptionService.shared.restorePurchases()
+            restoreAlertMessage = success
+                ? "Assinatura restaurada com sucesso!"
+                : (SubscriptionService.shared.errorMessage ?? "Nenhuma assinatura ativa encontrada.")
+            showRestoreAlert = true
+        }
     }
 
     var appVersion: String {

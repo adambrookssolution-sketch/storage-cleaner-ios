@@ -55,6 +55,22 @@ enum AppConstants {
         static let maxTrashSizeWarningBytes: Int64 = 1_073_741_824 // 1 GB
     }
 
+    enum Subscription {
+        static let weeklyProductId = "com.storagecleaner.weekly"
+        static let annualProductId = "com.storagecleaner.annual"
+        static let allProductIds: [String] = [weeklyProductId, annualProductId]
+
+        static func tier(for productId: String) -> SubscriptionTier? {
+            switch productId {
+            case weeklyProductId: return .weekly
+            case annualProductId: return .annual
+            default: return nil
+            }
+        }
+
+        static let freeDeleteLimit = 5
+    }
+
     enum AppInfo {
         static let appName = "StorageCleaner"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"

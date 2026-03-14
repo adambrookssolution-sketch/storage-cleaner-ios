@@ -18,13 +18,27 @@ struct DownloadsListView: View {
                 fileListView
             }
 
+            // Limit message overlay
+            if let msg = viewModel.limitMessage {
+                VStack {
+                    Spacer()
+                    Text(msg)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(ColorTokens.warningOrange.cornerRadius(10))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 90)
+                }
+            }
+
             // Bottom action bar
             if !viewModel.displayedFiles.isEmpty {
                 BatchActionBarView(
                     selectedCount: viewModel.totalSelectedCount,
                     potentialSavings: viewModel.totalPotentialSavings,
                     accentColor: ColorTokens.warningOrange,
-                    onDelete: { viewModel.showDeleteConfirmation = true }
+                    onDelete: { viewModel.confirmDeletion() }
                 )
             }
         }
@@ -76,6 +90,9 @@ struct DownloadsListView: View {
                     viewModel.showFolderPicker = false
                 }
             )
+        }
+        .sheet(isPresented: $viewModel.showPaywall) {
+            PaywallView()
         }
         .sheet(isPresented: $viewModel.showDeleteConfirmation) {
             DeletionConfirmationView(

@@ -51,8 +51,21 @@ struct ScreenshotsListView: View {
                     selectedCount: viewModel.totalSelectedCount,
                     potentialSavings: viewModel.totalPotentialSavings,
                     accentColor: Color.purple,
-                    onDelete: { viewModel.showDeleteConfirmation = true }
+                    onDelete: { viewModel.confirmDeletion() }
                 )
+            }
+
+            if let msg = viewModel.limitMessage {
+                VStack {
+                    Spacer()
+                    Text(msg)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(Color.purple.cornerRadius(10))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 90)
+                }
             }
         }
         .navigationTitle("Capturas de tela")
@@ -66,6 +79,9 @@ struct ScreenshotsListView: View {
                     Image(systemName: "ellipsis.circle")
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.showPaywall) {
+            PaywallView()
         }
         .sheet(isPresented: $viewModel.showDeleteConfirmation) {
             DeletionConfirmationView(

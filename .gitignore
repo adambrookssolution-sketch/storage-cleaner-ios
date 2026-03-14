@@ -35,6 +35,10 @@ Package.resolved
 # Temporary files
 *.tmp
 *.temp
+*.tmp.*
+
+# Legacy source directory
+StorageCleaner/
 
 # Claude
 .claude/

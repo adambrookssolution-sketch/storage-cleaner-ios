@@ -43,12 +43,28 @@ struct SimilarPhotosListView: View {
                     selectedCount: viewModel.totalSelectedCount,
                     potentialSavings: viewModel.totalPotentialSavings,
                     accentColor: ColorTokens.warningOrange,
-                    onDelete: { viewModel.showDeleteConfirmation = true }
+                    onDelete: { viewModel.confirmDeletion() }
                 )
+            }
+
+            if let msg = viewModel.limitMessage {
+                VStack {
+                    Spacer()
+                    Text(msg)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(ColorTokens.warningOrange.cornerRadius(10))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 90)
+                }
             }
         }
         .navigationTitle("Similar")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $viewModel.showPaywall) {
+            PaywallView()
+        }
         .sheet(isPresented: $viewModel.showDeleteConfirmation) {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,

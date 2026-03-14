@@ -4,6 +4,9 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State private var showPaywall = false
+    @State private var showFAQ = false
+    @State private var showAbout = false
 
     var body: some View {
         NavigationView {
@@ -14,7 +17,7 @@ struct SettingsView: View {
                 // Support section
                 Section {
                     settingsRow(icon: "questionmark.circle.fill", color: .blue, title: "Perguntas Frequentes") {
-                        // M2+: Navigate to FAQ
+                        showFAQ = true
                     }
                     settingsRow(icon: "envelope.fill", color: .blue, title: "Fale Conosco") {
                         viewModel.contactSupport()
@@ -23,7 +26,7 @@ struct SettingsView: View {
                         viewModel.restorePurchases()
                     }
                     settingsRow(icon: "info.circle.fill", color: .gray, title: "Sobre") {
-                        // M2+: Navigate to About
+                        showAbout = true
                     }
                     settingsRow(icon: "hand.raised.fill", color: .blue, title: "Política de Privacidade") {
                         viewModel.openPrivacyPolicy()
@@ -83,6 +86,20 @@ struct SettingsView: View {
                 }
             }
         }
+        .alert("Restaurar Compras", isPresented: $viewModel.showRestoreAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.restoreAlertMessage)
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .sheet(isPresented: $showFAQ) {
+            FAQView()
+        }
+        .sheet(isPresented: $showAbout) {
+            AboutView()
+        }
     }
 
     // MARK: - Premium Banner
@@ -90,7 +107,7 @@ struct SettingsView: View {
     private var premiumBanner: some View {
         Section {
             Button(action: {
-                // M4: Navigate to paywall
+                showPaywall = true
             }) {
                 HStack(spacing: 14) {
                     ZStack {

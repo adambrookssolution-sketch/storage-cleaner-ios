@@ -86,7 +86,14 @@
 		BB00008200000082 /* TrashItemCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008200000082 /* TrashItemCardView.swift */; };
 		BB00008300000083 /* TrashBinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008300000083 /* TrashBinListView.swift */; };
 		BB00008400000084 /* RestoreSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008400000084 /* RestoreSuccessView.swift */; };
+		BB00008500000085 /* SubscriptionProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008500000085 /* SubscriptionProduct.swift */; };
+		BB00008600000086 /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008600000086 /* SubscriptionService.swift */; };
+		BB00009900000099 /* DeletionLimitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009900000099 /* DeletionLimitService.swift */; };
+		BB00008700000087 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008700000087 /* PaywallView.swift */; };
+		BB00008800000088 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008800000088 /* FAQView.swift */; };
+		BB00008900000089 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008900000089 /* AboutView.swift */; };
 		BB00005000000050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00005000000050 /* Assets.xcassets */; };
+		BB00009000000090 /* StorageCleaner.storekit in Resources */ = {isa = PBXBuildFile; fileRef = AA00009000000090 /* StorageCleaner.storekit */; };
 		BB00006100000061 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006100000061 /* Photos.framework */; };
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
 		BB00006300000063 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006300000063 /* StoreKit.framework */; };
@@ -172,6 +179,13 @@
 		AA00008200000082 /* TrashItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashItemCardView.swift; sourceTree = "<group>"; };
 		AA00008300000083 /* TrashBinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashBinListView.swift; sourceTree = "<group>"; };
 		AA00008400000084 /* RestoreSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreSuccessView.swift; sourceTree = "<group>"; };
+		AA00008500000085 /* SubscriptionProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionProduct.swift; sourceTree = "<group>"; };
+		AA00008600000086 /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
+		AA00009900000099 /* DeletionLimitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionLimitService.swift; sourceTree = "<group>"; };
+		AA00008700000087 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		AA00008800000088 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
+		AA00008900000089 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA00009000000090 /* StorageCleaner.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StorageCleaner.storekit; sourceTree = "<group>"; };
 		AA00005000000050 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA00005100000051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00006100000061 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -284,6 +298,7 @@
 				AA00007100000071 /* TrashedFile.swift */,
 				AA00007200000072 /* TrashBinManifest.swift */,
 				AA00007300000073 /* DownloadsScanResult.swift */,
+				AA00008500000085 /* SubscriptionProduct.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +317,8 @@
 				AA00007400000074 /* DownloadsScanService.swift */,
 				AA00007500000075 /* TrashBinService.swift */,
 				AA00007600000076 /* FileDeletionService.swift */,
+				AA00008600000086 /* SubscriptionService.swift */,
+				AA00009900000099 /* DeletionLimitService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -335,6 +352,7 @@
 				CC00009300000093 /* Screenshots */,
 				CC00009400000094 /* Downloads */,
 				CC00009500000095 /* TrashBin */,
+				CC00009600000096 /* Paywall */,
 				CC00008400000084 /* Settings */,
 				CC00008500000085 /* TabBar */,
 			);
@@ -382,6 +400,8 @@
 			isa = PBXGroup;
 			children = (
 				AA00003900000039 /* SettingsView.swift */,
+				AA00008800000088 /* FAQView.swift */,
+				AA00008900000089 /* AboutView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -450,11 +470,20 @@
 			path = TrashBin;
 			sourceTree = "<group>";
 		};
+		CC00009600000096 /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				AA00008700000087 /* PaywallView.swift */,
+			);
+			path = Paywall;
+			sourceTree = "<group>";
+		};
 		CC00008900000089 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				AA00005000000050 /* Assets.xcassets */,
 				AA00005100000051 /* Info.plist */,
+				AA00009000000090 /* StorageCleaner.storekit */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -536,6 +565,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB00005000000050 /* Assets.xcassets in Resources */,
+				BB00009000000090 /* StorageCleaner.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,6 +655,12 @@
 				BB00008200000082 /* TrashItemCardView.swift in Sources */,
 				BB00008300000083 /* TrashBinListView.swift in Sources */,
 				BB00008400000084 /* RestoreSuccessView.swift in Sources */,
+				BB00008500000085 /* SubscriptionProduct.swift in Sources */,
+				BB00008600000086 /* SubscriptionService.swift in Sources */,
+				BB00009900000099 /* DeletionLimitService.swift in Sources */,
+				BB00008700000087 /* PaywallView.swift in Sources */,
+				BB00008800000088 /* FAQView.swift in Sources */,
+				BB00008900000089 /* AboutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

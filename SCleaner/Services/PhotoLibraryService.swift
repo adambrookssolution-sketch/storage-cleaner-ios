@@ -147,7 +147,9 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
         }
 
+        #if DEBUG
         print("[PhotoLibrary] Phase 1 done: \(totalPhotos) photos, \(totalVideos) videos, \(totalScreenshots) screenshots, photoAssets=\(photoAssets.count)")
+        #endif
 
         // ═══════════════════════════════════════════════════════════
         // Phase 2: Hash all photo assets
@@ -178,7 +180,9 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             excludingDuplicateIds: duplicateIds
         )
 
+        #if DEBUG
         print("[PhotoLibrary] Phase 3 done: \(detectedDuplicates.count) dup groups, \(detectedSimilar.count) similar groups")
+        #endif
 
         // Store results for navigation
         self.duplicateGroups = detectedDuplicates

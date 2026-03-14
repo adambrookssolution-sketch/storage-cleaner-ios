@@ -44,14 +44,20 @@ final class DuplicateDetectionService {
     /// Uses Union-Find with Hamming distance <= threshold.
     func findDuplicates(from hashes: [PhotoHash]) -> [DuplicateGroup] {
         let count = hashes.count
+        #if DEBUG
         print("[DuplicateDetection] Input: \(count) hashes")
+        #endif
         guard count >= 2 else {
+            #if DEBUG
             print("[DuplicateDetection] Less than 2 hashes, returning empty")
+            #endif
             return []
         }
 
         let threshold = AppConstants.Hashing.duplicateThreshold
+        #if DEBUG
         print("[DuplicateDetection] Threshold: \(threshold)")
+        #endif
         let uf = UnionFind(count: count)
 
         // Sort by hash value for locality-friendly comparison
@@ -81,7 +87,9 @@ final class DuplicateDetectionService {
 
         // Filter to groups of 2+ and build DuplicateGroup structs
         let multiGroups = groupMap.values.filter { $0.count >= 2 }
+        #if DEBUG
         print("[DuplicateDetection] Found \(multiGroups.count) groups with 2+ photos")
+        #endif
         return multiGroups
             .map { indices in
                 let photos = indices.map { hashes[$0] }

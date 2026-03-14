@@ -16,8 +16,10 @@ struct TrashItemCardView: View {
         fileType == .image
     }
 
-    private var storedFileURL: URL {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    private var storedFileURL: URL? {
+        guard let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
         return docs
             .appendingPathComponent(AppConstants.TrashBin.directoryName, isDirectory: true)
             .appendingPathComponent(file.storedFileName)
@@ -110,8 +112,8 @@ struct TrashItemCardView: View {
         .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
         .onTapGesture { onToggle() }
         .task {
-            guard canShowThumbnail, thumbnailImage == nil else { return }
-            thumbnailImage = await Self.loadThumbnailAsync(from: storedFileURL)
+            guard canShowThumbnail, thumbnailImage == nil, let url = storedFileURL else { return }
+            thumbnailImage = await Self.loadThumbnailAsync(from: url)
         }
     }
 

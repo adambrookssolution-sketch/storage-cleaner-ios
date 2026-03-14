@@ -13,10 +13,13 @@ final class DuplicatesViewModel: ObservableObject {
     @Published var deleteResult: DeleteResult?
     @Published var showDeleteConfirmation = false
     @Published var showDeleteSuccess = false
+    @Published var showPaywall = false
+    @Published var limitMessage: String?
 
     // MARK: - Dependencies
     private let thumbnailService: ThumbnailCacheService
     private let deletionService: PhotoDeletionService
+    private let limitService = DeletionLimitService.shared
 
     // MARK: - Computed
     var totalSelectedCount: Int { selectedIds.count }
@@ -106,12 +109,29 @@ final class DuplicatesViewModel: ObservableObject {
     // MARK: - Deletion
 
     func confirmDeletion() {
+        limitMessage = nil
+        if !limitService.canDelete(count: totalSelectedCount) {
+            if limitService.isLimitReached {
+                showPaywall = true
+            } else {
+                let remaining = limitService.remainingDeletions
+                limitMessage = "Limite diario: \(remaining) exclusoes restantes. Selecione menos itens ou assine o Premium."
+            }
+            return
+        }
         showDeleteConfirmation = true
     }
 
     func executeDelete() async {
+        // Final check before deletion
+        let allowed = limitService.allowedCount(requested: totalSelectedCount)
+        if allowed <= 0 && !SubscriptionService.shared.isPremium {
+            showPaywall = true
+            return
+        }
+
         isDeleting = true
-        let idsToDelete = Array(selectedIds)
+        let idsToDelete = Array(selectedIds.prefix(allowed))
 
         do {
             let result = try await deletionService.deletePhotos(assetIds: idsToDelete)
@@ -136,6 +156,9 @@ final class DuplicatesViewModel: ObservableObject {
             for id in result.deletedAssetIds {
                 selectedIds.remove(id)
             }
+
+            // Record deletions for daily limit tracking
+            limitService.recordDeletions(count: result.deletedCount)
 
             showDeleteSuccess = true
 

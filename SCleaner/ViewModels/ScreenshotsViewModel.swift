@@ -12,9 +12,12 @@ final class ScreenshotsViewModel: ObservableObject {
     @Published var deleteResult: DeleteResult?
     @Published var showDeleteConfirmation = false
     @Published var showDeleteSuccess = false
+    @Published var showPaywall = false
+    @Published var limitMessage: String?
 
     private let thumbnailService: ThumbnailCacheService
     private let deletionService: PhotoDeletionService
+    private let limitService = DeletionLimitService.shared
 
     var totalSelectedCount: Int { selectedIds.count }
     var totalScreenshotCount: Int { assets.count }
@@ -74,9 +77,29 @@ final class ScreenshotsViewModel: ObservableObject {
         }
     }
 
+    func confirmDeletion() {
+        limitMessage = nil
+        if !limitService.canDelete(count: totalSelectedCount) {
+            if limitService.isLimitReached {
+                showPaywall = true
+            } else {
+                let remaining = limitService.remainingDeletions
+                limitMessage = "Limite diario: \(remaining) exclusoes restantes. Selecione menos itens ou assine o Premium."
+            }
+            return
+        }
+        showDeleteConfirmation = true
+    }
+
     func executeDelete() async {
+        let allowed = limitService.allowedCount(requested: totalSelectedCount)
+        if allowed <= 0 && !SubscriptionService.shared.isPremium {
+            showPaywall = true
+            return
+        }
+
         isDeleting = true
-        let idsToDelete = Array(selectedIds)
+        let idsToDelete = Array(selectedIds.prefix(allowed))
 
         do {
             let result = try await deletionService.deletePhotos(assetIds: idsToDelete)
@@ -85,6 +108,7 @@ final class ScreenshotsViewModel: ObservableObject {
             for id in result.deletedAssetIds {
                 selectedIds.remove(id)
             }
+            limitService.recordDeletions(count: result.deletedCount)
             showDeleteSuccess = true
             NotificationCenter.default.post(
                 name: DashboardViewModel.photosDeletedNotification, object: nil

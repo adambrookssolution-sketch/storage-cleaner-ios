@@ -17,11 +17,15 @@ final class HashingService {
     ) async -> [PhotoHash] {
         let total = assets.count
         guard total > 0 else {
+            #if DEBUG
             print("[HashingService] No assets to hash")
+            #endif
             return []
         }
 
+        #if DEBUG
         print("[HashingService] Starting hashing of \(total) photo assets")
+        #endif
         let batchSize = AppConstants.Hashing.hashBatchSize
         var allHashes: [PhotoHash] = []
         allHashes.reserveCapacity(total)
@@ -66,7 +70,9 @@ final class HashingService {
 
                 guard let image else {
                     failedImageCount += 1
+                    #if DEBUG
                     print("[HashingService] FAILED asset \(asset.localIdentifier)")
+                    #endif
                     continue
                 }
 
@@ -87,10 +93,12 @@ final class HashingService {
             progressHandler(min(batchEnd, total), total)
         }
 
+        #if DEBUG
         print("[HashingService] Done: \(allHashes.count) hashed, \(failedImageCount) failed")
         for h in allHashes {
             print("[HashingService] hash=\(h.hash) px=\(h.pixelWidth)x\(h.pixelHeight) size=\(h.fileSize)")
         }
+        #endif
 
         return allHashes
     }

@@ -43,8 +43,21 @@ struct VideosListView: View {
                     selectedCount: viewModel.totalSelectedCount,
                     potentialSavings: viewModel.totalPotentialSavings,
                     accentColor: ColorTokens.primaryBlue,
-                    onDelete: { viewModel.showDeleteConfirmation = true }
+                    onDelete: { viewModel.confirmDeletion() }
                 )
+            }
+
+            if let msg = viewModel.limitMessage {
+                VStack {
+                    Spacer()
+                    Text(msg)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(ColorTokens.primaryBlue.cornerRadius(10))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 90)
+                }
             }
         }
         .navigationTitle("Vídeos")
@@ -58,6 +71,9 @@ struct VideosListView: View {
                     Image(systemName: "ellipsis.circle")
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.showPaywall) {
+            PaywallView()
         }
         .sheet(isPresented: $viewModel.showDeleteConfirmation) {
             DeletionConfirmationView(

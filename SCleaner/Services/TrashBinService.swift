@@ -11,9 +11,14 @@ final class TrashBinService: ObservableObject {
     @Published private(set) var manifest: TrashBinManifest = .empty
 
     private let fileManager = FileManager.default
+    private let trashBinURL: URL
 
-    private var trashBinURL: URL {
-        let docs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+    private static func resolveTrashBinURL(fileManager: FileManager) -> URL {
+        guard let docs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            // Fallback: construct from HOME if the standard API returns empty (should never happen on iOS)
+            let fallback = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Documents")
+            return fallback.appendingPathComponent(AppConstants.TrashBin.directoryName, isDirectory: true)
+        }
         return docs.appendingPathComponent(AppConstants.TrashBin.directoryName, isDirectory: true)
     }
 
@@ -22,6 +27,7 @@ final class TrashBinService: ObservableObject {
     }
 
     init() {
+        trashBinURL = Self.resolveTrashBinURL(fileManager: fileManager)
         ensureDirectoryExists()
         loadManifest()
         purgeExpiredFiles()

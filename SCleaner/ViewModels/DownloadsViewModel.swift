@@ -13,6 +13,8 @@ final class DownloadsViewModel: ObservableObject {
     @Published var deleteResult: DeleteResult?
     @Published var showDeleteConfirmation = false
     @Published var showDeleteSuccess = false
+    @Published var showPaywall = false
+    @Published var limitMessage: String?
     @Published var showFolderPicker = false
     @Published var showFilterOnly = true
     @Published var hasFolder = false
@@ -22,6 +24,7 @@ final class DownloadsViewModel: ObservableObject {
     // MARK: - Dependencies
     private let scanService: DownloadsScanService
     private let deletionService: FileDeletionService
+    private let limitService = DeletionLimitService.shared
     private var folderBookmark: Data?
     private var folderURL: URL?
 
@@ -131,10 +134,30 @@ final class DownloadsViewModel: ObservableObject {
         selectedIds.removeAll()
     }
 
+    func confirmDeletion() {
+        limitMessage = nil
+        if !limitService.canDelete(count: totalSelectedCount) {
+            if limitService.isLimitReached {
+                showPaywall = true
+            } else {
+                let remaining = limitService.remainingDeletions
+                limitMessage = "Limite diario: \(remaining) exclusoes restantes. Selecione menos itens ou assine o Premium."
+            }
+            return
+        }
+        showDeleteConfirmation = true
+    }
+
     func executeDelete() async {
+        let allowed = limitService.allowedCount(requested: totalSelectedCount)
+        if allowed <= 0 && !SubscriptionService.shared.isPremium {
+            showPaywall = true
+            return
+        }
+
         isDeleting = true
 
-        let filesToDelete = displayedFiles.filter { selectedIds.contains($0.id) }
+        let filesToDelete = Array(displayedFiles.filter { selectedIds.contains($0.id) }.prefix(allowed))
 
         guard let url = folderURL else {
             isDeleting = false
@@ -161,6 +184,7 @@ final class DownloadsViewModel: ObservableObject {
             selectedIds.remove(id)
         }
 
+        limitService.recordDeletions(count: result.deletedCount)
         showDeleteSuccess = true
         isDeleting = false
 
