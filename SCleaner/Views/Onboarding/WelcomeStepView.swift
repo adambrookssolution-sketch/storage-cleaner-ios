@@ -11,7 +11,7 @@ struct WelcomeStepView: View {
             Spacer().frame(height: 60)
 
             // Title
-            Text("Bem-vindo ao\nStorageCleaner")
+            Text("Bem-vindo ao\nVortex Cleaner")
                 .font(.system(size: 34, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundColor(ColorTokens.primaryText)
@@ -60,7 +60,7 @@ struct WelcomeStepView: View {
 
             // Privacy text
             VStack(spacing: 6) {
-                Text("O StorageCleaner precisa ter acesso às Fotos para liberar armazenamento. ")
+                Text("O Vortex Cleaner precisa ter acesso às Fotos para liberar armazenamento. ")
                     .foregroundColor(ColorTokens.secondaryText)
                 + Text("Queremos fornecer transparência e proteger sua privacidade. Ao iniciar, você concorda com nossos")
                     .foregroundColor(ColorTokens.tertiaryText)

@@ -66,7 +66,7 @@ struct SettingsView: View {
                             .font(.system(size: 24))
                             .foregroundColor(ColorTokens.primaryBlue.opacity(0.4))
 
-                        Text("StorageCleaner")
+                        Text(AppConstants.AppInfo.appName)
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(ColorTokens.tertiaryText)
 

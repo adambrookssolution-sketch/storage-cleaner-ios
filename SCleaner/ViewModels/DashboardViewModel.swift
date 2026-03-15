@@ -3,6 +3,7 @@ import Combine
 import Photos
 
 /// Primary ViewModel for the main dashboard. Orchestrates scan, manages category data, and loads thumbnails.
+/// Supports progressive scan: category cards update in real-time as scanning discovers assets.
 @MainActor
 final class DashboardViewModel: ObservableObject {
     // MARK: - Published State
@@ -14,11 +15,11 @@ final class DashboardViewModel: ObservableObject {
     @Published var categoryData: [CategoryCardData] = []
     @Published var thumbnailCache: [String: UIImage] = [:]
 
-    // M2: Detected groups for navigation to detail views
+    // Detected groups for navigation to detail views
     @Published var duplicateGroups: [DuplicateGroup] = []
     @Published var similarGroups: [SimilarGroup] = []
 
-    // M2: All video and screenshot assets for detail views
+    // All video and screenshot assets for detail views
     @Published var videoAssets: [PHAsset] = []
     @Published var screenshotAssets: [PHAsset] = []
 
@@ -106,6 +107,7 @@ final class DashboardViewModel: ObservableObject {
     /// Re-triggers a full scan after photos have been deleted
     func rescanAfterDeletion() {
         scanProgress = .idle
+        categoryData = []
         thumbnailCache.removeAll()
         startScan()
     }
@@ -120,6 +122,8 @@ final class DashboardViewModel: ObservableObject {
         guard !scanProgress.isScanning else { return }
         guard permissionService.status.hasAccess else { return }
 
+        categoryData = []
+
         photoService.scanLibrary()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] progress in
@@ -132,8 +136,20 @@ final class DashboardViewModel: ObservableObject {
                     if self.totalSizeFormatted.isEmpty {
                         self.totalSizeFormatted = "..."
                     }
+
+                case .partialResult(_, _, let result):
+                    // Progressive scan: update cards in real-time
+                    self.scanResult = result
+                    self.totalFileCount = result.totalAssets
+                    self.totalSizeFormatted = result.formattedTotalSize
+                    self.videoAssets = self.photoService.videoAssets
+                    self.screenshotAssets = self.photoService.screenshotAssets
+                    self.buildCategoryData(from: result)
+                    self.loadSampleThumbnails()
+
                 case .hashing:
                     break // Progress bar handles display
+
                 case .completed(let result):
                     self.scanResult = result
                     self.totalFileCount = result.totalAssets
@@ -147,8 +163,8 @@ final class DashboardViewModel: ObservableObject {
                     self.storageInfo = self.storageService.getDeviceStorageInfoWithPhotos(
                         photoLibrarySize: result.photosSizeBytes + result.videosSizeBytes
                     )
-                    // Also scan downloads folder if configured
                     Task { await self.updateDownloadsData() }
+
                 default:
                     break
                 }
@@ -183,7 +199,6 @@ final class DashboardViewModel: ObservableObject {
     private func updateDownloadsData() async {
         let scanService = DownloadsScanService()
         guard let folderURL = scanService.resolveBookmark() else {
-            // No folder configured - show "Configurar" hint on card
             if let idx = categoryData.firstIndex(where: { $0.category == .downloads }) {
                 categoryData[idx] = CategoryCardData(
                     id: MediaCategory.downloads.rawValue,

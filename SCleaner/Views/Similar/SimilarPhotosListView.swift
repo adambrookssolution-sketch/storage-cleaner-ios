@@ -131,6 +131,7 @@ struct SimilarPhotosListView: View {
                             isSelected: viewModel.selectedIds.contains(photo.id),
                             isBestResult: index == group.bestResultIndex,
                             thumbnail: viewModel.thumbnailCache[photo.id],
+                            fileSize: photo.fileSize,
                             onToggle: { viewModel.toggleSelection(assetId: photo.id) }
                         )
                         .frame(width: 110)

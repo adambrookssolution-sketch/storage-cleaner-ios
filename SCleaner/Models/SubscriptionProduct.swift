@@ -4,10 +4,10 @@ import StoreKit
 enum SubscriptionTier: String, Comparable {
     case none
     case weekly
-    case annual
+    case monthly
 
     static func < (lhs: SubscriptionTier, rhs: SubscriptionTier) -> Bool {
-        let order: [SubscriptionTier] = [.none, .weekly, .annual]
+        let order: [SubscriptionTier] = [.none, .weekly, .monthly]
         return (order.firstIndex(of: lhs) ?? 0) < (order.firstIndex(of: rhs) ?? 0)
     }
 }
@@ -37,18 +37,6 @@ struct SubscriptionProduct: Identifiable {
         return "\(displayPrice) / \(unitName)"
     }
 
-    /// Weekly equivalent price for annual plan display
-    var weeklyEquivalentPrice: String? {
-        guard tier == .annual,
-              let subscription = product.subscription,
-              subscription.subscriptionPeriod.unit == .year else { return nil }
-        let weeklyPrice = product.price / 52
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = product.priceFormatStyle.locale
-        return formatter.string(from: weeklyPrice as NSDecimalNumber)
-    }
-
     /// Whether this product offers a free trial
     var hasFreeTrial: Bool {
         product.subscription?.introductoryOffer?.paymentMode == .freeTrial
@@ -65,6 +53,24 @@ struct SubscriptionProduct: Identifiable {
         case .month: return "\(period.value) mês\(period.value > 1 ? "es" : "") grátis"
         case .year: return "\(period.value) ano\(period.value > 1 ? "s" : "") grátis"
         @unknown default: return nil
+        }
+    }
+
+    /// Introductory offer price description (e.g., "US$ 0,99 por 7 dias")
+    var introOfferPrice: String? {
+        guard let offer = product.subscription?.introductoryOffer else { return nil }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = product.priceFormatStyle.locale
+        let priceStr = formatter.string(from: offer.price as NSDecimalNumber) ?? "\(offer.price)"
+
+        let period = offer.period
+        switch period.unit {
+        case .day: return "\(priceStr) por \(period.value) dia\(period.value > 1 ? "s" : "")"
+        case .week: return "\(priceStr) por \(period.value) semana\(period.value > 1 ? "s" : "")"
+        case .month: return "\(priceStr) por \(period.value) mês\(period.value > 1 ? "es" : "")"
+        case .year: return "\(priceStr) por \(period.value) ano\(period.value > 1 ? "s" : "")"
+        @unknown default: return priceStr
         }
     }
 }

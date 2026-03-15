@@ -1,13 +1,30 @@
 import SwiftUI
 
 /// A thumbnail photo cell with a circular selection checkbox overlay.
-/// Reused in both DuplicateGroupCardView and SimilarGroupCardView.
+/// Shows file size badge and "Melhor" badge for best result.
 struct SelectablePhotoView: View {
     let assetId: String
     let isSelected: Bool
     let isBestResult: Bool
     let thumbnail: UIImage?
+    let fileSize: Int64
     let onToggle: () -> Void
+
+    init(
+        assetId: String,
+        isSelected: Bool,
+        isBestResult: Bool,
+        thumbnail: UIImage?,
+        fileSize: Int64 = 0,
+        onToggle: @escaping () -> Void
+    ) {
+        self.assetId = assetId
+        self.isSelected = isSelected
+        self.isBestResult = isBestResult
+        self.thumbnail = thumbnail
+        self.fileSize = fileSize
+        self.onToggle = onToggle
+    }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -43,21 +60,35 @@ struct SelectablePhotoView: View {
             }
             .padding(6)
 
-            // Best Result badge (bottom-left)
-            if isBestResult {
-                VStack {
-                    Spacer()
-                    HStack {
+            // Bottom overlay: "Melhor" badge (left) + size badge (right)
+            VStack {
+                Spacer()
+                HStack {
+                    // Best Result badge (bottom-left)
+                    if isBestResult {
                         Text("Melhor")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
                             .background(Capsule().fill(ColorTokens.primaryBlue))
-                        Spacer()
                     }
-                    .padding(6)
+
+                    Spacer()
+
+                    // File size badge (bottom-right)
+                    if fileSize > 0 {
+                        Text(fileSize.formattedSize)
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(
+                                Capsule().fill(ColorTokens.primaryBlue.opacity(0.85))
+                            )
+                    }
                 }
+                .padding(6)
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))

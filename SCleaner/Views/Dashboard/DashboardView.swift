@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Main scrollable dashboard showing storage stats, scan progress, and category cards
+/// Main scrollable dashboard showing storage stats, scan progress, and category cards.
+/// Cards appear and update in real-time during scan (progressive scan UX).
 struct DashboardView: View {
     @StateObject private var viewModel: DashboardViewModel
     @EnvironmentObject var appState: AppState
@@ -44,7 +45,7 @@ struct DashboardView: View {
                     StatsLineView(
                         fileCount: viewModel.totalFileCount,
                         totalSize: viewModel.totalSizeFormatted,
-                        isLoaded: viewModel.scanProgress.isCompleted
+                        isLoaded: !viewModel.categoryData.isEmpty
                     )
 
                     // Scan progress (visible while scanning)
@@ -53,8 +54,8 @@ struct DashboardView: View {
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
-                    // Category cards with navigation
-                    if viewModel.scanProgress.isCompleted {
+                    // Category cards — show as soon as data is available (progressive scan)
+                    if !viewModel.categoryData.isEmpty {
                         LazyVStack(spacing: AppConstants.UI.cardSpacing) {
                             ForEach(viewModel.categoryData) { cardData in
                                 NavigationLink(destination: destinationView(for: cardData)) {
@@ -64,14 +65,15 @@ struct DashboardView: View {
                                     )
                                 }
                                 .buttonStyle(.plain)
+                                .disabled(viewModel.scanProgress.isScanning && !viewModel.scanProgress.isCompleted)
                             }
                         }
                         .padding(.horizontal, AppConstants.UI.horizontalPadding)
                         .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
 
-                    // Scanning placeholder cards
-                    if viewModel.scanProgress.isScanning {
+                    // Scanning placeholder (only before first data arrives)
+                    if viewModel.scanProgress.isScanning && viewModel.categoryData.isEmpty {
                         scanningPlaceholder
                             .padding(.horizontal, AppConstants.UI.horizontalPadding)
                     }
@@ -92,8 +94,8 @@ struct DashboardView: View {
                 }
             }
             .background(ColorTokens.screenBackground.ignoresSafeArea())
-            .animation(.easeInOut(duration: 0.4), value: viewModel.scanProgress.isScanning)
-            .animation(.easeInOut(duration: 0.4), value: viewModel.scanProgress.isCompleted)
+            .animation(.easeInOut(duration: 0.4), value: viewModel.categoryData.isEmpty)
+            .animation(.easeInOut(duration: 0.3), value: viewModel.scanProgress.isScanning)
             .navigationBarHidden(true)
         }
         .navigationViewStyle(.stack)

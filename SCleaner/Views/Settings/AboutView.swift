@@ -27,7 +27,7 @@ struct AboutView: View {
                 }
 
                 VStack(spacing: 8) {
-                    Text("StorageCleaner")
+                    Text("Vortex Cleaner")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(ColorTokens.primaryText)
 

@@ -6,7 +6,7 @@ struct DashboardHeaderView: View {
 
     var body: some View {
         HStack {
-            Text("Cleanup")
+            Text("Limpeza")
                 .font(.system(size: 34, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 

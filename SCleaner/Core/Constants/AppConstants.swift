@@ -5,9 +5,9 @@ enum AppConstants {
     enum Storage {
         static let thumbnailSize = CGSize(width: 150, height: 150)
         static let categoryCardThumbnailSize = CGSize(width: 180, height: 180)
-        static let scanBatchSize = 100
+        static let scanBatchSize = 200
         static let maxConcurrentThumbnailRequests = 20
-        static let progressUpdateInterval = 3 // Update UI every N batches
+        static let progressUpdateInterval = 2 // Update UI every N batches
     }
 
     enum UI {
@@ -27,10 +27,10 @@ enum AppConstants {
     }
 
     enum URLs {
-        static let privacyPolicy = "https://storagecleaner.app/privacy"
-        static let termsOfUse = "https://storagecleaner.app/terms"
-        static let instagram = "https://instagram.com/storagecleaner"
-        static let supportEmail = "support@storagecleaner.app"
+        static let privacyPolicy = "https://vortexcleaner.com/privacy"
+        static let termsOfUse = "https://vortexcleaner.com/terms"
+        static let instagram = "https://instagram.com/vortexcleaner"
+        static let supportEmail = "support@vortexcleaner.com"
     }
 
     enum Hashing {
@@ -56,28 +56,28 @@ enum AppConstants {
     }
 
     enum Subscription {
-        /// Set to false for first App Store approval (no paywall).
-        /// Set to true to enable paywall + deletion limits in production.
-        static let paywallEnabled = false
+        /// Set to true to enable paywall + deletion limits.
+        static let paywallEnabled = true
 
-        static let weeklyProductId = "com.storagecleaner.weekly"
-        static let annualProductId = "com.storagecleaner.annual"
-        static let allProductIds: [String] = [weeklyProductId, annualProductId]
+        static let weeklyProductId = "com.vortexcleaner.weekly"
+        static let monthlyProductId = "com.vortexcleaner.monthly"
+        static let allProductIds: [String] = [weeklyProductId, monthlyProductId]
 
         static func tier(for productId: String) -> SubscriptionTier? {
             switch productId {
             case weeklyProductId: return .weekly
-            case annualProductId: return .annual
+            case monthlyProductId: return .monthly
             default: return nil
             }
         }
 
         static let freeDeleteLimit = 5
+        static let trialDays = 3
     }
 
     enum AppInfo {
-        static let appName = "StorageCleaner"
-        static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        static let appName = "Vortex Cleaner"
+        static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1"
         static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
     }
 }

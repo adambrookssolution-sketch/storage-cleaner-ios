@@ -33,6 +33,7 @@ struct DuplicateGroupCardView: View {
                             isSelected: selectedIds.contains(photo.id),
                             isBestResult: index == group.bestResultIndex,
                             thumbnail: thumbnailCache[photo.id],
+                            fileSize: photo.fileSize,
                             onToggle: { onToggleSelection(photo.id) }
                         )
                         .frame(width: 110)

@@ -2,7 +2,7 @@ import Photos
 import UIKit
 
 /// Computes perceptual hashes (dHash) for PHAssets in batches with progress reporting.
-/// Optimized for low memory footprint on devices with 15,000+ photos.
+/// Optimized for memory: uses small thumbnail size, yields between batches.
 final class HashingService {
 
     /// Hashes an array of PHAssets, returning PhotoHash structs.
@@ -11,13 +11,21 @@ final class HashingService {
         _ assets: [PHAsset],
         progressHandler: @escaping (Int, Int) -> Void
     ) async -> [PhotoHash] {
-        let imageAssets = assets.filter { $0.mediaType == .image }
-        let total = imageAssets.count
-        guard total > 0 else { return [] }
+        let total = assets.count
+        guard total > 0 else {
+            #if DEBUG
+            print("[HashingService] No assets to hash")
+            #endif
+            return []
+        }
 
+        #if DEBUG
+        print("[HashingService] Starting hashing of \(total) photo assets")
+        #endif
         let batchSize = AppConstants.Hashing.hashBatchSize
         var allHashes: [PhotoHash] = []
-        allHashes.reserveCapacity(total)
+        allHashes.reserveCapacity(min(total, 10000))
+        var failedImageCount = 0
 
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
@@ -26,63 +34,68 @@ final class HashingService {
         options.isNetworkAccessAllowed = false
         options.isSynchronous = false
 
-        let targetSize = AppConstants.Hashing.hashThumbnailSize  // 72x72
+        let targetSize = AppConstants.Hashing.hashThumbnailSize
 
         for batchStart in stride(from: 0, to: total, by: batchSize) {
             if Task.isCancelled { break }
 
             let batchEnd = min(batchStart + batchSize, total)
 
-            // Process each asset sequentially within the batch to control memory
             for i in batchStart..<batchEnd {
                 if Task.isCancelled { break }
 
-                let asset = imageAssets[i]
+                let asset = assets[i]
 
-                let photoHash: PhotoHash? = await withCheckedContinuation { continuation in
+                // Only hash photos
+                guard asset.mediaType == .image else { continue }
+
+                let image = await withCheckedContinuation { (continuation: CheckedContinuation<UIImage?, Never>) in
                     var hasResumed = false
-
                     manager.requestImage(
                         for: asset,
                         targetSize: targetSize,
                         contentMode: .aspectFill,
                         options: options
                     ) { image, info in
-                        // Prevent double-resume: take only the first valid callback
                         guard !hasResumed else { return }
-                        hasResumed = true
-
-                        guard let image else {
-                            continuation.resume(returning: nil)
-                            return
+                        let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
+                        let isCancelled = (info?[PHImageCancelledKey] as? Bool) ?? false
+                        let error = info?[PHImageErrorKey] as? Error
+                        if !isDegraded || isCancelled || error != nil {
+                            hasResumed = true
+                            continuation.resume(returning: image)
                         }
-
-                        var result: PhotoHash?
-                        autoreleasepool {
-                            let hashValue = image.dHash()
-                            result = PhotoHash(
-                                id: asset.localIdentifier,
-                                hash: hashValue,
-                                creationDate: asset.creationDate,
-                                fileSize: 0,
-                                pixelWidth: asset.pixelWidth,
-                                pixelHeight: asset.pixelHeight,
-                                isFavorite: asset.isFavorite,
-                                mediaSubtypes: asset.mediaSubtypes.rawValue
-                            )
-                        }
-                        continuation.resume(returning: result)
                     }
                 }
 
-                if let photoHash {
+                if let image {
+                    // Compute hash synchronously inside autoreleasepool
+                    let hashValue = autoreleasepool { image.dHash() }
+                    let photoHash = PhotoHash(
+                        id: asset.localIdentifier,
+                        hash: hashValue,
+                        creationDate: asset.creationDate,
+                        fileSize: asset.estimatedFileSize,
+                        pixelWidth: asset.pixelWidth,
+                        pixelHeight: asset.pixelHeight,
+                        isFavorite: asset.isFavorite,
+                        mediaSubtypes: asset.mediaSubtypes.rawValue
+                    )
                     allHashes.append(photoHash)
+                } else {
+                    failedImageCount += 1
                 }
             }
 
             progressHandler(min(batchEnd, total), total)
-            await Task.yield()
+
+            // Yield between batches to reduce memory pressure and prevent watchdog kill
+            try? await Task.sleep(nanoseconds: 50_000_000) // 50ms pause between batches
         }
+
+        #if DEBUG
+        print("[HashingService] Done: \(allHashes.count) hashed, \(failedImageCount) failed")
+        #endif
 
         return allHashes
     }

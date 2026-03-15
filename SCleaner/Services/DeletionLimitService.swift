@@ -2,6 +2,7 @@ import Foundation
 
 /// Tracks daily deletion count for free-tier enforcement.
 /// Resets count at midnight each day. Premium users bypass all limits.
+/// Controlled by AppConstants.Subscription.paywallEnabled flag.
 @MainActor
 final class DeletionLimitService: ObservableObject {
 
@@ -12,15 +13,12 @@ final class DeletionLimitService: ObservableObject {
 
     @Published private(set) var deletionsToday: Int = 0
 
-    /// Maximum free deletions per day
     var dailyLimit: Int { AppConstants.Subscription.freeDeleteLimit }
 
-    /// Remaining free deletions available today
     var remainingDeletions: Int {
         max(0, dailyLimit - deletionsToday)
     }
 
-    /// Whether the daily limit has been reached for free users
     var isLimitReached: Bool {
         guard AppConstants.Subscription.paywallEnabled else { return false }
         return !SubscriptionService.shared.isPremium && deletionsToday >= dailyLimit
@@ -30,22 +28,18 @@ final class DeletionLimitService: ObservableObject {
         loadTodayCount()
     }
 
-    /// Check if deletion of `count` items is allowed.
-    /// Premium users always return true. Free users are limited to `freeDeleteLimit` per day.
     func canDelete(count: Int) -> Bool {
         guard AppConstants.Subscription.paywallEnabled else { return true }
         if SubscriptionService.shared.isPremium { return true }
         return (deletionsToday + count) <= dailyLimit
     }
 
-    /// Record that `count` items were successfully deleted.
     func recordDeletions(count: Int) {
         resetIfNewDay()
         deletionsToday += count
         save()
     }
 
-    /// Number of items allowed to delete right now (for partial deletion)
     func allowedCount(requested: Int) -> Int {
         guard AppConstants.Subscription.paywallEnabled else { return requested }
         if SubscriptionService.shared.isPremium { return requested }
@@ -61,7 +55,6 @@ final class DeletionLimitService: ObservableObject {
         if savedDate == todayStr {
             deletionsToday = UserDefaults.standard.integer(forKey: dailyLimitKey)
         } else {
-            // New day — reset
             deletionsToday = 0
             save()
         }

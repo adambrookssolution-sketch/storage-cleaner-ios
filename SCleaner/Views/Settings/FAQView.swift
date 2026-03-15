@@ -6,7 +6,7 @@ struct FAQView: View {
 
     private let faqs: [(question: String, answer: String)] = [
         (
-            "Como o StorageCleaner encontra fotos duplicadas?",
+            "Como o Vortex Cleaner encontra fotos duplicadas?",
             "Utilizamos um algoritmo de hash perceptual (dHash) que compara visualmente cada foto. Fotos com aparencia identica ou muito similar sao agrupadas automaticamente."
         ),
         (
