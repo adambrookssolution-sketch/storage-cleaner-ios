@@ -4,7 +4,10 @@ import UIKit
 
 /// Core scan engine: fetches all PHAssets, categorizes them, calculates sizes,
 /// computes perceptual hashes, detects duplicates/similar photos,
-/// publishes progress incrementally, and collects sample assets for dashboard thumbnails
+/// publishes progress incrementally, and collects sample assets for dashboard thumbnails.
+///
+/// Optimized for devices with 15,000+ photos: uses autoreleasepool batching,
+/// defers expensive file-size lookups for hashing, and yields between phases.
 final class PhotoLibraryService: PhotoLibraryServicing {
     private let thumbnailService: ThumbnailCacheService
     private let hashingService: HashingService
@@ -90,12 +93,12 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         var screenshotSamples: [PHAsset] = []
         var videoSamples: [PHAsset] = []
         var photoSamples: [PHAsset] = []
-        var photoAssets: [PHAsset] = []  // Collect all photo assets for hashing
+        var photoAssets: [PHAsset] = []
         var allVideoAssets: [PHAsset] = []
         var allScreenshotAssets: [PHAsset] = []
 
-        let batchSize = AppConstants.Storage.scanBatchSize
-        let updateInterval = AppConstants.Storage.progressUpdateInterval
+        let batchSize = 200
+        let updateEvery = 2
 
         for batchStart in stride(from: 0, to: totalCount, by: batchSize) {
             if Task.isCancelled { return }
@@ -132,7 +135,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
             let currentProcessed = batchEnd
             let batchIndex = batchStart / batchSize
-            if batchIndex % updateInterval == 0 || batchEnd == totalCount {
+            if batchIndex % updateEvery == 0 || batchEnd == totalCount {
                 await MainActor.run {
                     self.progressSubject.send(.scanning(processed: currentProcessed, total: totalCount))
                 }
@@ -147,19 +150,15 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
         }
 
-        #if DEBUG
-        print("[PhotoLibrary] Phase 1 done: \(totalPhotos) photos, \(totalVideos) videos, \(totalScreenshots) screenshots, photoAssets=\(photoAssets.count)")
-        #endif
-
         // ═══════════════════════════════════════════════════════════
-        // Phase 2: Hash all photo assets
+        // Phase 2: Hash all photo assets (memory-optimized)
         // ═══════════════════════════════════════════════════════════
 
         await MainActor.run {
             self.progressSubject.send(.hashing(processed: 0, total: photoAssets.count))
         }
 
-        let hashes = await hashingService.hashAssets(photoAssets) { [weak self] processed, total in
+        var hashes = await hashingService.hashAssets(photoAssets) { [weak self] processed, total in
             guard let self else { return }
             Task { @MainActor in
                 self.progressSubject.send(.hashing(processed: processed, total: total))
@@ -180,19 +179,51 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             excludingDuplicateIds: duplicateIds
         )
 
-        #if DEBUG
-        print("[PhotoLibrary] Phase 3 done: \(detectedDuplicates.count) dup groups, \(detectedSimilar.count) similar groups")
-        #endif
+        // ═══════════════════════════════════════════════════════════
+        // Phase 3.5: Populate file sizes ONLY for grouped photos
+        // (avoids calling PHAssetResource for all 15K+ photos during hashing)
+        // ═══════════════════════════════════════════════════════════
+
+        let groupedIds = duplicateIds.union(Set(detectedSimilar.flatMap { $0.photos.map(\.id) }))
+
+        if !groupedIds.isEmpty {
+            var idToIndex: [String: Int] = [:]
+            idToIndex.reserveCapacity(hashes.count)
+            for (i, h) in hashes.enumerated() {
+                idToIndex[h.id] = i
+            }
+
+            let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: Array(groupedIds), options: nil)
+            fetchResult.enumerateObjects { asset, _, _ in
+                autoreleasepool {
+                    if let idx = idToIndex[asset.localIdentifier] {
+                        let resources = PHAssetResource.assetResources(for: asset)
+                        if let resource = resources.first,
+                           let size = resource.value(forKey: "fileSize") as? Int64 {
+                            hashes[idx].fileSize = size
+                        }
+                    }
+                }
+            }
+        }
+
+        // Rebuild groups with updated file sizes
+        let finalDuplicates = duplicateDetectionService.findDuplicates(from: hashes)
+        let finalDuplicateIds = Set(finalDuplicates.flatMap { $0.photos.map(\.id) })
+        let finalSimilar = similarDetectionService.findSimilarGroups(
+            from: hashes,
+            excludingDuplicateIds: finalDuplicateIds
+        )
 
         // Store results for navigation
-        self.duplicateGroups = detectedDuplicates
-        self.similarGroups = detectedSimilar
+        self.duplicateGroups = finalDuplicates
+        self.similarGroups = finalSimilar
 
         // Calculate totals
-        let dupPhotoCount = detectedDuplicates.reduce(0) { $0 + $1.count }
-        let dupSize = detectedDuplicates.reduce(Int64(0)) { $0 + $1.totalSize }
-        let simPhotoCount = detectedSimilar.reduce(0) { $0 + $1.count }
-        let simSize = detectedSimilar.reduce(Int64(0)) { $0 + $1.totalSize }
+        let dupPhotoCount = finalDuplicates.reduce(0) { $0 + $1.count }
+        let dupSize = finalDuplicates.reduce(Int64(0)) { $0 + $1.totalSize }
+        let simPhotoCount = finalSimilar.reduce(0) { $0 + $1.count }
+        let simSize = finalSimilar.reduce(Int64(0)) { $0 + $1.totalSize }
 
         // ═══════════════════════════════════════════════════════════
         // Phase 4: Build results and publish
@@ -215,10 +246,10 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             photosSizeBytes: photosSize,
             videosSizeBytes: videosSize,
             screenshotsSizeBytes: screenshotsSize,
-            duplicateGroupCount: detectedDuplicates.count,
+            duplicateGroupCount: finalDuplicates.count,
             duplicatePhotoCount: dupPhotoCount,
             duplicateSizeBytes: dupSize,
-            similarGroupCount: detectedSimilar.count,
+            similarGroupCount: finalSimilar.count,
             similarPhotoCount: simPhotoCount,
             similarSizeBytes: simSize,
             downloadFileCount: 0,

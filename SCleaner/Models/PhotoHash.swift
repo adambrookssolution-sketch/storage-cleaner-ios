@@ -7,7 +7,7 @@ struct PhotoHash: Identifiable, Hashable {
     let id: String          // PHAsset.localIdentifier
     let hash: UInt64        // 64-bit dHash
     let creationDate: Date?
-    let fileSize: Int64
+    var fileSize: Int64
     let pixelWidth: Int
     let pixelHeight: Int
     let isFavorite: Bool

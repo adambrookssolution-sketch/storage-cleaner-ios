@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Animated scan progress bar with label
+/// Animated scan progress bar with label.
+/// Shows combined progress: scanning (0-40%), analyzing (40-90%), finalizing (90-100%).
 struct ScanProgressView: View {
     let progress: ScanProgress
 
@@ -49,8 +50,22 @@ struct ScanProgressView: View {
 
     // MARK: - Computed Properties
 
+    /// Combined progress: scanning = 0→40%, hashing = 40→90%, completed = 100%
     private var fillWidth: CGFloat {
-        CGFloat(progress.progressFraction)
+        switch progress {
+        case .scanning(let processed, let total):
+            guard total > 0 else { return 0 }
+            let phase1 = Double(processed) / Double(total)
+            return CGFloat(phase1 * 0.4)  // 0% → 40%
+        case .hashing(let processed, let total):
+            guard total > 0 else { return 0.4 }
+            let phase2 = Double(processed) / Double(total)
+            return CGFloat(0.4 + phase2 * 0.5)  // 40% → 90%
+        case .completed:
+            return 1.0
+        default:
+            return 0
+        }
     }
 
     private var statusText: String {
@@ -69,7 +84,7 @@ struct ScanProgressView: View {
     }
 
     private var percentageText: String {
-        let pct = Int(progress.progressFraction * 100)
+        let pct = Int(fillWidth * 100)
         return "\(pct)%"
     }
 }

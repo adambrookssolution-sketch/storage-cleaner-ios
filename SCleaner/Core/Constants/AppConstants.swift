@@ -38,7 +38,7 @@ enum AppConstants {
         static let hashImageHeight = 8
         static let duplicateThreshold = 10   // Hamming distance <= 10 = duplicate
         static let similarThreshold = 20     // Hamming distance 11-20 = similar
-        static let hashBatchSize = 50
+        static let hashBatchSize = 100
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
     }
 
@@ -56,6 +56,10 @@ enum AppConstants {
     }
 
     enum Subscription {
+        /// Set to false for first App Store approval (no paywall).
+        /// Set to true to enable paywall + deletion limits in production.
+        static let paywallEnabled = false
+
         static let weeklyProductId = "com.storagecleaner.weekly"
         static let annualProductId = "com.storagecleaner.annual"
         static let allProductIds: [String] = [weeklyProductId, annualProductId]

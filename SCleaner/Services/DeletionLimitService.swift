@@ -22,7 +22,8 @@ final class DeletionLimitService: ObservableObject {
 
     /// Whether the daily limit has been reached for free users
     var isLimitReached: Bool {
-        !SubscriptionService.shared.isPremium && deletionsToday >= dailyLimit
+        guard AppConstants.Subscription.paywallEnabled else { return false }
+        return !SubscriptionService.shared.isPremium && deletionsToday >= dailyLimit
     }
 
     private init() {
@@ -32,6 +33,7 @@ final class DeletionLimitService: ObservableObject {
     /// Check if deletion of `count` items is allowed.
     /// Premium users always return true. Free users are limited to `freeDeleteLimit` per day.
     func canDelete(count: Int) -> Bool {
+        guard AppConstants.Subscription.paywallEnabled else { return true }
         if SubscriptionService.shared.isPremium { return true }
         return (deletionsToday + count) <= dailyLimit
     }
@@ -45,6 +47,7 @@ final class DeletionLimitService: ObservableObject {
 
     /// Number of items allowed to delete right now (for partial deletion)
     func allowedCount(requested: Int) -> Int {
+        guard AppConstants.Subscription.paywallEnabled else { return requested }
         if SubscriptionService.shared.isPremium { return requested }
         return min(requested, remainingDeletions)
     }

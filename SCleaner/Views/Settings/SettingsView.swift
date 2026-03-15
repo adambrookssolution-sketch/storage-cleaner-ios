@@ -11,8 +11,10 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
-                // Premium banner
-                premiumBanner
+                // Premium banner (hidden when paywall is disabled for App Store approval)
+                if AppConstants.Subscription.paywallEnabled {
+                    premiumBanner
+                }
 
                 // Support section
                 Section {
@@ -22,8 +24,10 @@ struct SettingsView: View {
                     settingsRow(icon: "envelope.fill", color: .blue, title: "Fale Conosco") {
                         viewModel.contactSupport()
                     }
-                    settingsRow(icon: "arrow.clockwise", color: .green, title: "Restaurar Compras") {
-                        viewModel.restorePurchases()
+                    if AppConstants.Subscription.paywallEnabled {
+                        settingsRow(icon: "arrow.clockwise", color: .green, title: "Restaurar Compras") {
+                            viewModel.restorePurchases()
+                        }
                     }
                     settingsRow(icon: "info.circle.fill", color: .gray, title: "Sobre") {
                         showAbout = true
