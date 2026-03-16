@@ -24,7 +24,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func shareApp() {
-        let text = "Confira o StorageCleaner - organize suas fotos e libere espaço!"
+        let text = "Confira o Vortex Cleaner - organize suas fotos e libere espaço!"
         let activityVC = UIActivityViewController(
             activityItems: [text],
             applicationActivities: nil
@@ -48,7 +48,7 @@ final class SettingsViewModel: ObservableObject {
 
     func contactSupport() {
         let email = AppConstants.URLs.supportEmail
-        guard let url = URL(string: "mailto:\(email)?subject=StorageCleaner%20Suporte") else { return }
+        guard let url = URL(string: "mailto:\(email)?subject=Vortex%20Cleaner%20Suporte") else { return }
         UIApplication.shared.open(url)
     }
 

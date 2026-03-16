@@ -1,8 +1,8 @@
 /* Onboarding - Welcome */
-"onboarding.welcome.title" = "Bem-vindo ao\nStorageCleaner";
+"onboarding.welcome.title" = "Bem-vindo ao\nVortex Cleaner";
 "onboarding.welcome.photos" = "Fotos";
 "onboarding.welcome.icloud" = "iCloud";
-"onboarding.welcome.privacyText" = "O StorageCleaner precisa ter acesso às Fotos para liberar armazenamento. Queremos fornecer transparência e proteger sua privacidade. Ao iniciar, você concorda com nossos";
+"onboarding.welcome.privacyText" = "O Vortex Cleaner precisa ter acesso às Fotos para liberar armazenamento. Queremos fornecer transparência e proteger sua privacidade. Ao iniciar, você concorda com nossos";
 "onboarding.welcome.termsOfUse" = "Termos de Uso";
 "onboarding.welcome.privacyPolicy" = "Política de Privacidade";
 "onboarding.welcome.and" = "e nossa";
@@ -22,11 +22,11 @@
 "onboarding.storage.apps" = "Aplicativos";
 "onboarding.storage.ios" = "iOS";
 "onboarding.storage.systemData" = "Dados do Sistema";
-"onboarding.storage.disclaimer" = "*Com base nos dados internos do StorageCleaner";
+"onboarding.storage.disclaimer" = "*Com base nos dados internos do Vortex Cleaner";
 "onboarding.storage.button" = "Próximo";
 
 /* Dashboard */
-"dashboard.title" = "Cleanup";
+"dashboard.title" = "Limpeza";
 "dashboard.statsFormat" = "%d arquivos • %@ do armazenamento";
 "dashboard.scanning" = "Escaneando..";
 "dashboard.scanComplete" = "Escaneamento concluído";
@@ -58,7 +58,7 @@
 "settings.rate" = "Avaliar o app";
 "settings.share" = "Compartilhar o app";
 "settings.instagram" = "Siga-nos no Instagram";
-"settings.versionFormat" = "StorageCleaner versão %@";
+"settings.versionFormat" = "Vortex Cleaner versão %@";
 
 /* Permissions */
 "permission.title" = "Acesso às Fotos";

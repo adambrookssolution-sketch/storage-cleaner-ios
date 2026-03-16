@@ -7,132 +7,108 @@
 
   ],
   "settings" : {
-    "_applicationInternalID" : "0000000000",
-    "_developerTeamID" : "XXXXXXXXXX",
+    "_applicationInternalID" : "6760512682",
+    "_developerTeamID" : "93BK6FVU6S",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : "2026-03-10T00:00:00Z",
-    "_locale" : "pt_BR",
-    "_storefront" : "BRA",
+    "_lastSynchronizedDate" : "2026-03-16T00:00:00Z",
+    "_locale" : "en_US",
+    "_storefront" : "USA",
     "_storeKitErrors" : [
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Load Products"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Purchase"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Verification"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "App Store Sync"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Subscription Status"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "App Transaction"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Manage Subscriptions Sheet"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Refund Request Sheet"
-      },
-      {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Offer Code Redeem Sheet"
-      }
+      { "current" : null, "enabled" : false, "name" : "Load Products" },
+      { "current" : null, "enabled" : false, "name" : "Purchase" },
+      { "current" : null, "enabled" : false, "name" : "Verification" },
+      { "current" : null, "enabled" : false, "name" : "App Store Sync" },
+      { "current" : null, "enabled" : false, "name" : "Subscription Status" },
+      { "current" : null, "enabled" : false, "name" : "App Transaction" },
+      { "current" : null, "enabled" : false, "name" : "Manage Subscriptions Sheet" },
+      { "current" : null, "enabled" : false, "name" : "Refund Request Sheet" },
+      { "current" : null, "enabled" : false, "name" : "Offer Code Redeem Sheet" }
     ]
   },
   "subscriptionGroups" : [
     {
-      "id" : "SC_Premium_Group",
+      "id" : "VortexCleaner_Pro_Group",
       "localizations" : [
         {
-          "description" : "Acesso ilimitado a todos os recursos de limpeza",
-          "displayName" : "StorageCleaner Premium",
-          "locale" : "pt_BR"
+          "description" : "Unlimited access to all cleaning features",
+          "displayName" : "Vortex Cleaner Pro",
+          "locale" : "en_US"
         }
       ],
-      "name" : "StorageCleaner Premium",
+      "name" : "Vortex Cleaner Pro",
       "subscriptions" : [
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "9.90",
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "7.99",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "SC_WEEKLY_001",
+          "internalID" : "VC_WEEKLY_001",
+          "introductoryOffer" : {
+            "displayPrice" : "0.99",
+            "internalID" : "VC_WEEKLY_INTRO",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "payAsYouGo",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Weekly subscription with $0.99 intro offer",
+              "displayName" : "Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.vortexcleaner.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Weekly",
+          "subscriptionGroupID" : "VortexCleaner_Pro_Group",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "28.00",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "VC_MONTHLY_001",
+          "localizations" : [
+            {
+              "description" : "Monthly subscription",
+              "displayName" : "Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.vortexcleaner.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "VortexCleaner_Pro_Group",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "6.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "VC_FREETRIAL_001",
           "introductoryOffer" : {
             "displayPrice" : "0",
-            "internalID" : "SC_WEEKLY_TRIAL",
+            "internalID" : "VC_FREETRIAL_INTRO",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P3D"
           },
           "localizations" : [
             {
-              "description" : "Acesso ilimitado com renovacao semanal",
-              "displayName" : "Semanal",
-              "locale" : "pt_BR"
+              "description" : "Weekly subscription with 3-day free trial",
+              "displayName" : "Free Trial",
+              "locale" : "en_US"
             }
           ],
-          "productID" : "com.storagecleaner.weekly",
+          "productID" : "com.vortexcleaner.free.3days",
           "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "Semanal",
-          "subscriptionGroupID" : "SC_Premium_Group",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "99.90",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "SC_ANNUAL_001",
-          "introductoryOffer" : {
-            "displayPrice" : "0",
-            "internalID" : "SC_ANNUAL_TRIAL",
-            "numberOfPeriods" : 1,
-            "paymentMode" : "free",
-            "subscriptionPeriod" : "P1W"
-          },
-          "localizations" : [
-            {
-              "description" : "Acesso ilimitado com renovacao anual - melhor valor",
-              "displayName" : "Anual",
-              "locale" : "pt_BR"
-            }
-          ],
-          "productID" : "com.storagecleaner.annual",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Anual",
-          "subscriptionGroupID" : "SC_Premium_Group",
+          "referenceName" : "Free Trial",
+          "subscriptionGroupID" : "VortexCleaner_Pro_Group",
           "type" : "RecurringSubscription"
         }
       ]
