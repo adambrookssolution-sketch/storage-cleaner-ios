@@ -72,13 +72,27 @@ struct PaywallView: View {
                         .font(.system(size: 30, weight: .black))
                         .foregroundColor(.white)
 
-                    // Benefits list
+                    // Benefits list — show live scan results if available
                     VStack(alignment: .leading, spacing: 12) {
-                        benefitRow("Exclusões ilimitadas de fotos e vídeos")
-                        benefitRow("Detecção avançada de duplicatas")
-                        benefitRow("Limpeza completa de screenshots")
-                        benefitRow("Scanner de downloads pesados")
-                        benefitRow("Todas as futuras atualizações")
+                        if hasScanResults {
+                            if scanPhotos > 0 {
+                                benefitRow("\(scanPhotos) fotos duplicadas encontradas")
+                            }
+                            if scanVideos > 0 {
+                                benefitRow("\(scanVideos) vídeos para revisar")
+                            }
+                            if scanScreenshots > 0 {
+                                benefitRow("\(scanScreenshots) capturas de tela")
+                            }
+                            benefitRow("Exclusões ilimitadas")
+                            benefitRow("Todas as futuras atualizações")
+                        } else {
+                            benefitRow("Exclusões ilimitadas de fotos e vídeos")
+                            benefitRow("Detecção avançada de duplicatas")
+                            benefitRow("Limpeza completa de screenshots")
+                            benefitRow("Scanner de downloads pesados")
+                            benefitRow("Todas as futuras atualizações")
+                        }
                     }
                     .padding(.horizontal, 30)
 
@@ -307,6 +321,10 @@ struct PaywallView: View {
             }
             .padding(.bottom, 30)
         }
+    }
+
+    private var hasScanResults: Bool {
+        scanPhotos > 0 || scanVideos > 0 || scanScreenshots > 0
     }
 
     // MARK: - Helpers

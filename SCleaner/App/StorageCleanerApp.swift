@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct StorageCleanerApp: App {
+struct VortexCleanerApp: App {
     @StateObject private var appState = AppState()
 
     init() {

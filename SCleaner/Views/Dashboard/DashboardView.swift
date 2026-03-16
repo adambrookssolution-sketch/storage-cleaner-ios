@@ -6,6 +6,7 @@ struct DashboardView: View {
     @StateObject private var viewModel: DashboardViewModel
     @EnvironmentObject var appState: AppState
     @State private var showSettings = false
+    @State private var showScanPaywall = false
 
     private let thumbnailService: ThumbnailCacheService
 
@@ -106,6 +107,41 @@ struct DashboardView: View {
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
+        .sheet(isPresented: $showScanPaywall) {
+            PaywallView(
+                scanPhotos: scanPhotoCount,
+                scanVideos: scanVideoCount,
+                scanScreenshots: scanScreenshotCount
+            )
+        }
+        .onChange(of: viewModel.scanProgress.isCompleted) { completed in
+            if completed,
+               AppConstants.Subscription.paywallEnabled,
+               !SubscriptionService.shared.isPremium {
+                // Small delay so user sees results first
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    showScanPaywall = true
+                }
+            }
+        }
+    }
+
+    // MARK: - Scan Counts for Paywall
+
+    private var scanPhotoCount: Int {
+        viewModel.categoryData
+            .filter { $0.category == .duplicates || $0.category == .similar }
+            .reduce(0) { $0 + $1.count }
+    }
+
+    private var scanVideoCount: Int {
+        viewModel.categoryData
+            .first(where: { $0.category == .videos })?.count ?? 0
+    }
+
+    private var scanScreenshotCount: Int {
+        viewModel.categoryData
+            .first(where: { $0.category == .screenshots })?.count ?? 0
     }
 
     // MARK: - Navigation Destination Builder

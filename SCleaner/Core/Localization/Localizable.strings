@@ -26,7 +26,7 @@
 "onboarding.storage.button" = "Próximo";
 
 /* Dashboard */
-"dashboard.title" = "Limpeza";
+"dashboard.title" = "Vortex Cleaner";
 "dashboard.statsFormat" = "%d arquivos • %@ do armazenamento";
 "dashboard.scanning" = "Escaneando..";
 "dashboard.scanComplete" = "Escaneamento concluído";

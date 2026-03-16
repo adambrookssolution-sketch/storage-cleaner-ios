@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// Dashboard top bar: "Cleanup" title + gear icon for settings
+/// Dashboard top bar: app name + gear icon for settings
 struct DashboardHeaderView: View {
     let onSettingsTapped: () -> Void
 
     var body: some View {
         HStack {
-            Text("Limpeza")
+            Text(AppConstants.AppInfo.appName)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 
