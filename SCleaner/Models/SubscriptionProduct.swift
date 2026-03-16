@@ -1,31 +1,42 @@
-import StoreKit
+import RevenueCat
 
 /// Represents the app's subscription tiers
 enum SubscriptionTier: String, Comparable {
     case none
-    case weekly
-    case monthly
+    case freeTrial   // com.vortexcleaner.free.3days ($6.99/sem, intro 3 days free)
+    case weekly      // com.vortexcleaner.weekly ($7.99/sem, intro $0.99)
+    case monthly     // com.vortexcleaner.monthly ($28/mês)
 
     static func < (lhs: SubscriptionTier, rhs: SubscriptionTier) -> Bool {
-        let order: [SubscriptionTier] = [.none, .weekly, .monthly]
+        let order: [SubscriptionTier] = [.none, .freeTrial, .weekly, .monthly]
         return (order.firstIndex(of: lhs) ?? 0) < (order.firstIndex(of: rhs) ?? 0)
     }
 }
 
-/// Wraps a StoreKit 2 Product with subscription-specific display helpers
+/// Wraps a RevenueCat Package with subscription-specific display helpers
 struct SubscriptionProduct: Identifiable {
     let id: String
-    let product: Product
+    let rcPackage: Package?
     let tier: SubscriptionTier
 
-    var displayName: String { product.displayName }
-    var description: String { product.description }
-    var displayPrice: String { product.displayPrice }
+    var storeProduct: RevenueCat.StoreProduct? { rcPackage?.storeProduct }
 
-    /// Formatted price per period (e.g. "R$ 9,90 / semana")
+    var displayName: String {
+        storeProduct?.localizedTitle ?? tier.rawValue
+    }
+
+    var description: String {
+        storeProduct?.localizedDescription ?? ""
+    }
+
+    var displayPrice: String {
+        storeProduct?.localizedPriceString ?? ""
+    }
+
+    /// Formatted price per period (e.g. "US$ 7,99 / semana")
     var pricePerPeriod: String {
-        guard let subscription = product.subscription else { return displayPrice }
-        let period = subscription.subscriptionPeriod
+        guard let product = storeProduct,
+              let period = product.subscriptionPeriod else { return displayPrice }
         let unitName: String
         switch period.unit {
         case .week: unitName = "semana"
@@ -39,14 +50,14 @@ struct SubscriptionProduct: Identifiable {
 
     /// Whether this product offers a free trial
     var hasFreeTrial: Bool {
-        product.subscription?.introductoryOffer?.paymentMode == .freeTrial
+        storeProduct?.introductoryDiscount?.paymentMode == .freeTrial
     }
 
     /// Free trial period description
     var freeTrialDescription: String? {
-        guard let offer = product.subscription?.introductoryOffer,
+        guard let offer = storeProduct?.introductoryDiscount,
               offer.paymentMode == .freeTrial else { return nil }
-        let period = offer.period
+        let period = offer.subscriptionPeriod
         switch period.unit {
         case .day: return "\(period.value) dia\(period.value > 1 ? "s" : "") grátis"
         case .week: return "\(period.value) semana\(period.value > 1 ? "s" : "") grátis"
@@ -58,13 +69,10 @@ struct SubscriptionProduct: Identifiable {
 
     /// Introductory offer price description (e.g., "US$ 0,99 por 7 dias")
     var introOfferPrice: String? {
-        guard let offer = product.subscription?.introductoryOffer else { return nil }
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = product.priceFormatStyle.locale
-        let priceStr = formatter.string(from: offer.price as NSDecimalNumber) ?? "\(offer.price)"
+        guard let offer = storeProduct?.introductoryDiscount else { return nil }
+        let priceStr = offer.localizedPriceString
 
-        let period = offer.period
+        let period = offer.subscriptionPeriod
         switch period.unit {
         case .day: return "\(priceStr) por \(period.value) dia\(period.value > 1 ? "s" : "")"
         case .week: return "\(priceStr) por \(period.value) semana\(period.value > 1 ? "s" : "")"

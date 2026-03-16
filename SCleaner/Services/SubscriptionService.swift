@@ -1,7 +1,8 @@
+import RevenueCat
 import StoreKit
 import Combine
 
-/// Manages in-app subscriptions using StoreKit 2.
+/// Manages subscriptions via RevenueCat.
 /// Single source of truth for subscription state across the app.
 @MainActor
 final class SubscriptionService: ObservableObject {
@@ -17,17 +18,16 @@ final class SubscriptionService: ObservableObject {
 
     var isPremium: Bool { currentTier != .none }
 
-    // MARK: - Private
-
-    private var transactionListener: Task<Void, Never>?
+    // MARK: - Init
 
     private init() {
-        transactionListener = listenForTransactions()
         Task { await checkCurrentEntitlements() }
     }
 
-    deinit {
-        transactionListener?.cancel()
+    /// Call once at app launch (in App init or AppDelegate)
+    static func configure() {
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: AppConstants.RevenueCat.apiKey)
     }
 
     // MARK: - Load Products
@@ -38,11 +38,24 @@ final class SubscriptionService: ObservableObject {
         errorMessage = nil
 
         do {
-            let storeProducts = try await Product.products(for: AppConstants.Subscription.allProductIds)
+            let offerings = try await Purchases.shared.offerings()
 
-            products = storeProducts.compactMap { product in
-                guard let tier = AppConstants.Subscription.tier(for: product.id) else { return nil }
-                return SubscriptionProduct(id: product.id, product: product, tier: tier)
+            guard let current = offerings.current else {
+                errorMessage = "Nenhum plano disponível no momento."
+                isLoading = false
+                return
+            }
+
+            products = current.availablePackages.compactMap { package in
+                let productId = package.storeProduct.productIdentifier
+                guard let tier = AppConstants.Subscription.tier(for: productId) else { return nil }
+
+                // Wrap RevenueCat StoreProduct into our SubscriptionProduct
+                return SubscriptionProduct(
+                    id: productId,
+                    rcPackage: package,
+                    tier: tier
+                )
             }
             .sorted { $0.tier < $1.tier }
 
@@ -56,33 +69,30 @@ final class SubscriptionService: ObservableObject {
     // MARK: - Purchase
 
     func purchase(_ subscriptionProduct: SubscriptionProduct) async -> Bool {
+        guard let package = subscriptionProduct.rcPackage else { return false }
         isLoading = true
         errorMessage = nil
 
         do {
-            let result = try await subscriptionProduct.product.purchase()
+            let result = try await Purchases.shared.purchase(package: package)
 
-            switch result {
-            case .success(let verification):
-                let transaction = try checkVerification(verification)
-                await transaction.finish()
+            if result.customerInfo.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true {
                 await checkCurrentEntitlements()
                 isLoading = false
                 return true
-
-            case .userCancelled:
-                isLoading = false
-                return false
-
-            case .pending:
-                errorMessage = "Compra pendente de aprovação."
-                isLoading = false
-                return false
-
-            @unknown default:
-                isLoading = false
-                return false
             }
+
+            isLoading = false
+            return false
+
+        } catch let error as RevenueCat.ErrorCode {
+            if error == .purchaseCancelledError {
+                // User cancelled — not an error
+            } else {
+                errorMessage = "Erro ao processar a compra. Tente novamente."
+            }
+            isLoading = false
+            return false
         } catch {
             errorMessage = "Erro ao processar a compra. Tente novamente."
             isLoading = false
@@ -97,14 +107,16 @@ final class SubscriptionService: ObservableObject {
         errorMessage = nil
 
         do {
-            try await AppStore.sync()
-            await checkCurrentEntitlements()
-            isLoading = false
+            let info = try await Purchases.shared.restorePurchases()
+            let isActive = info.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true
 
-            if isPremium {
+            if isActive {
+                await checkCurrentEntitlements()
+                isLoading = false
                 return true
             } else {
                 errorMessage = "Nenhuma assinatura ativa encontrada."
+                isLoading = false
                 return false
             }
         } catch {
@@ -117,42 +129,23 @@ final class SubscriptionService: ObservableObject {
     // MARK: - Check Entitlements
 
     func checkCurrentEntitlements() async {
-        var highestTier: SubscriptionTier = .none
+        do {
+            let info = try await Purchases.shared.customerInfo()
+            let isActive = info.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true
 
-        for await result in Transaction.currentEntitlements {
-            guard let transaction = try? checkVerification(result) else { continue }
-
-            if let tier = AppConstants.Subscription.tier(for: transaction.productID),
-               tier > highestTier {
-                highestTier = tier
-            }
-        }
-
-        currentTier = highestTier
-    }
-
-    // MARK: - Transaction Listener
-
-    private func listenForTransactions() -> Task<Void, Never> {
-        Task.detached { [weak self] in
-            for await result in Transaction.updates {
-                guard let self = self else { return }
-                if let transaction = try? self.checkVerification(result) {
-                    await transaction.finish()
-                    await self.checkCurrentEntitlements()
+            if isActive {
+                // Determine which product is active
+                if let activeProductId = info.entitlements[AppConstants.RevenueCat.entitlementId]?.productIdentifier,
+                   let tier = AppConstants.Subscription.tier(for: activeProductId) {
+                    currentTier = tier
+                } else {
+                    currentTier = .weekly // Default to weekly if active but unknown product
                 }
+            } else {
+                currentTier = .none
             }
-        }
-    }
-
-    // MARK: - Verification
-
-    private nonisolated func checkVerification<T>(_ result: VerificationResult<T>) throws -> T {
-        switch result {
-        case .unverified(_, let error):
-            throw error
-        case .verified(let value):
-            return value
+        } catch {
+            // Silently fail — keep current state
         }
     }
 }

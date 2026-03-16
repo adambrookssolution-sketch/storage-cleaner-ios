@@ -7,7 +7,7 @@ enum AppConstants {
         static let categoryCardThumbnailSize = CGSize(width: 180, height: 180)
         static let scanBatchSize = 200
         static let maxConcurrentThumbnailRequests = 20
-        static let progressUpdateInterval = 2 // Update UI every N batches
+        static let progressUpdateInterval = 2
     }
 
     enum UI {
@@ -36,14 +36,14 @@ enum AppConstants {
     enum Hashing {
         static let hashImageWidth = 9
         static let hashImageHeight = 8
-        static let duplicateThreshold = 10   // Hamming distance <= 10 = duplicate
-        static let similarThreshold = 20     // Hamming distance 11-20 = similar
+        static let duplicateThreshold = 10
+        static let similarThreshold = 20
         static let hashBatchSize = 100
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
     }
 
     enum Downloads {
-        static let minimumFileSizeBytes: Int64 = 10 * 1_048_576 // 10 MB
+        static let minimumFileSizeBytes: Int64 = 10 * 1_048_576
         static let staleMonths = 6
         static let bookmarkKey = "SCleaner_DownloadsFolderBookmark"
     }
@@ -52,21 +52,29 @@ enum AppConstants {
         static let purgeAfterDays = 30
         static let directoryName = "TrashBin"
         static let manifestFileName = "manifest.json"
-        static let maxTrashSizeWarningBytes: Int64 = 1_073_741_824 // 1 GB
+        static let maxTrashSizeWarningBytes: Int64 = 1_073_741_824
+    }
+
+    enum RevenueCat {
+        static let apiKey = "appl_hEiAkPrIaTecEddkQYBdHYdHdQF"
+        static let entitlementId = "Vortex Cleaner Pro"
     }
 
     enum Subscription {
-        /// Set to true to enable paywall + deletion limits.
         static let paywallEnabled = true
 
-        static let weeklyProductId = "com.vortexcleaner.weekly"
-        static let monthlyProductId = "com.vortexcleaner.monthly"
-        static let allProductIds: [String] = [weeklyProductId, monthlyProductId]
+        // 3 subscription products
+        static let weeklyProductId = "com.vortexcleaner.weekly"           // $7.99/sem (intro $0.99)
+        static let monthlyProductId = "com.vortexcleaner.monthly"         // $28/mês
+        static let freeTrialProductId = "com.vortexcleaner.free.3days"    // $6.99/sem (intro 3 dias grátis)
+
+        static let allProductIds: [String] = [weeklyProductId, monthlyProductId, freeTrialProductId]
 
         static func tier(for productId: String) -> SubscriptionTier? {
             switch productId {
             case weeklyProductId: return .weekly
             case monthlyProductId: return .monthly
+            case freeTrialProductId: return .freeTrial
             default: return nil
             }
         }

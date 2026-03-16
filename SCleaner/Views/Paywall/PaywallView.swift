@@ -51,14 +51,12 @@ struct PaywallView: View {
                     // Logo + badge
                     VStack(spacing: 12) {
                         // App logo
-                        Image(systemName: "sparkles")
-                            .font(.system(size: 50))
-                            .foregroundColor(.white)
-                            .frame(width: 90, height: 90)
-                            .background(
-                                Circle()
-                                    .fill(.white.opacity(0.2))
-                            )
+                        Image("AppLogo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 22))
+                            .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
                             .padding(.top, 40)
 
                         Text("ACESSO PREMIUM")
@@ -247,9 +245,9 @@ struct PaywallView: View {
                     .italic()
                     .multilineTextAlignment(.center)
 
-                // Trial details
-                if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
-                    Text("Teste \(AppConstants.Subscription.trialDays) dias depois \(weekly.pricePerPeriod). Acesso completo a todos os recursos! Sem custo extra, sem compromisso. Cancele quando quiser.")
+                // Trial details — uses the free.3days product
+                if let trialProduct = subscriptionService.products.first(where: { $0.tier == .freeTrial }) {
+                    Text("Teste \(AppConstants.Subscription.trialDays) dias depois \(trialProduct.pricePerPeriod). Acesso completo a todos os recursos! Sem custo extra, sem compromisso. Cancele quando quiser.")
                         .font(.system(size: 14))
                         .foregroundColor(.white.opacity(0.7))
                         .multilineTextAlignment(.center)
@@ -262,9 +260,9 @@ struct PaywallView: View {
             // CTA
             VStack(spacing: 16) {
                 Button(action: {
-                    // Select weekly with trial and purchase
-                    if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
-                        selectedProduct = weekly
+                    // Retention page uses the free.3days product (3 days free → $6.99/week)
+                    if let trialProduct = subscriptionService.products.first(where: { $0.tier == .freeTrial }) {
+                        selectedProduct = trialProduct
                         purchaseSelected()
                     }
                 }) {

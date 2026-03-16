@@ -97,6 +97,7 @@
 		BB00006100000061 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006100000061 /* Photos.framework */; };
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
 		BB00006300000063 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006300000063 /* StoreKit.framework */; };
+		BB00009900000099 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = PP00000100000001 /* RevenueCat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,6 +203,7 @@
 				BB00006100000061 /* Photos.framework in Frameworks */,
 				BB00006200000062 /* PhotosUI.framework in Frameworks */,
 				BB00006300000063 /* StoreKit.framework in Frameworks */,
+				BB00009900000099 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +524,9 @@
 			dependencies = (
 			);
 			name = SCleaner;
+			packageProductDependencies = (
+				PP00000100000001 /* RevenueCat */,
+			);
 			productName = SCleaner;
 			productReference = DD00000100000001 /* SCleaner.app */;
 			productType = "com.apple.product-type.application";
@@ -551,6 +556,9 @@
 			);
 			mainGroup = CC00000000000000;
 			productRefGroup = CC00009100000091 /* Products */;
+			packageReferences = (
+				PP00000200000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -874,6 +882,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		PP00000200000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		PP00000100000001 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = PP00000200000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FF00000200000002 /* Project object */;
 }
