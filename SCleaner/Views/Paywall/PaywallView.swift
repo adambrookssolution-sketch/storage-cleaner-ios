@@ -262,7 +262,7 @@ struct PaywallView: View {
                         title: "HOJE",
                         titleColor: Color(hex: "22C55E"),
                         description: "Acesso total a todos os recursos premium. Exclusões ilimitadas.",
-                        priceNote: "Cobranças: $0,00",
+                        priceNote: "Sem cobrança hoje",
                         showLine: true
                     )
 
@@ -417,32 +417,34 @@ struct PaywallView: View {
     // MARK: - Clickable Legal Consent Links (Apple compliance)
 
     private var legalConsentLinks: some View {
-        HStack(spacing: 4) {
+        VStack(spacing: 2) {
             Text("Ao assinar, você concorda com nossos")
                 .font(.system(size: 11))
                 .foregroundColor(.white.opacity(0.5))
 
-            Button("Termos de Uso") {
-                if let url = URL(string: AppConstants.URLs.termsOfUse) {
-                    UIApplication.shared.open(url)
+            HStack(spacing: 4) {
+                Button("Termos de Uso") {
+                    if let url = URL(string: AppConstants.URLs.termsOfUse) {
+                        UIApplication.shared.open(url)
+                    }
                 }
-            }
-            .font(.system(size: 11, weight: .medium))
-            .foregroundColor(.white.opacity(0.7))
-            .underline()
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.white.opacity(0.7))
+                .underline()
 
-            Text("e")
-                .font(.system(size: 11))
-                .foregroundColor(.white.opacity(0.5))
+                Text("e")
+                    .font(.system(size: 11))
+                    .foregroundColor(.white.opacity(0.5))
 
-            Button("Política de Privacidade") {
-                if let url = URL(string: AppConstants.URLs.privacyPolicy) {
-                    UIApplication.shared.open(url)
+                Button("Política de Privacidade") {
+                    if let url = URL(string: AppConstants.URLs.privacyPolicy) {
+                        UIApplication.shared.open(url)
+                    }
                 }
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.white.opacity(0.7))
+                .underline()
             }
-            .font(.system(size: 11, weight: .medium))
-            .foregroundColor(.white.opacity(0.7))
-            .underline()
         }
     }
 
