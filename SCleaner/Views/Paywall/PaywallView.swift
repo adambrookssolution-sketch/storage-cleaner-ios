@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// 2-page paywall flow:
+/// 2-page paywall flow (Apple-compliant):
 /// Page 1: Main paywall with weekly (intro offer) + monthly (anchor) plans
-/// Page 2: Retention screen with free trial offer (appears when user taps "Agora Não")
+/// Page 2: Trial timeline (appears when user taps "Agora Não") — same weekly product, no cheaper price
 struct PaywallView: View {
     @StateObject private var subscriptionService = SubscriptionService.shared
     @Environment(\.dismiss) private var dismiss
@@ -10,6 +10,7 @@ struct PaywallView: View {
     @State private var showRetention = false
     @State private var showSuccess = false
     @State private var isPurchasing = false
+    @State private var loadingTimedOut = false
 
     /// Optional scan result counters to show during-scan paywall
     var scanPhotos: Int = 0
@@ -18,7 +19,6 @@ struct PaywallView: View {
 
     var body: some View {
         ZStack {
-            // Gradient background
             LinearGradient(
                 colors: [Color(hex: "0EA5E9"), Color(hex: "0284C7"), Color(hex: "0369A1")],
                 startPoint: .top,
@@ -36,9 +36,16 @@ struct PaywallView: View {
         }
         .task {
             await subscriptionService.loadProducts()
-            // Default to weekly (intro offer)
             selectedProduct = subscriptionService.products.first(where: { $0.tier == .weekly })
                 ?? subscriptionService.products.first
+
+            // Timeout: if products don't load in 10s, show error
+            if subscriptionService.products.isEmpty {
+                try? await Task.sleep(nanoseconds: 10_000_000_000)
+                if subscriptionService.products.isEmpty {
+                    loadingTimedOut = true
+                }
+            }
         }
     }
 
@@ -50,7 +57,6 @@ struct PaywallView: View {
                 VStack(spacing: 20) {
                     // Logo + badge
                     VStack(spacing: 12) {
-                        // App logo
                         Image("AppLogo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -96,36 +102,60 @@ struct PaywallView: View {
                     }
                     .padding(.horizontal, 30)
 
-                    // Social proof
-                    HStack(spacing: 8) {
-                        Image(systemName: "flame.fill")
-                            .foregroundColor(.orange)
-                        Text("Milhares de pessoas já assinaram!")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.white)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(.white.opacity(0.15))
-                    )
-
-                    // Plan cards
+                    // Plan cards with loading state
                     VStack(spacing: 12) {
-                        // Weekly plan (intro offer — BEST VALUE)
-                        if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
-                            planCardWeekly(weekly)
-                        }
+                        if subscriptionService.products.isEmpty {
+                            // Loading state — Apple compliance: must show loading
+                            VStack(spacing: 12) {
+                                if loadingTimedOut {
+                                    Text("Não foi possível carregar os planos.\nVerifique sua conexão.")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(.white.opacity(0.8))
+                                        .multilineTextAlignment(.center)
 
-                        // Monthly plan (anchor — makes weekly look cheap)
-                        if let monthly = subscriptionService.products.first(where: { $0.tier == .monthly }) {
-                            planCardMonthly(monthly)
+                                    Button("Tentar novamente") {
+                                        loadingTimedOut = false
+                                        Task {
+                                            await subscriptionService.loadProducts()
+                                            selectedProduct = subscriptionService.products.first(where: { $0.tier == .weekly })
+                                            if subscriptionService.products.isEmpty {
+                                                try? await Task.sleep(nanoseconds: 10_000_000_000)
+                                                if subscriptionService.products.isEmpty {
+                                                    loadingTimedOut = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundColor(Color(hex: "0284C7"))
+                                    .padding(.horizontal, 24)
+                                    .padding(.vertical, 12)
+                                    .background(.white)
+                                    .clipShape(Capsule())
+                                } else {
+                                    ProgressView()
+                                        .tint(.white)
+                                    Text("Carregando planos...")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.white.opacity(0.7))
+                                }
+                            }
+                            .frame(height: 120)
+                        } else {
+                            // Weekly plan (intro offer — BEST VALUE)
+                            if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
+                                planCardWeekly(weekly)
+                            }
+
+                            // Monthly plan (anchor — makes weekly look cheap)
+                            if let monthly = subscriptionService.products.first(where: { $0.tier == .monthly }) {
+                                planCardMonthly(monthly)
+                            }
                         }
                     }
                     .padding(.horizontal, 20)
 
-                    // Legal text
+                    // Legal text — auto-renewal disclosure
                     Text("Assinatura renovável automaticamente. Cancele quando quiser nas Configurações.\nPagamento cobrado na conta do iTunes.")
                         .font(.system(size: 11))
                         .foregroundColor(.white.opacity(0.6))
@@ -145,7 +175,7 @@ struct PaywallView: View {
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
                     } else {
-                        Text(ctaText)
+                        Text("INICIAR 7 DIAS PREMIUM")
                             .font(.system(size: 18, weight: .black))
                             .foregroundColor(Color(hex: "0284C7"))
                             .frame(maxWidth: .infinity)
@@ -155,29 +185,14 @@ struct PaywallView: View {
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
-                .disabled(isPurchasing)
+                .disabled(isPurchasing || subscriptionService.products.isEmpty)
+                .opacity(subscriptionService.products.isEmpty ? 0.5 : 1.0)
                 .padding(.horizontal, 20)
 
-                // Legal links
-                Text("Ao assinar, você concorda com nossos ")
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.5))
-                +
-                Text("Termos de Uso")
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.7))
-                    .underline()
-                +
-                Text(" e ")
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.5))
-                +
-                Text("Política de Privacidade")
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.7))
-                    .underline()
+                // Legal links — CLICKABLE (Apple compliance)
+                legalConsentLinks
 
-                // Bottom row: Restore + Agora Não (disguised close)
+                // Bottom row: Restore + Agora Não
                 HStack(spacing: 20) {
                     Button("Restaurar Compras") {
                         Task {
@@ -213,7 +228,7 @@ struct PaywallView: View {
         }
     }
 
-    // MARK: - Page 2: Retention (Free Trial)
+    // MARK: - Page 2: Trial Timeline (Apple-compliant redesign)
 
     private var retentionPage: some View {
         VStack(spacing: 0) {
@@ -232,38 +247,54 @@ struct PaywallView: View {
 
             Spacer()
 
-            VStack(spacing: 20) {
-                Text("OFERTA ÚNICA")
-                    .font(.system(size: 16, weight: .bold))
+            VStack(spacing: 24) {
+                // Title
+                Text("Como funciona o\nTeste Grátis")
+                    .font(.system(size: 26, weight: .bold))
                     .foregroundColor(.white)
-                    .tracking(2)
-
-                // Big free trial card
-                VStack(spacing: 8) {
-                    Text("TESTE\nGRÁTIS")
-                        .font(.system(size: 42, weight: .black))
-                        .foregroundColor(Color(hex: "0284C7"))
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 30)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.white)
-                )
-                .padding(.horizontal, 40)
-
-                Text("Esta oferta não estará aqui\nquando você fechar!")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(.white.opacity(0.8))
-                    .italic()
                     .multilineTextAlignment(.center)
 
-                // Trial details — uses the free.3days product
-                if let trialProduct = subscriptionService.products.first(where: { $0.tier == .freeTrial }) {
-                    Text("Teste \(AppConstants.Subscription.trialDays) dias depois \(trialProduct.pricePerPeriod). Acesso completo a todos os recursos! Sem custo extra, sem compromisso. Cancele quando quiser.")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.7))
+                // Timeline cards
+                VStack(spacing: 0) {
+                    timelineStep(
+                        icon: "checkmark.circle.fill",
+                        iconColor: Color(hex: "22C55E"),
+                        title: "HOJE",
+                        titleColor: Color(hex: "22C55E"),
+                        description: "Acesso total a todos os recursos premium. Exclusões ilimitadas.",
+                        priceNote: "Cobranças: $0,00",
+                        showLine: true
+                    )
+
+                    timelineStep(
+                        icon: "bell.fill",
+                        iconColor: Color(hex: "F59E0B"),
+                        title: "DIA 2",
+                        titleColor: Color(hex: "F59E0B"),
+                        description: "Você receberá um lembrete antes da cobrança. Cancele a qualquer momento.",
+                        priceNote: nil,
+                        showLine: true
+                    )
+
+                    if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
+                        timelineStep(
+                            icon: "creditcard.fill",
+                            iconColor: Color(hex: "3B82F6"),
+                            title: "DIA 3",
+                            titleColor: Color(hex: "3B82F6"),
+                            description: "Sua assinatura renova por \(weekly.pricePerPeriod). Cancele nas Configurações do iPhone.",
+                            priceNote: nil,
+                            showLine: false
+                        )
+                    }
+                }
+                .padding(.horizontal, 30)
+
+                // Price disclosure — MUST be clearly visible (Apple compliance)
+                if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
+                    Text("Teste 3 dias grátis, depois \(weekly.pricePerPeriod).\nRenova automaticamente. Cancele quando quiser.")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 30)
                 }
@@ -271,12 +302,12 @@ struct PaywallView: View {
 
             Spacer()
 
-            // CTA
+            // CTA + links
             VStack(spacing: 16) {
+                // CTA — purchases the SAME weekly product (not a cheaper one)
                 Button(action: {
-                    // Retention page uses the free.3days product (3 days free → $6.99/week)
-                    if let trialProduct = subscriptionService.products.first(where: { $0.tier == .freeTrial }) {
-                        selectedProduct = trialProduct
+                    if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
+                        selectedProduct = weekly
                         purchaseSelected()
                     }
                 }) {
@@ -286,15 +317,11 @@ struct PaywallView: View {
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
                     } else {
-                        HStack {
-                            Text("Continuar")
-                                .font(.system(size: 18, weight: .bold))
-                            Image(systemName: "arrow.right")
-                                .font(.system(size: 16, weight: .bold))
-                        }
-                        .foregroundColor(Color(hex: "0284C7"))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
+                        Text("Começar Teste Grátis")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(Color(hex: "0284C7"))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
                     }
                 }
                 .background(.white)
@@ -303,7 +330,14 @@ struct PaywallView: View {
                 .disabled(isPurchasing)
                 .padding(.horizontal, 30)
 
-                // Legal links
+                // Post-trial price reinforcement
+                if let weekly = subscriptionService.products.first(where: { $0.tier == .weekly }) {
+                    Text("Após o período grátis: \(weekly.pricePerPeriod)")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white.opacity(0.8))
+                }
+
+                // Legal links (all clickable, opening Safari)
                 HStack(spacing: 12) {
                     linkButton("Termos de Uso", url: AppConstants.URLs.termsOfUse)
                     Text("·").foregroundColor(.white.opacity(0.3))
@@ -323,8 +357,93 @@ struct PaywallView: View {
         }
     }
 
+    // MARK: - Timeline Step
+
+    private func timelineStep(
+        icon: String,
+        iconColor: Color,
+        title: String,
+        titleColor: Color,
+        description: String,
+        priceNote: String?,
+        showLine: Bool
+    ) -> some View {
+        HStack(alignment: .top, spacing: 16) {
+            // Timeline indicator
+            VStack(spacing: 0) {
+                ZStack {
+                    Circle()
+                        .fill(iconColor.opacity(0.2))
+                        .frame(width: 40, height: 40)
+
+                    Image(systemName: icon)
+                        .font(.system(size: 18))
+                        .foregroundColor(iconColor)
+                }
+
+                if showLine {
+                    Rectangle()
+                        .fill(.white.opacity(0.2))
+                        .frame(width: 2, height: 40)
+                }
+            }
+
+            // Content
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundColor(titleColor)
+
+                Text(description)
+                    .font(.system(size: 13))
+                    .foregroundColor(.white.opacity(0.8))
+
+                if let note = priceNote {
+                    Text(note)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+            }
+            .padding(.bottom, showLine ? 12 : 0)
+
+            Spacer()
+        }
+    }
+
     private var hasScanResults: Bool {
         scanPhotos > 0 || scanVideos > 0 || scanScreenshots > 0
+    }
+
+    // MARK: - Clickable Legal Consent Links (Apple compliance)
+
+    private var legalConsentLinks: some View {
+        HStack(spacing: 4) {
+            Text("Ao assinar, você concorda com nossos")
+                .font(.system(size: 11))
+                .foregroundColor(.white.opacity(0.5))
+
+            Button("Termos de Uso") {
+                if let url = URL(string: AppConstants.URLs.termsOfUse) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            .font(.system(size: 11, weight: .medium))
+            .foregroundColor(.white.opacity(0.7))
+            .underline()
+
+            Text("e")
+                .font(.system(size: 11))
+                .foregroundColor(.white.opacity(0.5))
+
+            Button("Política de Privacidade") {
+                if let url = URL(string: AppConstants.URLs.privacyPolicy) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            .font(.system(size: 11, weight: .medium))
+            .foregroundColor(.white.opacity(0.7))
+            .underline()
+        }
     }
 
     // MARK: - Helpers
@@ -374,13 +493,14 @@ struct PaywallView: View {
                                 .foregroundColor(.white)
                         }
 
+                        // Recurring price clearly visible in capsule (Apple compliance)
                         Text("depois \(product.pricePerPeriod)")
                             .font(.system(size: 13))
-                            .foregroundColor(.white.opacity(0.6))
+                            .foregroundColor(.white.opacity(0.9))
                             .padding(.horizontal, 12)
                             .padding(.vertical, 4)
                             .background(
-                                Capsule().fill(.white.opacity(0.15))
+                                Capsule().fill(.white.opacity(0.2))
                             )
                     }
                     Spacer()
@@ -455,13 +575,6 @@ struct PaywallView: View {
                     .stroke(isSelected ? .white : .white.opacity(0.15), lineWidth: isSelected ? 2 : 1)
             )
         }
-    }
-
-    private var ctaText: String {
-        if let product = selectedProduct, product.hasFreeTrial {
-            return "INICIAR \(AppConstants.Subscription.trialDays) DIAS PREMIUM"
-        }
-        return "INICIAR 7 DIAS PREMIUM"
     }
 
     private func purchaseSelected() {
