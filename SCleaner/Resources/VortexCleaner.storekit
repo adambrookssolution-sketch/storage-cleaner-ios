@@ -105,7 +105,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.vortexcleaner.free.3days",
+          "productID" : "com.vortexcleaner.weekly.trial",
           "recurringSubscriptionPeriod" : "P1W",
           "referenceName" : "Free Trial",
           "subscriptionGroupID" : "VortexCleaner_Pro_Group",

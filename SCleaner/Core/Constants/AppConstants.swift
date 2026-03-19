@@ -66,7 +66,7 @@ enum AppConstants {
         // 3 subscription products
         static let weeklyProductId = "com.vortexcleaner.weekly"           // $7.99/sem (intro $0.99)
         static let monthlyProductId = "com.vortexcleaner.monthly"         // $28/mês
-        static let freeTrialProductId = "com.vortexcleaner.free.3days"    // $6.99/sem (intro 3 dias grátis)
+        static let freeTrialProductId = "com.vortexcleaner.weekly.trial"   // $6.99/sem (intro 3 dias grátis)
 
         static let allProductIds: [String] = [weeklyProductId, monthlyProductId, freeTrialProductId]
 

@@ -3,7 +3,7 @@ import RevenueCat
 /// Represents the app's subscription tiers
 enum SubscriptionTier: String, Comparable {
     case none
-    case freeTrial   // com.vortexcleaner.free.3days ($6.99/sem, intro 3 days free)
+    case freeTrial   // com.vortexcleaner.weekly.trial ($6.99/sem, intro 3 days free)
     case weekly      // com.vortexcleaner.weekly ($7.99/sem, intro $0.99)
     case monthly     // com.vortexcleaner.monthly ($28/mês)
 
