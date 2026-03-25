@@ -1,0 +1,307 @@
+/* ============================================ */
+/*  Vortex Cleaner — Română (Romanian)          */
+/* ============================================ */
+
+/* === ONBOARDING === */
+"onboarding.welcomeTitle" = "Bine ați venit în\nVortex Cleaner";
+"onboarding.photos" = "Fotografii";
+"onboarding.iCloud" = "iCloud";
+"onboarding.privacyText1" = "Vortex Cleaner are nevoie de acces la Fotografii pentru a elibera spațiu de stocare.";
+"onboarding.privacyText2" = "Dorim să vă oferim transparență și să vă protejăm confidențialitatea. Continuând, sunteți de acord cu";
+"onboarding.termsOfUse" = "Termenii de utilizare";
+"onboarding.privacyPolicy" = "Politica de confidențialitate";
+"onboarding.andOur" = "și";
+"onboarding.getStarted" = "Începeți";
+"onboarding.duplicatesTitle" = "Ștergeți Fotografiile\nDuplicate";
+"onboarding.duplicatesSubtitle" = "Eliminați fotografiile duplicate instantaneu și recuperați spațiul de stocare!";
+"onboarding.next" = "Următorul";
+"onboarding.optimizeStorage" = "Optimizați Spațiul\nde Stocare al iPhone";
+"onboarding.optimizeSubtitle" = "Eliberați până la 80% din spațiul de stocare și bucurați-vă de mai mult spațiu.";
+"onboarding.storageUsed" = "%@ GB din %@ GB utilizați";
+"onboarding.appsAndData" = "Date de sistem";
+"onboarding.available" = "Disponibil";
+"onboarding.disclaimer" = "*Pe baza datelor interne ale Vortex Cleaner";
+
+/* === PERMISSIONS === */
+"permission.waiting" = "Se așteaptă permisiunea...";
+"permission.granted" = "Acces acordat!";
+"permission.denied" = "Acces refuzat";
+"permission.deniedDetail" = "Puteți modifica în Setările iPhone";
+"permission.openSettings" = "Deschideți Setările";
+"permission.limitedAccess" = "Doar unele fotografii sunt accesibile";
+"permission.continueAnyway" = "Continuați oricum";
+
+/* === DASHBOARD === */
+"dashboard.title" = "Vortex Cleaner";
+"dashboard.tapToScan" = "Atingeți pentru a scana biblioteca de fotografii";
+"dashboard.startScan" = "Începeți Scanarea";
+"dashboard.retry" = "Reîncercați";
+
+/* === STATS === */
+"stats.filesSeparator" = " fișiere • ";
+"stats.ofStorage" = " din stocare";
+
+/* === STORAGE BAR === */
+"storageBar.of" = " din ";
+"storageBar.gb" = " GB ";
+"storageBar.used" = "utilizați";
+
+/* === CATEGORIES === */
+"category.duplicates" = "Duplicate";
+"category.similar" = "Similare";
+"category.similarVideos" = "Videoclipuri similare";
+"category.similarScreenshots" = "Capturi de ecran similare";
+"category.screenshots" = "Capturi de ecran";
+"category.videos" = "Videoclipuri";
+"category.downloads" = "Downloads";
+"category.trashBin" = "Coș de gunoi";
+"category.other" = "Altele";
+"category.selectFolder" = "Selectați dosarul";
+"category.tapToSelectFolder" = "Atingeți pentru a selecta dosarul";
+"category.noItems" = "Nu s-au găsit elemente";
+
+/* === DUPLICATES === */
+"duplicates.title" = "Duplicate";
+"duplicates.groupsFound" = "%d grupuri găsite";
+"duplicates.photosCount" = "%d fotografii duplicate";
+"duplicates.deleting" = "Se șterg %d fotografii...";
+"duplicates.confirmationNotice" = "iOS vă va solicita confirmarea.";
+"duplicates.emptyTitle" = "Nu s-au găsit duplicate!";
+"duplicates.emptyMessage" = "Biblioteca dumneavoastră este organizată.";
+"duplicates.keepAll" = "Păstrați toate";
+"duplicates.selectDuplicates" = "Selectați duplicatele";
+
+/* === SIMILAR === */
+"similar.title" = "Similare";
+"similar.groupsFound" = "%d grupuri găsite";
+"similar.photosCount" = "%d fotografii similare";
+"similar.groupCount" = "%d fotografii similare";
+"similar.deleting" = "Se șterg %d fotografii...";
+"similar.confirmationNotice" = "iOS vă va solicita confirmarea.";
+"similar.emptyTitle" = "Nu s-au găsit fotografii similare!";
+"similar.emptyMessage" = "Biblioteca dumneavoastră este organizată.";
+"similar.keepAll" = "Păstrați toate";
+"similar.selectSimilar" = "Selectați similare";
+"similar.compare" = "Comparați";
+"similar.resolution" = "Rezoluție";
+"similar.size" = "Dimensiune";
+
+/* === SCREENSHOTS === */
+"screenshots.title" = "Capturi de ecran";
+"screenshots.count" = "%d capturi de ecran";
+"screenshots.totalSize" = "Dimensiune totală: %@";
+"screenshots.savingsMessage" = "Economisiți %@ ștergând %d captură(i) de ecran";
+"screenshots.preselectedMessage" = "Toate capturile de ecran au fost preselectate.";
+"screenshots.deleting" = "Se șterg %d capturi de ecran...";
+"screenshots.confirmationNotice" = "iOS vă va solicita confirmarea.";
+"screenshots.emptyTitle" = "Nu s-au găsit capturi de ecran!";
+"screenshots.emptyMessage" = "Biblioteca dumneavoastră nu conține capturi de ecran.";
+"screenshots.itemLabel" = "capturi de ecran";
+
+/* === VIDEOS === */
+"videos.title" = "Videoclipuri";
+"videos.countFound" = "%d videoclipuri găsite";
+"videos.totalSize" = "Dimensiune totală: %@";
+"videos.savingsMessage" = "Economisiți %@ ștergând %d videoclip(uri)";
+"videos.preselectedMessage" = "Cele mai mari 15 videoclipuri au fost preselectate.";
+"videos.deleting" = "Se șterg %d videoclipuri...";
+"videos.confirmationNotice" = "iOS vă va solicita confirmarea.";
+"videos.emptyTitle" = "Nu s-au găsit videoclipuri!";
+"videos.emptyMessage" = "Biblioteca dumneavoastră nu conține videoclipuri.";
+"videos.itemLabel" = "videoclipuri";
+
+/* === DOWNLOADS === */
+"downloads.title" = "Downloads";
+"downloads.changeFolder" = "Schimbați dosarul";
+"downloads.movingToTrash" = "Se mută în Coșul de gunoi...";
+"downloads.noFolderSelected" = "Nu a fost selectat niciun dosar";
+"downloads.selectFolderPrompt" = "Selectați dosarul Downloads pentru a scana fișierele mari și vechi.";
+"downloads.selectFolderButton" = "Selectați Dosarul";
+"downloads.scanning" = "Se scanează...";
+"downloads.analyzingFolder" = "Se analizează fișierele din dosarul %@";
+"downloads.noLargeOldFiles" = "Nu există fișiere mari și vechi!";
+"downloads.noLargeOldFilesDetail" = "Nu s-au găsit fișiere mai mari de 10 MB neutilizate de peste 6 luni.";
+"downloads.showAllFiles" = "Afișați toate fișierele";
+"downloads.showAll" = "Afișați toate";
+"downloads.filteredOnly" = "Doar filtrate";
+"downloads.noFilesFound" = "Nu s-au găsit fișiere!";
+"downloads.folderEmpty" = "Dosarul selectat este gol.";
+"downloads.largeOldFilesCount" = "%d fișiere mari (>10 MB) neutilizate de peste 6 luni";
+"downloads.filesFoundCount" = "%d fișiere găsite";
+"downloads.totalSize" = "Dimensiune totală: %@";
+"downloads.unused6Months" = "Peste 6 luni de neutilizare";
+"downloads.errorSaveFolder" = "Nu s-a putut salva accesul la dosar.";
+"downloads.errorAccessFolder" = "Nu s-a putut accesa dosarul. Selectați din nou.";
+"downloads.limitMessage" = "Limita zilnică: %d ștergeri rămase. Selectați mai puține elemente sau abonați-vă la Premium.";
+
+/* === TRASH BIN === */
+"trashBin.title" = "Coș de gunoi";
+"trashBin.emptyTrash" = "Goliți Coșul de gunoi";
+"trashBin.empty" = "Coșul de gunoi este gol!";
+"trashBin.noFiles" = "Nu există fișiere în coșul de gunoi.";
+"trashBin.filesInTrash" = "%d fișiere în coșul de gunoi";
+"trashBin.totalSize" = "Dimensiune totală: %@";
+"trashBin.autoDeleteWarning" = "Fișierele sunt șterse automat după 30 de zile.";
+"trashBin.deletedDate" = "Șters: %@";
+"trashBin.daysRemaining" = "%d zile rămase";
+"trashBin.restore" = "Restaurați";
+"trashBin.processing" = "Se procesează...";
+
+/* === DELETION === */
+"deletion.confirmTitle" = "Ștergeți %d %@?";
+"deletion.descriptionPhotoLibrary" = "Eliberați %@ de spațiu.\n%@ vor fi mutate în Șterse recent din iOS pentru 30 de zile.";
+"deletion.descriptionAppTrash" = "Eliberați %@ de spațiu.\n%@ vor fi mutate în Coșul de gunoi al aplicației pentru 30 de zile.";
+"deletion.descriptionPermanent" = "Eliberați %@ de spațiu.\n%@ vor fi șterse permanent. Această acțiune nu poate fi anulată.";
+"deletion.deletePermanently" = "Ștergeți permanent";
+"deletion.deleteItems" = "Ștergeți %@";
+"deletion.successCount" = "%d %@ șterse";
+"deletion.freedSpace" = "%@ eliberați";
+"deletion.failedCount" = "%d %@ nu au putut fi șterse";
+"deletion.guidancePhotoLibrary" = "Puteți recupera %@ din Fotografii > Albume > Șterse recent în termen de 30 de zile.";
+"deletion.guidanceAppTrash" = "%@ au fost mutate în Coșul de gunoi al aplicației. Le puteți restaura în termen de 30 de zile.";
+
+/* === RESTORE === */
+"restore.filesRestored" = "%d fișiere restaurate";
+"restore.filesRestoredDetail" = "Fișierele au fost restaurate în locația originală.";
+"restore.filesFailed" = "%d fișiere nu au putut fi restaurate";
+
+/* === SCAN === */
+"scan.readyToScan" = "Pregătit pentru scanare";
+"scan.scanning" = "Se scanează...";
+"scan.analyzingPhotos" = "Se analizează fotografiile...";
+"scan.completed" = "Finalizat";
+"scan.error" = "Eroare în timpul scanării";
+"scan.errorDuringScan" = "Eroare în timpul scanării: %@";
+
+/* === PAYWALL === */
+"paywall.premiumBadge" = "ACCES PREMIUM";
+"paywall.fullAccessTitle" = "Acces Complet";
+"paywall.loadError" = "Nu s-au putut încărca planurile.\nVerificați conexiunea la internet.";
+"paywall.retryButton" = "Reîncercați";
+"paywall.loadingPlans" = "Se încarcă planurile...";
+"paywall.autoRenewalNotice" = "Abonament cu reînnoire automată. Anulați oricând din Setări.\nPlata este debitată din contul iTunes.";
+"paywall.startTrialButton" = "ÎNCEPEȚI 7 ZILE PREMIUM";
+"paywall.trialTimelineTitle" = "Cum funcționează\nPerioada de probă";
+"paywall.timelineToday" = "ASTĂZI";
+"paywall.timelineTodayDescription" = "Acces complet la toate funcțiile premium. Ștergeri nelimitate.";
+"paywall.noChargeToday" = "Fără taxe astăzi";
+"paywall.timelineDay2" = "ZIUA 2";
+"paywall.timelineDay2Description" = "Veți primi o notificare înainte de taxare. Anulați oricând.";
+"paywall.timelineDay3" = "ZIUA 3";
+"paywall.timelineDay3Description" = "Abonamentul dumneavoastră se reînnoiește la %@. Anulați din Setările iPhone.";
+"paywall.trialDescription" = "3 zile gratuite, apoi %@.\nSe reînnoiește automat. Anulați oricând.";
+"paywall.startFreeTrialButton" = "Începeți Perioada de Probă Gratuită";
+"paywall.afterTrialPrice" = "După perioada gratuită: %@";
+"paywall.bestValueBadge" = "CEL MAI BUN PREȚ";
+"paywall.specialOfferBadge" = "Ofertă Specială";
+"paywall.afterPrice" = "apoi %@";
+"paywall.monthlyPlan" = "Lunar";
+"paywall.monthlySuffix" = "/lună";
+"paywall.billedMonthly" = "Facturat lunar";
+"paywall.subscriptionActivated" = "Abonament activat!";
+"paywall.unlimitedAccessMessage" = "Acum aveți acces nelimitat\nla toate funcțiile.";
+"paywall.consentPrefix" = "Prin abonare, sunteți de acord cu";
+"paywall.termsOfUse" = "Termenii de utilizare";
+"paywall.privacyPolicy" = "Politica de confidențialitate";
+"paywall.restorePurchases" = "Restaurați Achizițiile";
+"paywall.notNow" = "Nu Acum";
+"paywall.unlimitedDeletions" = "Ștergeri nelimitate de fotografii și videoclipuri";
+"paywall.advancedDetection" = "Detectare avansată a duplicatelor";
+"paywall.screenshotCleanup" = "Curățare completă a capturilor de ecran";
+"paywall.downloadScanner" = "Scanner pentru descărcări voluminoase";
+"paywall.futureUpdates" = "Toate actualizările viitoare";
+"paywall.unlimitedDeletionsShort" = "Ștergeri nelimitate";
+"paywall.duplicatesFound" = "%d fotografii duplicate găsite";
+"paywall.videosToReview" = "%d videoclipuri de revizuit";
+"paywall.screenshotsFound" = "%d capturi de ecran";
+
+/* === SETTINGS === */
+"settings.title" = "Setări";
+"settings.unlockPremium" = "Deblocați accesul nelimitat";
+"settings.removeLimits" = "Eliminați toate limitele";
+"settings.supportSection" = "ASISTENȚĂ";
+"settings.faq" = "Întrebări Frecvente";
+"settings.contactSupport" = "Contactați-ne";
+"settings.restorePurchases" = "Restaurați Achizițiile";
+"settings.about" = "Despre";
+"settings.privacyPolicy" = "Politica de confidențialitate";
+"settings.termsOfUse" = "Termenii de utilizare";
+"settings.socialSection" = "PĂSTRAȚI LEGĂTURA";
+"settings.rateApp" = "Evaluați Aplicația";
+"settings.shareApp" = "Distribuiți";
+"settings.instagram" = "Instagram";
+"settings.versionFormat" = "Versiunea %@";
+"settings.shareText" = "Descoperiți Vortex Cleaner — organizați-vă fotografiile și eliberați spațiu de stocare!";
+"settings.noActiveSubscription" = "Nu s-a găsit niciun abonament activ.";
+"settings.restoreSuccess" = "Abonamentul a fost restaurat cu succes!";
+
+/* === ABOUT === */
+"about.title" = "Despre";
+"about.appName" = "Vortex Cleaner";
+"about.versionFormat" = "Versiunea %@ (%@)";
+"about.description" = "Organizați-vă fotografiile, eliberați spațiu de stocare și mențineți-vă iPhone-ul rapid și ordonat.";
+"about.privacyPolicy" = "Politica de confidențialitate";
+"about.termsOfUse" = "Termenii de utilizare";
+"about.support" = "Asistență";
+
+/* === FAQ === */
+"faq.title" = "Întrebări Frecvente";
+"faq.q1.title" = "Cum găsește Vortex Cleaner fotografiile duplicate?";
+"faq.q1.answer" = "Utilizăm un algoritm de hash perceptual (dHash) care analizează conținutul vizual al fiecărei fotografii. Aceasta permite identificarea fotografiilor identice sau foarte similare, chiar dacă au nume diferite.";
+"faq.q2.title" = "Fotografiile mele sunt trimise către vreun server?";
+"faq.q2.answer" = "Nu. Toată procesarea se realizează local pe dispozitivul dumneavoastră. Fotografiile nu părăsesc niciodată iPhone-ul.";
+"faq.q3.title" = "Ce se întâmplă când șterg fotografii?";
+"faq.q3.answer" = "Fotografiile șterse sunt mutate în Șterse recent din iOS, unde rămân disponibile 30 de zile înainte de a fi șterse permanent.";
+"faq.q4.title" = "Ce este Coșul de gunoi al aplicației?";
+"faq.q4.answer" = "Coșul de gunoi este un spațiu intern unde fișierele din Downloads sunt păstrate timp de 30 de zile înainte de ștergerea permanentă, permițându-vă să le restaurați dacă este necesar.";
+"faq.q5.title" = "Cum funcționează abonamentul?";
+"faq.q5.answer" = "Oferim planuri săptămânal și lunar. Abonații au acces nelimitat la toate funcționalitățile. Anulați oricând din Setările iPhone.";
+"faq.q6.title" = "Pot anula abonamentul?";
+"faq.q6.answer" = "Da. Accesați Setări > numele dumneavoastră > Abonamente pe iPhone. Accesul Premium continuă până la sfârșitul perioadei plătite.";
+"faq.q7.title" = "Aplicația funcționează fără internet?";
+"faq.q7.answer" = "Da. Scanarea și ștergerea funcționează complet offline. Conexiunea la internet este necesară doar pentru gestionarea abonamentelor.";
+
+/* === SUBSCRIPTION === */
+"subscription.noPlansAvailable" = "Nu sunt planuri disponibile în acest moment.";
+"subscription.errorLoadingPlans" = "Nu s-au putut încărca planurile. Verificați conexiunea la internet.";
+"subscription.purchaseError" = "Eroare la procesarea achiziției. Încercați din nou.";
+"subscription.noActiveSubscription" = "Nu s-a găsit niciun abonament activ.";
+"subscription.restoreError" = "Eroare la restaurarea achizițiilor. Încercați din nou.";
+"subscription.week" = "săptămână";
+"subscription.month" = "lună";
+"subscription.year" = "an";
+"subscription.day" = "zi";
+"subscription.freeTrialDays" = "%d zile gratuite";
+"subscription.freeTrialWeeks" = "%d săptămâni gratuite";
+"subscription.freeTrialMonths" = "%d luni gratuite";
+"subscription.freeTrialYears" = "%d ani gratuiți";
+"subscription.introOfferDays" = "%1$@ pentru %2$d zile";
+"subscription.introOfferWeeks" = "%1$@ pentru %2$d săptămâni";
+"subscription.introOfferMonths" = "%1$@ pentru %2$d luni";
+"subscription.introOfferYears" = "%1$@ pentru %2$d ani";
+
+/* === GENERAL === */
+"general.and" = "și";
+"general.back" = "Înapoi";
+"general.becomePro" = "Treceți la Pro";
+"general.bestResultBadge" = "Cel mai bun";
+"general.cancel" = "Anulați";
+"general.close" = "Închideți";
+"general.continue" = "Continuați";
+"general.delete" = "Ștergeți";
+"general.deselectAll" = "Deselectați toate";
+"general.done" = "Finalizat";
+"general.files" = "fișiere";
+"general.freeSpaceLabel" = "Eliberați %@";
+"general.limitMessage" = "Limita zilnică: %d ștergeri rămase.";
+"general.photos" = "fotografii";
+"general.selectAll" = "Selectați toate";
+"general.selectedCount" = "%d selectat(e)";
+
+/* === TABS === */
+"tab.cleaning" = "Curățare";
+"tab.contacts" = "Contacte";
+"tab.email" = "E-mailuri";
+"tab.compress" = "Comprimare";
+"tab.comingSoon" = "În curând";
+"tab.comingSoonMessage" = "Această funcționalitate va fi disponibilă într-o actualizare viitoare.";

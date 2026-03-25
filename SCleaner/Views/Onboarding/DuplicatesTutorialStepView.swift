@@ -24,7 +24,7 @@ struct DuplicatesTutorialStepView: View {
             Spacer().frame(height: 30)
 
             // Title
-            Text("Excluir Fotos\nDuplicadas")
+            Text(NSLocalizedString("onboarding.duplicatesTitle", comment: ""))
                 .font(.system(size: 30, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundColor(ColorTokens.primaryText)
@@ -32,7 +32,7 @@ struct DuplicatesTutorialStepView: View {
             Spacer().frame(height: 14)
 
             // Subtitle
-            Text("Elimine fotos duplicadas instantaneamente e recupere seu armazenamento!")
+            Text(NSLocalizedString("onboarding.duplicatesSubtitle", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
@@ -51,7 +51,7 @@ struct DuplicatesTutorialStepView: View {
             Spacer()
 
             // Button
-            Button("Próximo") { onContinue() }
+            Button(NSLocalizedString("onboarding.next", comment: "")) { onContinue() }
                 .buttonStyle(PrimaryButtonStyle())
                 .padding(.horizontal, AppConstants.UI.horizontalPadding)
 
@@ -148,7 +148,7 @@ struct DuplicatesTutorialStepView: View {
     private var footerLinks: some View {
         HStack(spacing: 6) {
             Button(action: { viewModel.openPrivacyPolicy() }) {
-                Text("Política de Privacidade")
+                Text(NSLocalizedString("onboarding.privacyPolicy", comment: ""))
                     .font(.system(size: 12))
                     .foregroundColor(ColorTokens.tertiaryText)
             }
@@ -156,7 +156,7 @@ struct DuplicatesTutorialStepView: View {
                 .font(.system(size: 12))
                 .foregroundColor(ColorTokens.tertiaryText)
             Button(action: { viewModel.openTermsOfUse() }) {
-                Text("Termos de Uso")
+                Text(NSLocalizedString("onboarding.termsOfUse", comment: ""))
                     .font(.system(size: 12))
                     .foregroundColor(ColorTokens.tertiaryText)
             }

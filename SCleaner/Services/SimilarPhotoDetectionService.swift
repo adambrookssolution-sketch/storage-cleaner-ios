@@ -43,7 +43,7 @@ final class SimilarPhotoDetectionService {
 
         // Sort and compare within window
         let sorted = candidates.enumerated().sorted { $0.element.hash < $1.element.hash }
-        let windowSize = 300
+        let windowSize = AppConstants.Hashing.similarWindowSize
 
         for i in 0..<(count - 1) {
             let upperBound = min(i + windowSize, count)

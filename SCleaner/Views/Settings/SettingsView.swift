@@ -11,50 +11,50 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
-                // Premium banner (hidden when paywall is disabled for App Store approval)
-                if AppConstants.Subscription.paywallEnabled {
+                // Premium banner — hidden when paywall disabled OR user is already premium
+                if AppConstants.Subscription.paywallEnabled && !SubscriptionService.shared.isPremium {
                     premiumBanner
                 }
 
                 // Support section
                 Section {
-                    settingsRow(icon: "questionmark.circle.fill", color: .blue, title: "Perguntas Frequentes") {
+                    settingsRow(icon: "questionmark.circle.fill", color: .blue, title: NSLocalizedString("settings.faq", comment: "")) {
                         showFAQ = true
                     }
-                    settingsRow(icon: "envelope.fill", color: .blue, title: "Fale Conosco") {
+                    settingsRow(icon: "envelope.fill", color: .blue, title: NSLocalizedString("settings.contactSupport", comment: "")) {
                         viewModel.contactSupport()
                     }
                     if AppConstants.Subscription.paywallEnabled {
-                        settingsRow(icon: "arrow.clockwise", color: .green, title: "Restaurar Compras") {
+                        settingsRow(icon: "arrow.clockwise", color: .green, title: NSLocalizedString("settings.restorePurchases", comment: "")) {
                             viewModel.restorePurchases()
                         }
                     }
-                    settingsRow(icon: "info.circle.fill", color: .gray, title: "Sobre") {
+                    settingsRow(icon: "info.circle.fill", color: .gray, title: NSLocalizedString("settings.about", comment: "")) {
                         showAbout = true
                     }
-                    settingsRow(icon: "hand.raised.fill", color: .blue, title: "Política de Privacidade") {
+                    settingsRow(icon: "hand.raised.fill", color: .blue, title: NSLocalizedString("settings.privacyPolicy", comment: "")) {
                         viewModel.openPrivacyPolicy()
                     }
-                    settingsRow(icon: "doc.text.fill", color: .gray, title: "Termos de Uso") {
+                    settingsRow(icon: "doc.text.fill", color: .gray, title: NSLocalizedString("settings.termsOfUse", comment: "")) {
                         viewModel.openTermsOfUse()
                     }
                 } header: {
-                    Text("SUPORTE")
+                    Text(NSLocalizedString("settings.supportSection", comment: ""))
                 }
 
                 // Social section
                 Section {
-                    settingsRow(icon: "star.fill", color: .yellow, title: "Avalie o App") {
+                    settingsRow(icon: "star.fill", color: .yellow, title: NSLocalizedString("settings.rateApp", comment: "")) {
                         viewModel.rateApp()
                     }
-                    settingsRow(icon: "square.and.arrow.up.fill", color: .blue, title: "Compartilhar") {
+                    settingsRow(icon: "square.and.arrow.up.fill", color: .blue, title: NSLocalizedString("settings.shareApp", comment: "")) {
                         viewModel.shareApp()
                     }
-                    settingsRow(icon: "camera.fill", color: .purple, title: "Instagram") {
+                    settingsRow(icon: "camera.fill", color: .purple, title: NSLocalizedString("settings.instagram", comment: "")) {
                         viewModel.openInstagram()
                     }
                 } header: {
-                    Text("MANTENHA CONTATO")
+                    Text(NSLocalizedString("settings.socialSection", comment: ""))
                 }
 
                 // Footer
@@ -70,7 +70,7 @@ struct SettingsView: View {
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(ColorTokens.tertiaryText)
 
-                        Text("Versão \(viewModel.appVersion)")
+                        Text(String(format: NSLocalizedString("settings.versionFormat", comment: ""), viewModel.appVersion))
                             .font(.system(size: 12))
                             .foregroundColor(ColorTokens.tertiaryText)
                     }
@@ -79,18 +79,18 @@ struct SettingsView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Configurações")
+            .navigationTitle(NSLocalizedString("settings.title", comment: ""))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Fechar") {
+                    Button(NSLocalizedString("general.close", comment: "")) {
                         dismiss()
                     }
                     .foregroundColor(ColorTokens.primaryBlue)
                 }
             }
         }
-        .alert("Restaurar Compras", isPresented: $viewModel.showRestoreAlert) {
+        .alert(NSLocalizedString("settings.restorePurchases", comment: ""), isPresented: $viewModel.showRestoreAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text(viewModel.restoreAlertMessage)
@@ -131,10 +131,10 @@ struct SettingsView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Desbloquear acesso ilimitado")
+                        Text(NSLocalizedString("settings.unlockPremium", comment: ""))
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(ColorTokens.primaryText)
-                        Text("Remova todos os limites")
+                        Text(NSLocalizedString("settings.removeLimits", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(ColorTokens.secondaryText)
                     }

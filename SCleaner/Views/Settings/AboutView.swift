@@ -27,25 +27,25 @@ struct AboutView: View {
                 }
 
                 VStack(spacing: 8) {
-                    Text("Vortex Cleaner")
+                    Text(NSLocalizedString("about.appName", comment: ""))
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(ColorTokens.primaryText)
 
-                    Text("Versao \(AppConstants.AppInfo.version) (\(AppConstants.AppInfo.buildNumber))")
+                    Text(String(format: NSLocalizedString("about.versionFormat", comment: ""), AppConstants.AppInfo.version, AppConstants.AppInfo.buildNumber))
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.secondaryText)
                 }
 
-                Text("Organize suas fotos, libere espaco e mantenha seu iPhone sempre rapido e organizado.")
+                Text(NSLocalizedString("about.description", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 40)
 
                 VStack(spacing: 16) {
-                    linkButton(title: "Politica de Privacidade", url: AppConstants.URLs.privacyPolicy)
-                    linkButton(title: "Termos de Uso", url: AppConstants.URLs.termsOfUse)
-                    linkButton(title: "Suporte", url: "mailto:\(AppConstants.URLs.supportEmail)")
+                    linkButton(title: NSLocalizedString("about.privacyPolicy", comment: ""), url: AppConstants.URLs.privacyPolicy)
+                    linkButton(title: NSLocalizedString("about.termsOfUse", comment: ""), url: AppConstants.URLs.termsOfUse)
+                    linkButton(title: NSLocalizedString("about.support", comment: ""), url: "mailto:\(AppConstants.URLs.supportEmail)")
                 }
 
                 Spacer()
@@ -53,11 +53,11 @@ struct AboutView: View {
             }
             .frame(maxWidth: .infinity)
             .background(ColorTokens.screenBackground.ignoresSafeArea())
-            .navigationTitle("Sobre")
+            .navigationTitle(NSLocalizedString("about.title", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Fechar") { dismiss() }
+                    Button(NSLocalizedString("general.close", comment: "")) { dismiss() }
                         .foregroundColor(ColorTokens.primaryBlue)
                 }
             }

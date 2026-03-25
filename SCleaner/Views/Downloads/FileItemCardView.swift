@@ -37,7 +37,7 @@ struct FileItemCardView: View {
                 }
 
                 if file.isStale {
-                    Text("6+ meses sem uso")
+                    Text(NSLocalizedString("downloads.unused6Months", comment: ""))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)

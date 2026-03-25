@@ -13,7 +13,7 @@ struct StatsLineView: View {
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(ColorTokens.primaryText)
 
-                Text(" arquivos • ")
+                Text(NSLocalizedString("stats.filesSeparator", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
 
@@ -21,7 +21,7 @@ struct StatsLineView: View {
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(ColorTokens.primaryText)
 
-                Text(" do armazenamento")
+                Text(NSLocalizedString("stats.ofStorage", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
             }

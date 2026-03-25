@@ -1,3 +1,4 @@
+import Foundation
 import RevenueCat
 
 /// Represents the app's subscription tiers
@@ -39,10 +40,10 @@ struct SubscriptionProduct: Identifiable {
               let period = product.subscriptionPeriod else { return displayPrice }
         let unitName: String
         switch period.unit {
-        case .week: unitName = "semana"
-        case .month: unitName = "mês"
-        case .year: unitName = "ano"
-        case .day: unitName = "dia"
+        case .week: unitName = NSLocalizedString("subscription.week", comment: "")
+        case .month: unitName = NSLocalizedString("subscription.month", comment: "")
+        case .year: unitName = NSLocalizedString("subscription.year", comment: "")
+        case .day: unitName = NSLocalizedString("subscription.day", comment: "")
         @unknown default: unitName = ""
         }
         return "\(displayPrice) / \(unitName)"
@@ -59,10 +60,10 @@ struct SubscriptionProduct: Identifiable {
               offer.paymentMode == .freeTrial else { return nil }
         let period = offer.subscriptionPeriod
         switch period.unit {
-        case .day: return "\(period.value) dia\(period.value > 1 ? "s" : "") grátis"
-        case .week: return "\(period.value) semana\(period.value > 1 ? "s" : "") grátis"
-        case .month: return "\(period.value) mês\(period.value > 1 ? "es" : "") grátis"
-        case .year: return "\(period.value) ano\(period.value > 1 ? "s" : "") grátis"
+        case .day: return String(format: NSLocalizedString("subscription.freeTrialDays", comment: ""), period.value)
+        case .week: return String(format: NSLocalizedString("subscription.freeTrialWeeks", comment: ""), period.value)
+        case .month: return String(format: NSLocalizedString("subscription.freeTrialMonths", comment: ""), period.value)
+        case .year: return String(format: NSLocalizedString("subscription.freeTrialYears", comment: ""), period.value)
         @unknown default: return nil
         }
     }
@@ -74,10 +75,10 @@ struct SubscriptionProduct: Identifiable {
 
         let period = offer.subscriptionPeriod
         switch period.unit {
-        case .day: return "\(priceStr) por \(period.value) dia\(period.value > 1 ? "s" : "")"
-        case .week: return "\(priceStr) por \(period.value) semana\(period.value > 1 ? "s" : "")"
-        case .month: return "\(priceStr) por \(period.value) mês\(period.value > 1 ? "es" : "")"
-        case .year: return "\(priceStr) por \(period.value) ano\(period.value > 1 ? "s" : "")"
+        case .day: return String(format: NSLocalizedString("subscription.introOfferDays", comment: ""), priceStr, period.value)
+        case .week: return String(format: NSLocalizedString("subscription.introOfferWeeks", comment: ""), priceStr, period.value)
+        case .month: return String(format: NSLocalizedString("subscription.introOfferMonths", comment: ""), priceStr, period.value)
+        case .year: return String(format: NSLocalizedString("subscription.introOfferYears", comment: ""), priceStr, period.value)
         @unknown default: return priceStr
         }
     }

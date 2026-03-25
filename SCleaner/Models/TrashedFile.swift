@@ -15,7 +15,7 @@ struct TrashedFile: Identifiable, Codable, Equatable {
     var formattedDeletionDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.locale = Locale(identifier: "pt_BR")
+        formatter.locale = Locale.current
         return formatter.string(from: deletionDate)
     }
 

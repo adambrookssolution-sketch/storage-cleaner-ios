@@ -22,13 +22,24 @@ struct DownloadsListView: View {
             if let msg = viewModel.limitMessage {
                 VStack {
                     Spacer()
-                    Text(msg)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(ColorTokens.warningOrange.cornerRadius(10))
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 90)
+                    HStack(spacing: 8) {
+                        Text(msg)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                        Button(NSLocalizedString("general.becomePro", comment: "")) {
+                            viewModel.showPaywall = true
+                        }
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(ColorTokens.warningOrange)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                    }
+                    .padding(12)
+                    .background(ColorTokens.warningOrange.cornerRadius(10))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 90)
                 }
             }
 
@@ -42,32 +53,32 @@ struct DownloadsListView: View {
                 )
             }
         }
-        .navigationTitle("Downloads")
+        .navigationTitle(NSLocalizedString("downloads.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Voltar") { dismiss() }
+                Button(NSLocalizedString("general.back", comment: "")) { dismiss() }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: { viewModel.selectAll() }) {
-                        Label("Selecionar todos", systemImage: "checkmark.circle.fill")
+                        Label(NSLocalizedString("general.selectAll", comment: ""), systemImage: "checkmark.circle.fill")
                     }
                     Button(action: { viewModel.deselectAll() }) {
-                        Label("Desmarcar todos", systemImage: "circle")
+                        Label(NSLocalizedString("general.deselectAll", comment: ""), systemImage: "circle")
                     }
                     Divider()
                     Button(action: { viewModel.toggleFilter() }) {
                         Label(
-                            viewModel.showFilterOnly ? "Mostrar todos" : "Apenas filtrados",
+                            viewModel.showFilterOnly ? NSLocalizedString("downloads.showAll", comment: "") : NSLocalizedString("downloads.filteredOnly", comment: ""),
                             systemImage: viewModel.showFilterOnly ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill"
                         )
                     }
                     if viewModel.hasFolder {
                         Divider()
                         Button(action: { viewModel.changeFolder() }) {
-                            Label("Alterar pasta", systemImage: "folder.badge.gear")
+                            Label(NSLocalizedString("downloads.changeFolder", comment: ""), systemImage: "folder.badge.gear")
                         }
                     }
                 } label: {
@@ -98,7 +109,7 @@ struct DownloadsListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
-                itemLabel: "arquivos",
+                itemLabel: NSLocalizedString("general.files", comment: ""),
                 destination: .appTrashBin,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
@@ -110,7 +121,7 @@ struct DownloadsListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "arquivos", destination: .appTrashBin) {
+                DeletionSuccessView(result: result, itemLabel: NSLocalizedString("general.files", comment: ""), destination: .appTrashBin) {
                     viewModel.showDeleteSuccess = false
                 }
             }
@@ -123,7 +134,7 @@ struct DownloadsListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Movendo para a Lixeira...")
+                        Text(NSLocalizedString("downloads.movingToTrash", comment: ""))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
                     }
@@ -145,11 +156,11 @@ struct DownloadsListView: View {
                 .font(.system(size: 56))
                 .foregroundColor(ColorTokens.warningOrange.opacity(0.6))
 
-            Text("Nenhuma pasta selecionada")
+            Text(NSLocalizedString("downloads.noFolderSelected", comment: ""))
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Selecione a pasta de Downloads para escanear arquivos grandes e antigos.")
+            Text(NSLocalizedString("downloads.selectFolderPrompt", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
@@ -158,7 +169,7 @@ struct DownloadsListView: View {
             Button(action: { viewModel.selectFolder() }) {
                 HStack(spacing: 8) {
                     Image(systemName: "folder.fill")
-                    Text("Selecionar Pasta")
+                    Text(NSLocalizedString("downloads.selectFolderButton", comment: ""))
                 }
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(.white)
@@ -182,11 +193,11 @@ struct DownloadsListView: View {
                 .scaleEffect(1.5)
                 .tint(ColorTokens.warningOrange)
 
-            Text("Escaneando...")
+            Text(NSLocalizedString("downloads.scanning", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Analisando arquivos na pasta \(viewModel.folderName)")
+            Text(String(format: NSLocalizedString("downloads.analyzingFolder", comment: ""), viewModel.folderName))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
@@ -206,11 +217,11 @@ struct DownloadsListView: View {
                 .foregroundColor(ColorTokens.successGreen)
 
             if viewModel.showFilterOnly {
-                Text("Nenhum arquivo grande e antigo!")
+                Text(NSLocalizedString("downloads.noLargeOldFiles", comment: ""))
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(ColorTokens.primaryText)
 
-                Text("Não foram encontrados arquivos maiores que 10 MB sem uso há 6+ meses.")
+                Text(NSLocalizedString("downloads.noLargeOldFilesDetail", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
                     .multilineTextAlignment(.center)
@@ -218,18 +229,18 @@ struct DownloadsListView: View {
 
                 if !viewModel.allFiles.isEmpty {
                     Button(action: { viewModel.toggleFilter() }) {
-                        Text("Mostrar todos os arquivos")
+                        Text(NSLocalizedString("downloads.showAllFiles", comment: ""))
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundColor(ColorTokens.warningOrange)
                     }
                     .padding(.top, 8)
                 }
             } else {
-                Text("Nenhum arquivo encontrado!")
+                Text(NSLocalizedString("downloads.noFilesFound", comment: ""))
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(ColorTokens.primaryText)
 
-                Text("A pasta selecionada está vazia.")
+                Text(NSLocalizedString("downloads.folderEmpty", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
             }
@@ -246,16 +257,16 @@ struct DownloadsListView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
                     if viewModel.showFilterOnly {
-                        Text("\(viewModel.totalDisplayedCount) arquivos grandes (>10 MB) sem uso há 6+ meses")
+                        Text(String(format: NSLocalizedString("downloads.largeOldFilesCount", comment: ""), viewModel.totalDisplayedCount))
                             .font(.system(size: 14))
                             .foregroundColor(ColorTokens.secondaryText)
                     } else {
-                        Text("\(viewModel.totalDisplayedCount) arquivos encontrados")
+                        Text(String(format: NSLocalizedString("downloads.filesFoundCount", comment: ""), viewModel.totalDisplayedCount))
                             .font(.system(size: 14))
                             .foregroundColor(ColorTokens.secondaryText)
                     }
 
-                    Text("Tamanho total: \(viewModel.totalDisplayedSize.formattedSize)")
+                    Text(String(format: NSLocalizedString("downloads.totalSize", comment: ""), viewModel.totalDisplayedSize.formattedSize))
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.tertiaryText)
                 }

@@ -25,11 +25,11 @@ struct RestoreSuccessView: View {
                     .opacity(showCheckmark ? 1 : 0)
             }
 
-            Text("\(restoredCount) arquivos restaurados")
+            Text(String(format: NSLocalizedString("restore.filesRestored", comment: ""), restoredCount))
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Os arquivos foram restaurados ao local original.")
+            Text(NSLocalizedString("restore.filesRestoredDetail", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
@@ -40,7 +40,7 @@ struct RestoreSuccessView: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(ColorTokens.warningOrange)
 
-                    Text("\(failedCount) arquivos não puderam ser restaurados")
+                    Text(String(format: NSLocalizedString("restore.filesFailed", comment: ""), failedCount))
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.warningOrange)
                 }
@@ -55,7 +55,7 @@ struct RestoreSuccessView: View {
             Spacer()
 
             Button(action: onDismiss) {
-                Text("Concluído")
+                Text(NSLocalizedString("general.done", comment: ""))
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

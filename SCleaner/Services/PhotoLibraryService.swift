@@ -37,7 +37,13 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         scanTask = Task(priority: .userInitiated) { [weak self] in
             guard let self else { return }
-            await self.performScan()
+            do {
+                try await self.performScanSafe()
+            } catch {
+                await MainActor.run {
+                    self.progressSubject.send(.failed(String(format: NSLocalizedString("scan.errorDuringScan", comment: ""), error.localizedDescription)))
+                }
+            }
         }
 
         return progressSubject.eraseToAnyPublisher()
@@ -58,7 +64,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
     // MARK: - Scan
 
-    private func performScan() async {
+    private func performScanSafe() async throws {
         let sortByDate = [NSSortDescriptor(key: "creationDate", ascending: false)]
 
         // ═══════════════════════════════════════════════════════════

@@ -36,7 +36,7 @@ extension PHAsset {
         guard let date = creationDate else { return "" }
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.locale = Locale(identifier: "pt_BR")
+        formatter.locale = Locale.current
         return formatter.string(from: date)
     }
 

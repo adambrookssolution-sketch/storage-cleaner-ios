@@ -6,32 +6,32 @@ struct FAQView: View {
 
     private let faqs: [(question: String, answer: String)] = [
         (
-            "Como o Vortex Cleaner encontra fotos duplicadas?",
-            "Utilizamos um algoritmo de hash perceptual (dHash) que compara visualmente cada foto. Fotos com aparencia identica ou muito similar sao agrupadas automaticamente."
+            NSLocalizedString("faq.q1.title", comment: ""),
+            NSLocalizedString("faq.q1.answer", comment: "")
         ),
         (
-            "Minhas fotos sao enviadas para algum servidor?",
-            "Nao. Todo o processamento e feito localmente no seu dispositivo. Suas fotos nunca saem do seu iPhone."
+            NSLocalizedString("faq.q2.title", comment: ""),
+            NSLocalizedString("faq.q2.answer", comment: "")
         ),
         (
-            "O que acontece quando excluo fotos?",
-            "As fotos excluidas sao movidas para a pasta 'Apagados Recentemente' do iOS, onde ficam disponiveis por 30 dias antes da exclusao permanente."
+            NSLocalizedString("faq.q3.title", comment: ""),
+            NSLocalizedString("faq.q3.answer", comment: "")
         ),
         (
-            "O que e a Lixeira do app?",
-            "A Lixeira do app e um espaco interno onde arquivos de downloads excluidos ficam armazenados por 30 dias, permitindo restauracao antes da exclusao definitiva."
+            NSLocalizedString("faq.q4.title", comment: ""),
+            NSLocalizedString("faq.q4.answer", comment: "")
         ),
         (
-            "Como funciona a assinatura?",
-            "Oferecemos planos semanal e anual. Com a assinatura, voce tem acesso ilimitado a todas as funcionalidades de limpeza sem restricoes."
+            NSLocalizedString("faq.q5.title", comment: ""),
+            NSLocalizedString("faq.q5.answer", comment: "")
         ),
         (
-            "Posso cancelar minha assinatura?",
-            "Sim. Voce pode cancelar a qualquer momento nas Configuracoes do iPhone > Apple ID > Assinaturas. O acesso continua ate o final do periodo pago."
+            NSLocalizedString("faq.q6.title", comment: ""),
+            NSLocalizedString("faq.q6.answer", comment: "")
         ),
         (
-            "O app funciona sem internet?",
-            "Sim. O escaneamento e a exclusao funcionam offline. A conexao e necessaria apenas para compras e restauracao de assinaturas."
+            NSLocalizedString("faq.q7.title", comment: ""),
+            NSLocalizedString("faq.q7.answer", comment: "")
         )
     ]
 
@@ -52,11 +52,11 @@ struct FAQView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Perguntas Frequentes")
+            .navigationTitle(NSLocalizedString("faq.title", comment: ""))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Fechar") { dismiss() }
+                    Button(NSLocalizedString("general.close", comment: "")) { dismiss() }
                         .foregroundColor(ColorTokens.primaryBlue)
                 }
             }

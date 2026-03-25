@@ -1,0 +1,307 @@
+/* ============================================ */
+/*  Vortex Cleaner — Español (Latinoamérica)    */
+/* ============================================ */
+
+/* === ONBOARDING === */
+"onboarding.welcomeTitle" = "Bienvenido a\nVortex Cleaner";
+"onboarding.photos" = "Fotos";
+"onboarding.iCloud" = "iCloud";
+"onboarding.privacyText1" = "Vortex Cleaner necesita acceso a sus Fotos para liberar almacenamiento.";
+"onboarding.privacyText2" = "Queremos brindarle transparencia y proteger su privacidad. Al continuar, usted acepta nuestros";
+"onboarding.termsOfUse" = "Términos de Uso";
+"onboarding.privacyPolicy" = "Política de Privacidad";
+"onboarding.andOur" = "y nuestra";
+"onboarding.getStarted" = "Comenzar";
+"onboarding.duplicatesTitle" = "Eliminar Fotos\nDuplicadas";
+"onboarding.duplicatesSubtitle" = "Elimine fotos duplicadas al instante y recupere su almacenamiento.";
+"onboarding.next" = "Siguiente";
+"onboarding.optimizeStorage" = "Optimizar el\nAlmacenamiento del iPhone";
+"onboarding.optimizeSubtitle" = "Libere hasta el 80% de su almacenamiento y obtenga más espacio.";
+"onboarding.storageUsed" = "%@ GB de %@ GB usados";
+"onboarding.appsAndData" = "Datos del Sistema";
+"onboarding.available" = "Disponible";
+"onboarding.disclaimer" = "*Basado en datos internos de Vortex Cleaner";
+
+/* === PERMISSIONS === */
+"permission.waiting" = "Esperando permiso...";
+"permission.granted" = "Acceso concedido.";
+"permission.denied" = "Acceso denegado";
+"permission.deniedDetail" = "Puede cambiarlo en los Ajustes de su iPhone";
+"permission.openSettings" = "Abrir Ajustes";
+"permission.limitedAccess" = "Solo algunas fotos están accesibles";
+"permission.continueAnyway" = "Continuar de todas formas";
+
+/* === DASHBOARD === */
+"dashboard.title" = "Vortex Cleaner";
+"dashboard.tapToScan" = "Toque para analizar su biblioteca de fotos";
+"dashboard.startScan" = "Iniciar Análisis";
+"dashboard.retry" = "Reintentar";
+
+/* === STATS === */
+"stats.filesSeparator" = " archivos • ";
+"stats.ofStorage" = " del almacenamiento";
+
+/* === STORAGE BAR === */
+"storageBar.of" = " de ";
+"storageBar.gb" = " GB ";
+"storageBar.used" = "usados";
+
+/* === CATEGORIES === */
+"category.duplicates" = "Duplicadas";
+"category.similar" = "Similares";
+"category.similarVideos" = "Videos similares";
+"category.similarScreenshots" = "Capturas similares";
+"category.screenshots" = "Capturas de pantalla";
+"category.videos" = "Videos";
+"category.downloads" = "Downloads";
+"category.trashBin" = "Papelera";
+"category.other" = "Otro";
+"category.selectFolder" = "Seleccionar carpeta";
+"category.tapToSelectFolder" = "Toque para seleccionar la carpeta";
+"category.noItems" = "No se encontraron elementos";
+
+/* === DUPLICATES === */
+"duplicates.title" = "Duplicadas";
+"duplicates.groupsFound" = "%d grupos encontrados";
+"duplicates.photosCount" = "%d fotos duplicadas";
+"duplicates.deleting" = "Eliminando %d fotos...";
+"duplicates.confirmationNotice" = "iOS le solicitará confirmación.";
+"duplicates.emptyTitle" = "No se encontraron duplicadas.";
+"duplicates.emptyMessage" = "Su biblioteca está organizada.";
+"duplicates.keepAll" = "Conservar todas";
+"duplicates.selectDuplicates" = "Seleccionar duplicadas";
+
+/* === SIMILAR === */
+"similar.title" = "Similares";
+"similar.groupsFound" = "%d grupos encontrados";
+"similar.photosCount" = "%d fotos similares";
+"similar.groupCount" = "%d fotos similares";
+"similar.deleting" = "Eliminando %d fotos...";
+"similar.confirmationNotice" = "iOS le solicitará confirmación.";
+"similar.emptyTitle" = "No se encontraron fotos similares.";
+"similar.emptyMessage" = "Su biblioteca está organizada.";
+"similar.keepAll" = "Conservar todas";
+"similar.selectSimilar" = "Seleccionar similares";
+"similar.compare" = "Comparar";
+"similar.resolution" = "Resolución";
+"similar.size" = "Tamaño";
+
+/* === SCREENSHOTS === */
+"screenshots.title" = "Capturas de pantalla";
+"screenshots.count" = "%d capturas de pantalla";
+"screenshots.totalSize" = "Tamaño total: %@";
+"screenshots.savingsMessage" = "Ahorre %@ eliminando %d captura(s)";
+"screenshots.preselectedMessage" = "Todas las capturas de pantalla fueron preseleccionadas.";
+"screenshots.deleting" = "Eliminando %d capturas de pantalla...";
+"screenshots.confirmationNotice" = "iOS le solicitará confirmación.";
+"screenshots.emptyTitle" = "No se encontraron capturas de pantalla.";
+"screenshots.emptyMessage" = "Su biblioteca no contiene capturas de pantalla.";
+"screenshots.itemLabel" = "capturas de pantalla";
+
+/* === VIDEOS === */
+"videos.title" = "Videos";
+"videos.countFound" = "%d videos encontrados";
+"videos.totalSize" = "Tamaño total: %@";
+"videos.savingsMessage" = "Ahorre %@ eliminando %d video(s)";
+"videos.preselectedMessage" = "Los 15 videos más pesados fueron preseleccionados.";
+"videos.deleting" = "Eliminando %d videos...";
+"videos.confirmationNotice" = "iOS le solicitará confirmación.";
+"videos.emptyTitle" = "No se encontraron videos.";
+"videos.emptyMessage" = "Su biblioteca no contiene videos.";
+"videos.itemLabel" = "videos";
+
+/* === DOWNLOADS === */
+"downloads.title" = "Downloads";
+"downloads.changeFolder" = "Cambiar carpeta";
+"downloads.movingToTrash" = "Moviendo a la Papelera...";
+"downloads.noFolderSelected" = "No se seleccionó ninguna carpeta";
+"downloads.selectFolderPrompt" = "Seleccione la carpeta de Downloads para analizar archivos grandes y antiguos.";
+"downloads.selectFolderButton" = "Seleccionar Carpeta";
+"downloads.scanning" = "Analizando...";
+"downloads.analyzingFolder" = "Analizando archivos en la carpeta %@";
+"downloads.noLargeOldFiles" = "No se encontraron archivos grandes y antiguos.";
+"downloads.noLargeOldFilesDetail" = "No se encontraron archivos de más de 10 MB sin uso en más de 6 meses.";
+"downloads.showAllFiles" = "Mostrar todos los archivos";
+"downloads.showAll" = "Mostrar todos";
+"downloads.filteredOnly" = "Solo filtrados";
+"downloads.noFilesFound" = "No se encontraron archivos.";
+"downloads.folderEmpty" = "La carpeta seleccionada está vacía.";
+"downloads.largeOldFilesCount" = "%d archivos grandes (>10 MB) sin uso en más de 6 meses";
+"downloads.filesFoundCount" = "%d archivos encontrados";
+"downloads.totalSize" = "Tamaño total: %@";
+"downloads.unused6Months" = "Más de 6 meses sin uso";
+"downloads.errorSaveFolder" = "No fue posible guardar el acceso a la carpeta.";
+"downloads.errorAccessFolder" = "No fue posible acceder a la carpeta. Selecciónela nuevamente.";
+"downloads.limitMessage" = "Límite diario: %d eliminaciones restantes. Seleccione menos elementos o suscríbase a Premium.";
+
+/* === TRASH BIN === */
+"trashBin.title" = "Papelera";
+"trashBin.emptyTrash" = "Vaciar Papelera";
+"trashBin.empty" = "Papelera vacía.";
+"trashBin.noFiles" = "No hay archivos en la papelera.";
+"trashBin.filesInTrash" = "%d archivos en la papelera";
+"trashBin.totalSize" = "Tamaño total: %@";
+"trashBin.autoDeleteWarning" = "Los archivos se eliminan automáticamente después de 30 días.";
+"trashBin.deletedDate" = "Eliminado: %@";
+"trashBin.daysRemaining" = "%d días restantes";
+"trashBin.restore" = "Restaurar";
+"trashBin.processing" = "Procesando...";
+
+/* === DELETION === */
+"deletion.confirmTitle" = "¿Eliminar %d %@?";
+"deletion.descriptionPhotoLibrary" = "Libere %@ de espacio.\nLas %@ se moverán a Eliminados Recientes de iOS durante 30 días.";
+"deletion.descriptionAppTrash" = "Libere %@ de espacio.\nLos %@ se moverán a la Papelera de la aplicación durante 30 días.";
+"deletion.descriptionPermanent" = "Libere %@ de espacio.\nLos %@ se eliminarán permanentemente. Esta acción no se puede deshacer.";
+"deletion.deletePermanently" = "Eliminar permanentemente";
+"deletion.deleteItems" = "Eliminar %@";
+"deletion.successCount" = "%d %@ eliminados";
+"deletion.freedSpace" = "%@ liberados";
+"deletion.failedCount" = "%d %@ no pudieron ser eliminados";
+"deletion.guidancePhotoLibrary" = "Puede recuperar las %@ en Fotos > Álbumes > Eliminados Recientes durante 30 días.";
+"deletion.guidanceAppTrash" = "Los %@ se movieron a la Papelera de la aplicación. Puede restaurarlos en un plazo de 30 días.";
+
+/* === RESTORE === */
+"restore.filesRestored" = "%d archivos restaurados";
+"restore.filesRestoredDetail" = "Los archivos fueron restaurados a su ubicación original.";
+"restore.filesFailed" = "%d archivos no pudieron ser restaurados";
+
+/* === SCAN === */
+"scan.readyToScan" = "Listo para analizar";
+"scan.scanning" = "Analizando...";
+"scan.analyzingPhotos" = "Analizando fotos...";
+"scan.completed" = "Completado";
+"scan.error" = "Error durante el análisis";
+"scan.errorDuringScan" = "Error durante el análisis: %@";
+
+/* === PAYWALL === */
+"paywall.premiumBadge" = "ACCESO PREMIUM";
+"paywall.fullAccessTitle" = "Acceso Completo";
+"paywall.loadError" = "No fue posible cargar los planes.\nVerifique su conexión.";
+"paywall.retryButton" = "Reintentar";
+"paywall.loadingPlans" = "Cargando planes...";
+"paywall.autoRenewalNotice" = "Suscripción con renovación automática. Cancele cuando lo desee en Ajustes.\nEl pago se cobra a la cuenta de iTunes.";
+"paywall.startTrialButton" = "INICIAR 7 DÍAS PREMIUM";
+"paywall.trialTimelineTitle" = "Cómo funciona la\nPrueba Gratuita";
+"paywall.timelineToday" = "HOY";
+"paywall.timelineTodayDescription" = "Acceso total a todas las funciones premium. Eliminaciones ilimitadas.";
+"paywall.noChargeToday" = "Sin cargo hoy";
+"paywall.timelineDay2" = "DÍA 2";
+"paywall.timelineDay2Description" = "Recibirá un recordatorio antes del cobro. Cancele en cualquier momento.";
+"paywall.timelineDay3" = "DÍA 3";
+"paywall.timelineDay3Description" = "Su suscripción se renueva por %@. Cancele en los Ajustes del iPhone.";
+"paywall.trialDescription" = "Pruebe 3 días gratis, luego %@.\nSe renueva automáticamente. Cancele cuando lo desee.";
+"paywall.startFreeTrialButton" = "Comenzar Prueba Gratuita";
+"paywall.afterTrialPrice" = "Después del periodo gratuito: %@";
+"paywall.bestValueBadge" = "MEJOR VALOR";
+"paywall.specialOfferBadge" = "Oferta Especial";
+"paywall.afterPrice" = "luego %@";
+"paywall.monthlyPlan" = "Mensual";
+"paywall.monthlySuffix" = "/mes";
+"paywall.billedMonthly" = "Cobro mensual";
+"paywall.subscriptionActivated" = "Suscripción activada.";
+"paywall.unlimitedAccessMessage" = "Ahora tiene acceso ilimitado\na todas las funciones.";
+"paywall.consentPrefix" = "Al suscribirse, usted acepta nuestros";
+"paywall.termsOfUse" = "Términos de Uso";
+"paywall.privacyPolicy" = "Política de Privacidad";
+"paywall.restorePurchases" = "Restaurar Compras";
+"paywall.notNow" = "Ahora No";
+"paywall.unlimitedDeletions" = "Eliminaciones ilimitadas de fotos y videos";
+"paywall.advancedDetection" = "Detección avanzada de duplicadas";
+"paywall.screenshotCleanup" = "Limpieza completa de capturas de pantalla";
+"paywall.downloadScanner" = "Análisis de descargas pesadas";
+"paywall.futureUpdates" = "Todas las futuras actualizaciones";
+"paywall.unlimitedDeletionsShort" = "Eliminaciones ilimitadas";
+"paywall.duplicatesFound" = "%d fotos duplicadas encontradas";
+"paywall.videosToReview" = "%d videos para revisar";
+"paywall.screenshotsFound" = "%d capturas de pantalla";
+
+/* === SETTINGS === */
+"settings.title" = "Ajustes";
+"settings.unlockPremium" = "Desbloquear acceso ilimitado";
+"settings.removeLimits" = "Elimine todos los límites";
+"settings.supportSection" = "SOPORTE";
+"settings.faq" = "Preguntas Frecuentes";
+"settings.contactSupport" = "Contáctenos";
+"settings.restorePurchases" = "Restaurar Compras";
+"settings.about" = "Acerca de";
+"settings.privacyPolicy" = "Política de Privacidad";
+"settings.termsOfUse" = "Términos de Uso";
+"settings.socialSection" = "MANTÉNGASE EN CONTACTO";
+"settings.rateApp" = "Calificar la App";
+"settings.shareApp" = "Compartir";
+"settings.instagram" = "Instagram";
+"settings.versionFormat" = "Versión %@";
+"settings.shareText" = "Conozca Vortex Cleaner: organice sus fotos y libere espacio.";
+"settings.noActiveSubscription" = "No se encontró ninguna suscripción activa.";
+"settings.restoreSuccess" = "Suscripción restaurada correctamente.";
+
+/* === ABOUT === */
+"about.title" = "Acerca de";
+"about.appName" = "Vortex Cleaner";
+"about.versionFormat" = "Versión %@ (%@)";
+"about.description" = "Organice sus fotos, libere espacio y mantenga su iPhone siempre rápido y ordenado.";
+"about.privacyPolicy" = "Política de Privacidad";
+"about.termsOfUse" = "Términos de Uso";
+"about.support" = "Soporte";
+
+/* === FAQ === */
+"faq.title" = "Preguntas Frecuentes";
+"faq.q1.title" = "¿Cómo encuentra fotos duplicadas Vortex Cleaner?";
+"faq.q1.answer" = "Utilizamos un algoritmo de hash perceptual (dHash) que analiza el contenido visual de cada foto. Esto permite identificar fotos idénticas o muy similares aunque tengan nombres diferentes.";
+"faq.q2.title" = "¿Mis fotos se envían a algún servidor?";
+"faq.q2.answer" = "No. Todo el procesamiento se realiza de forma local en su dispositivo. Sus fotos nunca salen de su iPhone.";
+"faq.q3.title" = "¿Qué sucede cuando elimino fotos?";
+"faq.q3.answer" = "Las fotos eliminadas se mueven a Eliminados Recientes de iOS, donde permanecen disponibles durante 30 días antes de ser eliminadas permanentemente.";
+"faq.q4.title" = "¿Qué es la Papelera de la aplicación?";
+"faq.q4.answer" = "La Papelera es un espacio interno donde los archivos de Downloads se conservan durante 30 días antes de la eliminación permanente, lo que le permite restaurarlos si es necesario.";
+"faq.q5.title" = "¿Cómo funciona la suscripción?";
+"faq.q5.answer" = "Ofrecemos planes semanal y mensual. Los suscriptores tienen acceso ilimitado a todas las funcionalidades. Cancele en cualquier momento desde los Ajustes del iPhone.";
+"faq.q6.title" = "¿Puedo cancelar mi suscripción?";
+"faq.q6.answer" = "Sí. Acceda a Ajustes > su nombre > Suscripciones en su iPhone. El acceso Premium continúa hasta el final del periodo pagado.";
+"faq.q7.title" = "¿La aplicación funciona sin internet?";
+"faq.q7.answer" = "Sí. El análisis y la eliminación funcionan completamente sin conexión. La conexión a internet solo es necesaria para gestionar suscripciones.";
+
+/* === SUBSCRIPTION === */
+"subscription.noPlansAvailable" = "No hay planes disponibles en este momento.";
+"subscription.errorLoadingPlans" = "No fue posible cargar los planes. Verifique su conexión.";
+"subscription.purchaseError" = "Error al procesar la compra. Intente nuevamente.";
+"subscription.noActiveSubscription" = "No se encontró ninguna suscripción activa.";
+"subscription.restoreError" = "Error al restaurar compras. Intente nuevamente.";
+"subscription.week" = "semana";
+"subscription.month" = "mes";
+"subscription.year" = "año";
+"subscription.day" = "día";
+"subscription.freeTrialDays" = "%d días gratis";
+"subscription.freeTrialWeeks" = "%d semanas gratis";
+"subscription.freeTrialMonths" = "%d meses gratis";
+"subscription.freeTrialYears" = "%d años gratis";
+"subscription.introOfferDays" = "%1$@ por %2$d días";
+"subscription.introOfferWeeks" = "%1$@ por %2$d semanas";
+"subscription.introOfferMonths" = "%1$@ por %2$d meses";
+"subscription.introOfferYears" = "%1$@ por %2$d años";
+
+/* === GENERAL === */
+"general.and" = "y";
+"general.back" = "Atrás";
+"general.becomePro" = "Obtener Pro";
+"general.bestResultBadge" = "Mejor";
+"general.cancel" = "Cancelar";
+"general.close" = "Cerrar";
+"general.continue" = "Continuar";
+"general.delete" = "Eliminar";
+"general.deselectAll" = "Deseleccionar todos";
+"general.done" = "Listo";
+"general.files" = "archivos";
+"general.freeSpaceLabel" = "Liberar %@";
+"general.limitMessage" = "Límite diario: %d eliminaciones restantes.";
+"general.photos" = "fotos";
+"general.selectAll" = "Seleccionar todos";
+"general.selectedCount" = "%d seleccionado(s)";
+
+/* === TABS === */
+"tab.cleaning" = "Limpieza";
+"tab.contacts" = "Contactos";
+"tab.email" = "Correos";
+"tab.compress" = "Comprimir";
+"tab.comingSoon" = "Próximamente";
+"tab.comingSoonMessage" = "Esta función estará disponible en una actualización futura.";

@@ -3,9 +3,9 @@ import StoreKit
 import Combine
 
 /// Manages subscriptions via RevenueCat.
-/// Single source of truth for subscription state across the app.
+/// Implements PurchasesDelegate for real-time entitlement updates (trial expiry, cancellation, billing failure).
 @MainActor
-final class SubscriptionService: ObservableObject {
+final class SubscriptionService: NSObject, ObservableObject, PurchasesDelegate {
 
     static let shared = SubscriptionService()
 
@@ -20,14 +20,35 @@ final class SubscriptionService: ObservableObject {
 
     // MARK: - Init
 
-    private init() {
+    private override init() {
+        super.init()
         Task { await checkCurrentEntitlements() }
     }
 
-    /// Call once at app launch (in App init or AppDelegate)
+    /// Call once at app launch (in App init)
     static func configure() {
+        #if DEBUG
         Purchases.logLevel = .debug
+        #else
+        Purchases.logLevel = .error
+        #endif
         Purchases.configure(withAPIKey: AppConstants.RevenueCat.apiKey)
+        Purchases.shared.delegate = SubscriptionService.shared
+    }
+
+    // MARK: - PurchasesDelegate (real-time entitlement updates)
+
+    nonisolated func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+        Task { @MainActor in
+            self.updateEntitlements(from: customerInfo)
+        }
+    }
+
+    // MARK: - Foreground Revalidation
+
+    /// Call when app returns to foreground (scenePhase == .active)
+    func revalidateOnForeground() {
+        Task { await checkCurrentEntitlements() }
     }
 
     // MARK: - Load Products
@@ -41,7 +62,7 @@ final class SubscriptionService: ObservableObject {
             let offerings = try await Purchases.shared.offerings()
 
             guard let current = offerings.current else {
-                errorMessage = "Nenhum plano disponível no momento."
+                errorMessage = NSLocalizedString("subscription.noPlansAvailable", comment: "")
                 isLoading = false
                 return
             }
@@ -49,18 +70,12 @@ final class SubscriptionService: ObservableObject {
             products = current.availablePackages.compactMap { package in
                 let productId = package.storeProduct.productIdentifier
                 guard let tier = AppConstants.Subscription.tier(for: productId) else { return nil }
-
-                // Wrap RevenueCat StoreProduct into our SubscriptionProduct
-                return SubscriptionProduct(
-                    id: productId,
-                    rcPackage: package,
-                    tier: tier
-                )
+                return SubscriptionProduct(id: productId, rcPackage: package, tier: tier)
             }
             .sorted { $0.tier < $1.tier }
 
         } catch {
-            errorMessage = "Não foi possível carregar os planos. Verifique sua conexão."
+            errorMessage = NSLocalizedString("subscription.errorLoadingPlans", comment: "")
         }
 
         isLoading = false
@@ -77,7 +92,7 @@ final class SubscriptionService: ObservableObject {
             let result = try await Purchases.shared.purchase(package: package)
 
             if result.customerInfo.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true {
-                await checkCurrentEntitlements()
+                updateEntitlements(from: result.customerInfo)
                 isLoading = false
                 return true
             }
@@ -86,15 +101,13 @@ final class SubscriptionService: ObservableObject {
             return false
 
         } catch let error as RevenueCat.ErrorCode {
-            if error == .purchaseCancelledError {
-                // User cancelled — not an error
-            } else {
-                errorMessage = "Erro ao processar a compra. Tente novamente."
+            if error != .purchaseCancelledError {
+                errorMessage = NSLocalizedString("subscription.purchaseError", comment: "")
             }
             isLoading = false
             return false
         } catch {
-            errorMessage = "Erro ao processar a compra. Tente novamente."
+            errorMessage = NSLocalizedString("subscription.purchaseError", comment: "")
             isLoading = false
             return false
         }
@@ -111,16 +124,16 @@ final class SubscriptionService: ObservableObject {
             let isActive = info.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true
 
             if isActive {
-                await checkCurrentEntitlements()
+                updateEntitlements(from: info)
                 isLoading = false
                 return true
             } else {
-                errorMessage = "Nenhuma assinatura ativa encontrada."
+                errorMessage = NSLocalizedString("subscription.noActiveSubscription", comment: "")
                 isLoading = false
                 return false
             }
         } catch {
-            errorMessage = "Erro ao restaurar compras. Tente novamente."
+            errorMessage = NSLocalizedString("subscription.restoreError", comment: "")
             isLoading = false
             return false
         }
@@ -131,21 +144,25 @@ final class SubscriptionService: ObservableObject {
     func checkCurrentEntitlements() async {
         do {
             let info = try await Purchases.shared.customerInfo()
-            let isActive = info.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true
-
-            if isActive {
-                // Determine which product is active
-                if let activeProductId = info.entitlements[AppConstants.RevenueCat.entitlementId]?.productIdentifier,
-                   let tier = AppConstants.Subscription.tier(for: activeProductId) {
-                    currentTier = tier
-                } else {
-                    currentTier = .weekly // Default to weekly if active but unknown product
-                }
-            } else {
-                currentTier = .none
-            }
+            updateEntitlements(from: info)
         } catch {
             // Silently fail — keep current state
+        }
+    }
+
+    /// Unified entitlement update — used by delegate, purchase, restore, and foreground check
+    private func updateEntitlements(from info: CustomerInfo) {
+        let isActive = info.entitlements[AppConstants.RevenueCat.entitlementId]?.isActive == true
+
+        if isActive {
+            if let activeProductId = info.entitlements[AppConstants.RevenueCat.entitlementId]?.productIdentifier,
+               let tier = AppConstants.Subscription.tier(for: activeProductId) {
+                currentTier = tier
+            } else {
+                currentTier = .weekly
+            }
+        } else {
+            currentTier = .none
         }
     }
 }

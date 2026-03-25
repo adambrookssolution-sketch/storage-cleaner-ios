@@ -66,7 +66,7 @@ struct SelectablePhotoView: View {
                 HStack {
                     // Best Result badge (bottom-left)
                     if isBestResult {
-                        Text("Melhor")
+                        Text(NSLocalizedString("general.bestResultBadge", comment: ""))
                             .font(.system(size: 10, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.horizontal, 8)

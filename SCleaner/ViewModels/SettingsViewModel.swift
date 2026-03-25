@@ -24,7 +24,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func shareApp() {
-        let text = "Confira o Vortex Cleaner - organize suas fotos e libere espaço!"
+        let text = NSLocalizedString("settings.shareText", comment: "")
         let activityVC = UIActivityViewController(
             activityItems: [text],
             applicationActivities: nil
@@ -59,8 +59,8 @@ final class SettingsViewModel: ObservableObject {
         Task {
             let success = await SubscriptionService.shared.restorePurchases()
             restoreAlertMessage = success
-                ? "Assinatura restaurada com sucesso!"
-                : (SubscriptionService.shared.errorMessage ?? "Nenhuma assinatura ativa encontrada.")
+                ? NSLocalizedString("settings.restoreSuccess", comment: "")
+                : (SubscriptionService.shared.errorMessage ?? NSLocalizedString("settings.noActiveSubscription", comment: ""))
             showRestoreAlert = true
         }
     }

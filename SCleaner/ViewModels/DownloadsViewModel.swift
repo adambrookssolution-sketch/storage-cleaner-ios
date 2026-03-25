@@ -75,7 +75,7 @@ final class DownloadsViewModel: ObservableObject {
             }
             Task { await scanFolder() }
         } catch {
-            errorMessage = "Não foi possível salvar o acesso à pasta."
+            errorMessage = NSLocalizedString("downloads.errorSaveFolder", comment: "")
         }
     }
 
@@ -141,7 +141,7 @@ final class DownloadsViewModel: ObservableObject {
                 showPaywall = true
             } else {
                 let remaining = limitService.remainingDeletions
-                limitMessage = "Limite diario: \(remaining) exclusoes restantes. Selecione menos itens ou assine o Premium."
+                limitMessage = String(format: NSLocalizedString("downloads.limitMessage", comment: ""), remaining)
             }
             return
         }
@@ -165,7 +165,7 @@ final class DownloadsViewModel: ObservableObject {
         }
 
         guard url.startAccessingSecurityScopedResource() else {
-            errorMessage = "Não foi possível acessar a pasta. Selecione novamente."
+            errorMessage = NSLocalizedString("downloads.errorAccessFolder", comment: "")
             isDeleting = false
             return
         }

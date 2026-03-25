@@ -40,6 +40,10 @@ enum AppConstants {
         static let similarThreshold = 20
         static let hashBatchSize = 100
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
+        /// Sliding window size for duplicate comparison. Larger = more accurate but slower.
+        static let duplicateWindowSize = 200
+        /// Sliding window size for similar photo comparison.
+        static let similarWindowSize = 300
     }
 
     enum Downloads {
@@ -85,7 +89,7 @@ enum AppConstants {
 
     enum AppInfo {
         static let appName = "Vortex Cleaner"
-        static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1"
-        static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2"
+        static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "2"
     }
 }

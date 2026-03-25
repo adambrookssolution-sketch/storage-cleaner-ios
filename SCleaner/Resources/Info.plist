@@ -19,9 +19,9 @@
 	<key>CFBundleName</key>
 	<string>Vortex Cleaner</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.0</string>
+	<string>1.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>UILaunchStoryboardName</key>
 	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -39,5 +39,17 @@
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>pt-BR</string>
+		<string>ja</string>
+		<string>de</string>
+		<string>fr</string>
+		<string>es</string>
+		<string>ko</string>
+		<string>zh-Hant</string>
+		<string>ro</string>
+	</array>
 </dict>
 </plist>

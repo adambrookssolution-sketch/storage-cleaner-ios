@@ -1,0 +1,307 @@
+/* ============================================ */
+/*  Vortex Cleaner — 繁體中文 (台灣)              */
+/* ============================================ */
+
+/* === ONBOARDING === */
+"onboarding.welcomeTitle" = "歡迎使用\nVortex Cleaner";
+"onboarding.photos" = "照片";
+"onboarding.iCloud" = "iCloud";
+"onboarding.privacyText1" = "Vortex Cleaner 需要取用您的照片才能釋放儲存空間。";
+"onboarding.privacyText2" = "我們致力於提供透明度並保護您的隱私。繼續使用即表示您同意我們的";
+"onboarding.termsOfUse" = "使用條款";
+"onboarding.privacyPolicy" = "隱私權政策";
+"onboarding.andOur" = "以及";
+"onboarding.getStarted" = "開始使用";
+"onboarding.duplicatesTitle" = "刪除\n重複照片";
+"onboarding.duplicatesSubtitle" = "立即移除重複照片，釋放您的儲存空間！";
+"onboarding.next" = "下一步";
+"onboarding.optimizeStorage" = "最佳化\niPhone 儲存空間";
+"onboarding.optimizeSubtitle" = "釋放多達 80% 的儲存空間，享有更多可用容量。";
+"onboarding.storageUsed" = "已使用 %@ GB（共 %@ GB）";
+"onboarding.appsAndData" = "系統資料";
+"onboarding.available" = "可用";
+"onboarding.disclaimer" = "*根據 Vortex Cleaner 內部資料";
+
+/* === PERMISSIONS === */
+"permission.waiting" = "正在等待授權...";
+"permission.granted" = "已取得存取權限！";
+"permission.denied" = "存取被拒絕";
+"permission.deniedDetail" = "您可以在 iPhone 設定中變更";
+"permission.openSettings" = "開啟設定";
+"permission.limitedAccess" = "僅可存取部分照片";
+"permission.continueAnyway" = "仍要繼續";
+
+/* === DASHBOARD === */
+"dashboard.title" = "Vortex Cleaner";
+"dashboard.tapToScan" = "點一下即可掃描您的照片圖庫";
+"dashboard.startScan" = "開始掃描";
+"dashboard.retry" = "重試";
+
+/* === STATS === */
+"stats.filesSeparator" = " 個檔案 • ";
+"stats.ofStorage" = " 儲存空間";
+
+/* === STORAGE BAR === */
+"storageBar.of" = " / ";
+"storageBar.gb" = " GB ";
+"storageBar.used" = "已使用";
+
+/* === CATEGORIES === */
+"category.duplicates" = "重複項目";
+"category.similar" = "相似項目";
+"category.similarVideos" = "相似影片";
+"category.similarScreenshots" = "相似螢幕截圖";
+"category.screenshots" = "螢幕截圖";
+"category.videos" = "影片";
+"category.downloads" = "Downloads";
+"category.trashBin" = "垃圾桶";
+"category.other" = "其他";
+"category.selectFolder" = "選擇資料夾";
+"category.tapToSelectFolder" = "點一下以選擇資料夾";
+"category.noItems" = "找不到任何項目";
+
+/* === DUPLICATES === */
+"duplicates.title" = "重複項目";
+"duplicates.groupsFound" = "找到 %d 個群組";
+"duplicates.photosCount" = "%d 張重複照片";
+"duplicates.deleting" = "正在刪除 %d 張照片...";
+"duplicates.confirmationNotice" = "iOS 將會要求您確認。";
+"duplicates.emptyTitle" = "沒有重複項目！";
+"duplicates.emptyMessage" = "您的圖庫整理得很好。";
+"duplicates.keepAll" = "全部保留";
+"duplicates.selectDuplicates" = "選取重複項目";
+
+/* === SIMILAR === */
+"similar.title" = "相似項目";
+"similar.groupsFound" = "找到 %d 個群組";
+"similar.photosCount" = "%d 張相似照片";
+"similar.groupCount" = "%d 張相似照片";
+"similar.deleting" = "正在刪除 %d 張照片...";
+"similar.confirmationNotice" = "iOS 將會要求您確認。";
+"similar.emptyTitle" = "沒有相似的照片！";
+"similar.emptyMessage" = "您的圖庫整理得很好。";
+"similar.keepAll" = "全部保留";
+"similar.selectSimilar" = "選取相似項目";
+"similar.compare" = "比較";
+"similar.resolution" = "解析度";
+"similar.size" = "大小";
+
+/* === SCREENSHOTS === */
+"screenshots.title" = "螢幕截圖";
+"screenshots.count" = "%d 張螢幕截圖";
+"screenshots.totalSize" = "總大小：%@";
+"screenshots.savingsMessage" = "刪除 %d 張螢幕截圖可節省 %@";
+"screenshots.preselectedMessage" = "所有螢幕截圖已預先選取。";
+"screenshots.deleting" = "正在刪除 %d 張螢幕截圖...";
+"screenshots.confirmationNotice" = "iOS 將會要求您確認。";
+"screenshots.emptyTitle" = "沒有螢幕截圖！";
+"screenshots.emptyMessage" = "您的圖庫中沒有螢幕截圖。";
+"screenshots.itemLabel" = "螢幕截圖";
+
+/* === VIDEOS === */
+"videos.title" = "影片";
+"videos.countFound" = "找到 %d 部影片";
+"videos.totalSize" = "總大小：%@";
+"videos.savingsMessage" = "刪除 %d 部影片可節省 %@";
+"videos.preselectedMessage" = "已預先選取 15 部最大的影片。";
+"videos.deleting" = "正在刪除 %d 部影片...";
+"videos.confirmationNotice" = "iOS 將會要求您確認。";
+"videos.emptyTitle" = "沒有影片！";
+"videos.emptyMessage" = "您的圖庫中沒有影片。";
+"videos.itemLabel" = "影片";
+
+/* === DOWNLOADS === */
+"downloads.title" = "Downloads";
+"downloads.changeFolder" = "變更資料夾";
+"downloads.movingToTrash" = "正在移至垃圾桶...";
+"downloads.noFolderSelected" = "尚未選擇資料夾";
+"downloads.selectFolderPrompt" = "請選擇 Downloads 資料夾以掃描大型及舊檔案。";
+"downloads.selectFolderButton" = "選擇資料夾";
+"downloads.scanning" = "掃描中...";
+"downloads.analyzingFolder" = "正在分析 %@ 資料夾中的檔案";
+"downloads.noLargeOldFiles" = "沒有大型舊檔案！";
+"downloads.noLargeOldFilesDetail" = "找不到超過 10 MB 且超過 6 個月未使用的檔案。";
+"downloads.showAllFiles" = "顯示所有檔案";
+"downloads.showAll" = "顯示全部";
+"downloads.filteredOnly" = "僅篩選結果";
+"downloads.noFilesFound" = "找不到檔案！";
+"downloads.folderEmpty" = "所選資料夾是空的。";
+"downloads.largeOldFilesCount" = "%d 個大型檔案（>10 MB）超過 6 個月未使用";
+"downloads.filesFoundCount" = "找到 %d 個檔案";
+"downloads.totalSize" = "總大小：%@";
+"downloads.unused6Months" = "超過 6 個月未使用";
+"downloads.errorSaveFolder" = "無法儲存資料夾存取權限。";
+"downloads.errorAccessFolder" = "無法存取資料夾，請重新選擇。";
+"downloads.limitMessage" = "每日限額：剩餘 %d 次刪除。請減少選取項目或訂閱 Premium。";
+
+/* === TRASH BIN === */
+"trashBin.title" = "垃圾桶";
+"trashBin.emptyTrash" = "清空垃圾桶";
+"trashBin.empty" = "垃圾桶是空的！";
+"trashBin.noFiles" = "垃圾桶中沒有檔案。";
+"trashBin.filesInTrash" = "垃圾桶中有 %d 個檔案";
+"trashBin.totalSize" = "總大小：%@";
+"trashBin.autoDeleteWarning" = "檔案將在 30 天後自動刪除。";
+"trashBin.deletedDate" = "刪除日期：%@";
+"trashBin.daysRemaining" = "剩餘 %d 天";
+"trashBin.restore" = "復原";
+"trashBin.processing" = "處理中...";
+
+/* === DELETION === */
+"deletion.confirmTitle" = "確定要刪除 %d 個%@嗎？";
+"deletion.descriptionPhotoLibrary" = "將釋放 %@ 空間。\n%@將移至 iOS「最近刪除」，保留 30 天。";
+"deletion.descriptionAppTrash" = "將釋放 %@ 空間。\n%@將移至 App 垃圾桶，保留 30 天。";
+"deletion.descriptionPermanent" = "將釋放 %@ 空間。\n%@將被永久刪除，此操作無法復原。";
+"deletion.deletePermanently" = "永久刪除";
+"deletion.deleteItems" = "刪除%@";
+"deletion.successCount" = "已刪除 %d 個%@";
+"deletion.freedSpace" = "已釋放 %@";
+"deletion.failedCount" = "%d 個%@無法刪除";
+"deletion.guidancePhotoLibrary" = "您可以在照片 > 相簿 > 最近刪除中，於 30 天內復原%@。";
+"deletion.guidanceAppTrash" = "%@已移至 App 垃圾桶。您可以在 30 天內復原。";
+
+/* === RESTORE === */
+"restore.filesRestored" = "已復原 %d 個檔案";
+"restore.filesRestoredDetail" = "檔案已復原至原始位置。";
+"restore.filesFailed" = "%d 個檔案無法復原";
+
+/* === SCAN === */
+"scan.readyToScan" = "準備掃描";
+"scan.scanning" = "掃描中...";
+"scan.analyzingPhotos" = "正在分析照片...";
+"scan.completed" = "完成";
+"scan.error" = "掃描時發生錯誤";
+"scan.errorDuringScan" = "掃描時發生錯誤：%@";
+
+/* === PAYWALL === */
+"paywall.premiumBadge" = "PREMIUM 方案";
+"paywall.fullAccessTitle" = "完整存取";
+"paywall.loadError" = "無法載入方案。\n請檢查您的網路連線。";
+"paywall.retryButton" = "重試";
+"paywall.loadingPlans" = "正在載入方案...";
+"paywall.autoRenewalNotice" = "自動續約訂閱。您可隨時在設定中取消。\n款項將透過 iTunes 帳號收取。";
+"paywall.startTrialButton" = "開始 7 天 PREMIUM";
+"paywall.trialTimelineTitle" = "免費試用\n使用說明";
+"paywall.timelineToday" = "今天";
+"paywall.timelineTodayDescription" = "完整存取所有 Premium 功能。無限次刪除。";
+"paywall.noChargeToday" = "今天不會收費";
+"paywall.timelineDay2" = "第 2 天";
+"paywall.timelineDay2Description" = "我們會在收費前傳送提醒。您可隨時取消。";
+"paywall.timelineDay3" = "第 3 天";
+"paywall.timelineDay3Description" = "您的訂閱將以 %@ 續約。可在 iPhone 設定中取消。";
+"paywall.trialDescription" = "免費試用 3 天，之後 %@。\n自動續約。您可隨時取消。";
+"paywall.startFreeTrialButton" = "開始免費試用";
+"paywall.afterTrialPrice" = "免費試用後：%@";
+"paywall.bestValueBadge" = "最超值";
+"paywall.specialOfferBadge" = "限時優惠";
+"paywall.afterPrice" = "之後 %@";
+"paywall.monthlyPlan" = "月繳";
+"paywall.monthlySuffix" = "/月";
+"paywall.billedMonthly" = "每月收費";
+"paywall.subscriptionActivated" = "訂閱已啟用！";
+"paywall.unlimitedAccessMessage" = "您現在可以無限制地\n使用所有功能。";
+"paywall.consentPrefix" = "訂閱即表示您同意我們的";
+"paywall.termsOfUse" = "使用條款";
+"paywall.privacyPolicy" = "隱私權政策";
+"paywall.restorePurchases" = "恢復購買";
+"paywall.notNow" = "稍後再說";
+"paywall.unlimitedDeletions" = "無限次刪除照片和影片";
+"paywall.advancedDetection" = "進階重複偵測";
+"paywall.screenshotCleanup" = "完整螢幕截圖清理";
+"paywall.downloadScanner" = "大型下載檔案掃描";
+"paywall.futureUpdates" = "包含所有未來更新";
+"paywall.unlimitedDeletionsShort" = "無限次刪除";
+"paywall.duplicatesFound" = "找到 %d 張重複照片";
+"paywall.videosToReview" = "%d 部影片待檢視";
+"paywall.screenshotsFound" = "%d 張螢幕截圖";
+
+/* === SETTINGS === */
+"settings.title" = "設定";
+"settings.unlockPremium" = "解鎖無限存取";
+"settings.removeLimits" = "移除所有限制";
+"settings.supportSection" = "支援";
+"settings.faq" = "常見問題";
+"settings.contactSupport" = "聯絡我們";
+"settings.restorePurchases" = "恢復購買";
+"settings.about" = "關於";
+"settings.privacyPolicy" = "隱私權政策";
+"settings.termsOfUse" = "使用條款";
+"settings.socialSection" = "保持聯繫";
+"settings.rateApp" = "為 App 評分";
+"settings.shareApp" = "分享";
+"settings.instagram" = "Instagram";
+"settings.versionFormat" = "版本 %@";
+"settings.shareText" = "來試試 Vortex Cleaner — 整理您的照片並釋放儲存空間！";
+"settings.noActiveSubscription" = "找不到有效的訂閱。";
+"settings.restoreSuccess" = "訂閱已成功恢復！";
+
+/* === ABOUT === */
+"about.title" = "關於";
+"about.appName" = "Vortex Cleaner";
+"about.versionFormat" = "版本 %@（%@）";
+"about.description" = "整理您的照片、釋放儲存空間，讓您的 iPhone 隨時保持快速與整潔。";
+"about.privacyPolicy" = "隱私權政策";
+"about.termsOfUse" = "使用條款";
+"about.support" = "支援";
+
+/* === FAQ === */
+"faq.title" = "常見問題";
+"faq.q1.title" = "Vortex Cleaner 如何找到重複照片？";
+"faq.q1.answer" = "我們使用感知雜湊演算法（dHash）來分析每張照片的視覺內容。即使檔案名稱不同，也能辨識出相同或非常相似的照片。";
+"faq.q2.title" = "我的照片會被上傳到伺服器嗎？";
+"faq.q2.answer" = "不會。所有處理都在您的裝置上進行。您的照片絕不會離開您的 iPhone。";
+"faq.q3.title" = "刪除照片後會怎樣？";
+"faq.q3.answer" = "刪除的照片會移至 iOS 的「最近刪除」，在永久刪除前保留 30 天。";
+"faq.q4.title" = "什麼是 App 垃圾桶？";
+"faq.q4.answer" = "垃圾桶是一個內部空間，Downloads 檔案在永久刪除前會保留 30 天，讓您在需要時可以復原。";
+"faq.q5.title" = "訂閱如何運作？";
+"faq.q5.answer" = "我們提供週繳和月繳方案。訂閱者可無限制使用所有功能。您可隨時在 iPhone 設定中取消。";
+"faq.q6.title" = "我可以取消訂閱嗎？";
+"faq.q6.answer" = "可以。請前往 iPhone 的設定 > 您的名稱 > 訂閱項目。Premium 存取將持續到付費期間結束。";
+"faq.q7.title" = "App 可以在沒有網路的情況下使用嗎？";
+"faq.q7.answer" = "可以。掃描和刪除功能完全可離線使用。只有管理訂閱時才需要網路連線。";
+
+/* === SUBSCRIPTION === */
+"subscription.noPlansAvailable" = "目前沒有可用的方案。";
+"subscription.errorLoadingPlans" = "無法載入方案。請檢查您的網路連線。";
+"subscription.purchaseError" = "購買處理時發生錯誤，請再試一次。";
+"subscription.noActiveSubscription" = "找不到有效的訂閱。";
+"subscription.restoreError" = "恢復購買時發生錯誤，請再試一次。";
+"subscription.week" = "週";
+"subscription.month" = "月";
+"subscription.year" = "年";
+"subscription.day" = "天";
+"subscription.freeTrialDays" = "%d 天免費";
+"subscription.freeTrialWeeks" = "%d 週免費";
+"subscription.freeTrialMonths" = "%d 個月免費";
+"subscription.freeTrialYears" = "%d 年免費";
+"subscription.introOfferDays" = "%1$@（%2$d 天）";
+"subscription.introOfferWeeks" = "%1$@（%2$d 週）";
+"subscription.introOfferMonths" = "%1$@（%2$d 個月）";
+"subscription.introOfferYears" = "%1$@（%2$d 年）";
+
+/* === GENERAL === */
+"general.and" = "和";
+"general.back" = "返回";
+"general.becomePro" = "升級 Pro";
+"general.bestResultBadge" = "最佳";
+"general.cancel" = "取消";
+"general.close" = "關閉";
+"general.continue" = "繼續";
+"general.delete" = "刪除";
+"general.deselectAll" = "取消全選";
+"general.done" = "完成";
+"general.files" = "檔案";
+"general.freeSpaceLabel" = "釋放 %@";
+"general.limitMessage" = "每日限額：剩餘 %d 次刪除。";
+"general.photos" = "照片";
+"general.selectAll" = "全選";
+"general.selectedCount" = "已選取 %d 個";
+
+/* === TABS === */
+"tab.cleaning" = "清理";
+"tab.contacts" = "聯絡人";
+"tab.email" = "電子郵件";
+"tab.compress" = "壓縮";
+"tab.comingSoon" = "即將推出";
+"tab.comingSoonMessage" = "此功能將在未來的更新中提供。";

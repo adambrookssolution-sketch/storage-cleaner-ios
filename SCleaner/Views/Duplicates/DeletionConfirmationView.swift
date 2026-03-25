@@ -22,7 +22,7 @@ struct DeletionConfirmationView: View {
     init(
         selectedCount: Int,
         savedBytes: Int64,
-        itemLabel: String = "fotos",
+        itemLabel: String = NSLocalizedString("general.photos", comment: ""),
         destination: DeletionDestination = .photoLibrary,
         onConfirm: @escaping () -> Void,
         onCancel: @escaping () -> Void
@@ -38,20 +38,20 @@ struct DeletionConfirmationView: View {
     private var descriptionText: String {
         switch destination {
         case .photoLibrary:
-            return "Libere \(savedBytes.formattedSize) de espaço.\nAs \(itemLabel) serão movidas para Apagados Recentemente do iOS por 30 dias."
+            return String(format: NSLocalizedString("deletion.descriptionPhotoLibrary", comment: ""), savedBytes.formattedSize, itemLabel)
         case .appTrashBin:
-            return "Libere \(savedBytes.formattedSize) de espaço.\nOs \(itemLabel) serão movidos para a Lixeira do app por 30 dias."
+            return String(format: NSLocalizedString("deletion.descriptionAppTrash", comment: ""), savedBytes.formattedSize, itemLabel)
         case .permanent:
-            return "Libere \(savedBytes.formattedSize) de espaço.\nOs \(itemLabel) serão excluídos permanentemente. Esta ação não pode ser desfeita."
+            return String(format: NSLocalizedString("deletion.descriptionPermanent", comment: ""), savedBytes.formattedSize, itemLabel)
         }
     }
 
     private var confirmButtonText: String {
         switch destination {
         case .permanent:
-            return "Excluir permanentemente"
+            return NSLocalizedString("deletion.deletePermanently", comment: "")
         default:
-            return "Excluir \(itemLabel)"
+            return String(format: NSLocalizedString("deletion.deleteItems", comment: ""), itemLabel)
         }
     }
 
@@ -63,7 +63,7 @@ struct DeletionConfirmationView: View {
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.destructiveRed)
 
-            Text("Excluir \(selectedCount) \(itemLabel)?")
+            Text(String(format: NSLocalizedString("deletion.confirmTitle", comment: ""), selectedCount, itemLabel))
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 
@@ -80,7 +80,7 @@ struct DeletionConfirmationView: View {
                 .buttonStyle(PrimaryButtonStyle(backgroundColor: ColorTokens.destructiveRed))
                 .padding(.horizontal, 40)
 
-                Button("Cancelar") {
+                Button(NSLocalizedString("general.cancel", comment: "")) {
                     onCancel()
                 }
                 .font(.system(size: 16, weight: .medium))

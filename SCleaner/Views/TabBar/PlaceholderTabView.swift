@@ -17,11 +17,11 @@ struct PlaceholderTabView: View {
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Em breve")
+            Text(NSLocalizedString("tab.comingSoon", comment: ""))
                 .font(.system(size: 16))
                 .foregroundColor(ColorTokens.secondaryText)
 
-            Text("Esta funcionalidade estará disponível em uma atualização futura.")
+            Text(NSLocalizedString("tab.comingSoonMessage", comment: ""))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.tertiaryText)
                 .multilineTextAlignment(.center)

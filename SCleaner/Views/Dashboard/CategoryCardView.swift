@@ -4,7 +4,7 @@ import SwiftUI
 /// Shows category title, thumbnail preview area, and a blue badge with count/size.
 struct CategoryCardView: View {
     let cardData: DashboardViewModel.CategoryCardData
-    let thumbnailCache: [String: UIImage]
+    let thumbnailStore: ThumbnailStore
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -39,7 +39,7 @@ struct CategoryCardView: View {
                     Image(systemName: "folder.badge.plus")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.white)
-                    Text("Selecionar pasta")
+                    Text(NSLocalizedString("category.selectFolder", comment: ""))
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                 }
@@ -82,11 +82,11 @@ struct CategoryCardView: View {
                         .font(.system(size: 36))
                         .foregroundColor(cardData.category.iconColor.opacity(0.5))
                     if needsSetup {
-                        Text("Toque para selecionar a pasta")
+                        Text(NSLocalizedString("category.tapToSelectFolder", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(ColorTokens.primaryBlue)
                     } else {
-                        Text("Nenhum item encontrado")
+                        Text(NSLocalizedString("category.noItems", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(ColorTokens.tertiaryText)
                     }
@@ -123,7 +123,7 @@ struct CategoryCardView: View {
 
     @ViewBuilder
     private func thumbnailImage(for assetId: String?) -> some View {
-        if let assetId, let image = thumbnailCache[assetId] {
+        if let assetId, let image = thumbnailStore[assetId] {
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fill)

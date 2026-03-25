@@ -50,17 +50,28 @@ struct SimilarPhotosListView: View {
             if let msg = viewModel.limitMessage {
                 VStack {
                     Spacer()
-                    Text(msg)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(ColorTokens.warningOrange.cornerRadius(10))
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 90)
+                    HStack(spacing: 8) {
+                        Text(msg)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                        Button(NSLocalizedString("general.becomePro", comment: "")) {
+                            viewModel.showPaywall = true
+                        }
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(ColorTokens.warningOrange)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                    }
+                    .padding(12)
+                    .background(ColorTokens.warningOrange.cornerRadius(10))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 90)
                 }
             }
         }
-        .navigationTitle("Similar")
+        .navigationTitle(NSLocalizedString("similar.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
@@ -94,10 +105,10 @@ struct SimilarPhotosListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Excluindo \(viewModel.totalSelectedCount) fotos...")
+                        Text(String(format: NSLocalizedString("similar.deleting", comment: ""), viewModel.totalSelectedCount))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
-                        Text("O iOS solicitará sua confirmação.")
+                        Text(NSLocalizedString("similar.confirmationNotice", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(.white.opacity(0.7))
                     }
@@ -114,7 +125,7 @@ struct SimilarPhotosListView: View {
     private func similarGroupCard(_ group: SimilarGroup) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("\(group.count) fotos similares")
+                Text(String(format: NSLocalizedString("similar.groupCount", comment: ""), group.count))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(ColorTokens.primaryText)
                 Spacer()
@@ -130,7 +141,7 @@ struct SimilarPhotosListView: View {
                             assetId: photo.id,
                             isSelected: viewModel.selectedIds.contains(photo.id),
                             isBestResult: index == group.bestResultIndex,
-                            thumbnail: viewModel.thumbnailCache[photo.id],
+                            thumbnail: viewModel.thumbnails[photo.id],
                             fileSize: photo.fileSize,
                             onToggle: { viewModel.toggleSelection(assetId: photo.id) }
                         )
@@ -140,13 +151,13 @@ struct SimilarPhotosListView: View {
             }
 
             HStack(spacing: 12) {
-                Button("Manter todos") {
+                Button(NSLocalizedString("similar.keepAll", comment: "")) {
                     viewModel.deselectAllInGroup(group)
                 }
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(ColorTokens.primaryBlue)
 
-                Button("Selecionar similares") {
+                Button(NSLocalizedString("similar.selectSimilar", comment: "")) {
                     viewModel.selectAllInGroup(group)
                 }
                 .font(.system(size: 13, weight: .medium))
@@ -161,10 +172,10 @@ struct SimilarPhotosListView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(viewModel.totalGroupCount) grupos encontrados")
+            Text(String(format: NSLocalizedString("similar.groupsFound", comment: ""), viewModel.totalGroupCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
-            Text("\(viewModel.totalSimilarCount) fotos similares")
+            Text(String(format: NSLocalizedString("similar.photosCount", comment: ""), viewModel.totalSimilarCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
         }
@@ -178,10 +189,10 @@ struct SimilarPhotosListView: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.successGreen)
-            Text("Nenhuma foto similar encontrada!")
+            Text(NSLocalizedString("similar.emptyTitle", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
-            Text("Sua biblioteca está organizada.")
+            Text(NSLocalizedString("similar.emptyMessage", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
             Spacer()

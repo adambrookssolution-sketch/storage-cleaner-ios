@@ -58,23 +58,34 @@ struct ScreenshotsListView: View {
             if let msg = viewModel.limitMessage {
                 VStack {
                     Spacer()
-                    Text(msg)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(Color.purple.cornerRadius(10))
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 90)
+                    HStack(spacing: 8) {
+                        Text(msg)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                        Button(NSLocalizedString("general.becomePro", comment: "")) {
+                            viewModel.showPaywall = true
+                        }
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(Color.purple)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                    }
+                    .padding(12)
+                    .background(Color.purple.cornerRadius(10))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 90)
                 }
             }
         }
-        .navigationTitle("Capturas de tela")
+        .navigationTitle(NSLocalizedString("screenshots.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button("Selecionar todos") { viewModel.selectAll() }
-                    Button("Desmarcar todos") { viewModel.deselectAll() }
+                    Button(NSLocalizedString("general.selectAll", comment: "")) { viewModel.selectAll() }
+                    Button(NSLocalizedString("general.deselectAll", comment: "")) { viewModel.deselectAll() }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
@@ -87,7 +98,7 @@ struct ScreenshotsListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
-                itemLabel: "capturas de tela",
+                itemLabel: NSLocalizedString("screenshots.itemLabel", comment: ""),
                 destination: .photoLibrary,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
@@ -101,7 +112,7 @@ struct ScreenshotsListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "capturas de tela", destination: .photoLibrary) {
+                DeletionSuccessView(result: result, itemLabel: NSLocalizedString("screenshots.itemLabel", comment: ""), destination: .photoLibrary) {
                     viewModel.showDeleteSuccess = false
                 }
             }
@@ -114,10 +125,10 @@ struct ScreenshotsListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Excluindo \(viewModel.totalSelectedCount) capturas de tela...")
+                        Text(String(format: NSLocalizedString("screenshots.deleting", comment: ""), viewModel.totalSelectedCount))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
-                        Text("O iOS solicitará sua confirmação.")
+                        Text(NSLocalizedString("screenshots.confirmationNotice", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(.white.opacity(0.7))
                     }
@@ -138,7 +149,7 @@ struct ScreenshotsListView: View {
         return ZStack(alignment: .topTrailing) {
             // Thumbnail
             Group {
-                if let image = viewModel.thumbnailCache[id] {
+                if let image = viewModel.thumbnails[id] {
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -198,10 +209,10 @@ struct ScreenshotsListView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(viewModel.totalScreenshotCount) capturas de tela")
+            Text(String(format: NSLocalizedString("screenshots.count", comment: ""), viewModel.totalScreenshotCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
-            Text("Tamanho total: \(viewModel.totalSize.formattedSize)")
+            Text(String(format: NSLocalizedString("screenshots.totalSize", comment: ""), viewModel.totalSize.formattedSize))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
 
@@ -210,7 +221,7 @@ struct ScreenshotsListView: View {
                     Image(systemName: "arrow.down.circle.fill")
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.successGreen)
-                    Text("Economize \(viewModel.totalPotentialSavings.formattedSize) excluindo \(viewModel.totalSelectedCount) captura(s)")
+                    Text(String(format: NSLocalizedString("screenshots.savingsMessage", comment: ""), viewModel.totalPotentialSavings.formattedSize, viewModel.totalSelectedCount))
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(ColorTokens.successGreen)
                 }
@@ -218,7 +229,7 @@ struct ScreenshotsListView: View {
             }
 
             if viewModel.totalSelectedCount == viewModel.totalScreenshotCount && viewModel.totalScreenshotCount > 0 {
-                Text("Todas as capturas de tela foram pré-selecionadas.")
+                Text(NSLocalizedString("screenshots.preselectedMessage", comment: ""))
                     .font(.system(size: 12))
                     .foregroundColor(ColorTokens.tertiaryText)
             }
@@ -235,10 +246,10 @@ struct ScreenshotsListView: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.successGreen)
-            Text("Nenhuma captura de tela encontrada!")
+            Text(NSLocalizedString("screenshots.emptyTitle", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
-            Text("Sua biblioteca não contém capturas de tela.")
+            Text(NSLocalizedString("screenshots.emptyMessage", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
             Spacer()

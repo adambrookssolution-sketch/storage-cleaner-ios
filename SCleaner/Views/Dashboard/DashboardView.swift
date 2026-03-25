@@ -7,8 +7,10 @@ struct DashboardView: View {
     @EnvironmentObject var appState: AppState
     @State private var showSettings = false
     @State private var showScanPaywall = false
+    @State private var paywallShownThisSession = false
 
     private let thumbnailService: ThumbnailCacheService
+    private let deletionService = PhotoDeletionService()
 
     init(
         photoService: PhotoLibraryService,
@@ -62,11 +64,10 @@ struct DashboardView: View {
                                 NavigationLink(destination: destinationView(for: cardData)) {
                                     CategoryCardView(
                                         cardData: cardData,
-                                        thumbnailCache: viewModel.thumbnailCache
+                                        thumbnailStore: viewModel.thumbnails
                                     )
                                 }
                                 .buttonStyle(.plain)
-                                .disabled(viewModel.scanProgress.isScanning && !viewModel.scanProgress.isCompleted)
                             }
                         }
                         .padding(.horizontal, AppConstants.UI.horizontalPadding)
@@ -117,7 +118,9 @@ struct DashboardView: View {
         .onChange(of: viewModel.scanProgress.isCompleted) { completed in
             if completed,
                AppConstants.Subscription.paywallEnabled,
-               !SubscriptionService.shared.isPremium {
+               !SubscriptionService.shared.isPremium,
+               !paywallShownThisSession {
+                paywallShownThisSession = true
                 // Small delay so user sees results first
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     showScanPaywall = true
@@ -153,25 +156,25 @@ struct DashboardView: View {
             DuplicatesListView(
                 groups: viewModel.duplicateGroups,
                 thumbnailService: thumbnailService,
-                deletionService: PhotoDeletionService()
+                deletionService: deletionService
             )
         case .similar:
             SimilarPhotosListView(
                 groups: viewModel.similarGroups,
                 thumbnailService: thumbnailService,
-                deletionService: PhotoDeletionService()
+                deletionService: deletionService
             )
         case .videos:
             VideosListView(
                 assets: viewModel.videoAssets,
                 thumbnailService: thumbnailService,
-                deletionService: PhotoDeletionService()
+                deletionService: deletionService
             )
         case .screenshots:
             ScreenshotsListView(
                 assets: viewModel.screenshotAssets,
                 thumbnailService: thumbnailService,
-                deletionService: PhotoDeletionService()
+                deletionService: deletionService
             )
         case .downloads:
             DownloadsListView()
@@ -218,12 +221,12 @@ struct DashboardView: View {
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.primaryBlue.opacity(0.6))
 
-            Text("Toque para escanear sua biblioteca de fotos")
+            Text(NSLocalizedString("dashboard.tapToScan", comment: ""))
                 .font(.system(size: 16))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
 
-            Button("Iniciar Escaneamento") {
+            Button(NSLocalizedString("dashboard.startScan", comment: "")) {
                 viewModel.startScan()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -246,7 +249,7 @@ struct DashboardView: View {
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
 
-            Button("Tentar novamente") {
+            Button(NSLocalizedString("dashboard.retry", comment: "")) {
                 viewModel.startScan()
             }
             .buttonStyle(SecondaryButtonStyle())

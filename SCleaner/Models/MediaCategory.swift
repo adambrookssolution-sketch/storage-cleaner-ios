@@ -16,15 +16,15 @@ enum MediaCategory: String, CaseIterable, Identifiable {
 
     var localizedTitle: String {
         switch self {
-        case .duplicates:          return "Duplicata"
-        case .similar:             return "Similar"
-        case .similarVideos:       return "Vídeos similares"
-        case .similarScreenshots:  return "Capturas de tela semelhantes"
-        case .screenshots:         return "Capturas de tela"
-        case .videos:              return "Vídeos"
-        case .downloads:           return "Downloads"
-        case .trashBin:            return "Lixeira"
-        case .other:               return "Outro"
+        case .duplicates:          return NSLocalizedString("category.duplicates", comment: "")
+        case .similar:             return NSLocalizedString("category.similar", comment: "")
+        case .similarVideos:       return NSLocalizedString("category.similarVideos", comment: "")
+        case .similarScreenshots:  return NSLocalizedString("category.similarScreenshots", comment: "")
+        case .screenshots:         return NSLocalizedString("category.screenshots", comment: "")
+        case .videos:              return NSLocalizedString("category.videos", comment: "")
+        case .downloads:           return NSLocalizedString("category.downloads", comment: "")
+        case .trashBin:            return NSLocalizedString("category.trashBin", comment: "")
+        case .other:               return NSLocalizedString("category.other", comment: "")
         }
     }
 

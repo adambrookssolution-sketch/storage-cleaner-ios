@@ -4,7 +4,7 @@ import SwiftUI
 struct DuplicateGroupCardView: View {
     let group: DuplicateGroup
     let selectedIds: Set<String>
-    let thumbnailCache: [String: UIImage]
+    let thumbnailStore: ThumbnailStore
     let onToggleSelection: (String) -> Void
     let onSelectAll: () -> Void
     let onDeselectAll: () -> Void
@@ -13,7 +13,7 @@ struct DuplicateGroupCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
-                Text("\(group.count) fotos duplicadas")
+                Text(String(format: NSLocalizedString("duplicates.photosCount", comment: ""), group.count))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(ColorTokens.primaryText)
 
@@ -32,7 +32,7 @@ struct DuplicateGroupCardView: View {
                             assetId: photo.id,
                             isSelected: selectedIds.contains(photo.id),
                             isBestResult: index == group.bestResultIndex,
-                            thumbnail: thumbnailCache[photo.id],
+                            thumbnail: thumbnailStore[photo.id],
                             fileSize: photo.fileSize,
                             onToggle: { onToggleSelection(photo.id) }
                         )
@@ -43,13 +43,13 @@ struct DuplicateGroupCardView: View {
 
             // Group action buttons
             HStack(spacing: 12) {
-                Button("Manter todos") {
+                Button(NSLocalizedString("duplicates.keepAll", comment: "")) {
                     onDeselectAll()
                 }
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(ColorTokens.primaryBlue)
 
-                Button("Selecionar duplicatas") {
+                Button(NSLocalizedString("duplicates.selectDuplicates", comment: "")) {
                     onSelectAll()
                 }
                 .font(.system(size: 13, weight: .medium))

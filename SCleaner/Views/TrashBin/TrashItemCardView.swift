@@ -58,13 +58,13 @@ struct TrashItemCardView: View {
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(ColorTokens.secondaryText)
 
-                    Text("Excluído: \(file.formattedDeletionDate)")
+                    Text(String(format: NSLocalizedString("trashBin.deletedDate", comment: ""), file.formattedDeletionDate))
                         .font(.system(size: 13))
                         .foregroundColor(ColorTokens.tertiaryText)
                 }
 
                 // Days until purge badge
-                Text("\(file.daysUntilPurge) dias restantes")
+                Text(String(format: NSLocalizedString("trashBin.daysRemaining", comment: ""), file.daysUntilPurge))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)

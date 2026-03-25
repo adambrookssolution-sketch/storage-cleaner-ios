@@ -15,7 +15,7 @@ struct PermissionStepView: View {
                 ProgressView()
                     .scaleEffect(1.5)
                     .tint(ColorTokens.primaryBlue)
-                Text("Aguardando permissão...")
+                Text(NSLocalizedString("permission.waiting", comment: ""))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
             } else {
@@ -27,12 +27,12 @@ struct PermissionStepView: View {
                         .foregroundColor(ColorTokens.successGreen)
                         .transition(.scale.combined(with: .opacity))
 
-                    Text("Acesso concedido!")
+                    Text(NSLocalizedString("permission.granted", comment: ""))
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(ColorTokens.primaryText)
 
                     if viewModel.permissionStatus == .limited {
-                        Text("Apenas algumas fotos estão acessíveis")
+                        Text(NSLocalizedString("permission.limitedAccess", comment: ""))
                             .font(.system(size: 15))
                             .foregroundColor(ColorTokens.secondaryText)
                     }
@@ -44,17 +44,17 @@ struct PermissionStepView: View {
                         .foregroundColor(ColorTokens.warningOrange)
                         .transition(.scale.combined(with: .opacity))
 
-                    Text("Acesso negado")
+                    Text(NSLocalizedString("permission.denied", comment: ""))
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(ColorTokens.primaryText)
 
-                    Text("Você pode alterar nas Configurações do iPhone")
+                    Text(NSLocalizedString("permission.deniedDetail", comment: ""))
                         .font(.system(size: 15))
                         .foregroundColor(ColorTokens.secondaryText)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
 
-                    Button("Abrir Ajustes") {
+                    Button(NSLocalizedString("permission.openSettings", comment: "")) {
                         viewModel.permissionService.openSettings()
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -62,7 +62,7 @@ struct PermissionStepView: View {
 
                     Spacer().frame(height: 16)
 
-                    Button("Continuar mesmo assim") {
+                    Button(NSLocalizedString("permission.continueAnyway", comment: "")) {
                         onPermissionHandled()
                     }
                     .font(.system(size: 15, weight: .medium))

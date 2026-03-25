@@ -9,7 +9,7 @@ struct DeletionSuccessView: View {
 
     init(
         result: DeleteResult,
-        itemLabel: String = "fotos",
+        itemLabel: String = NSLocalizedString("general.photos", comment: ""),
         destination: DeletionDestination = .photoLibrary,
         onDismiss: @escaping () -> Void
     ) {
@@ -24,9 +24,9 @@ struct DeletionSuccessView: View {
     private var guidanceText: String? {
         switch destination {
         case .photoLibrary:
-            return "Você pode recuperar as \(itemLabel) em Fotos > Álbuns > Apagados Recentemente por até 30 dias."
+            return String(format: NSLocalizedString("deletion.guidancePhotoLibrary", comment: ""), itemLabel)
         case .appTrashBin:
-            return "Os \(itemLabel) foram movidos para a Lixeira do app. Você pode restaurá-los em até 30 dias."
+            return String(format: NSLocalizedString("deletion.guidanceAppTrash", comment: ""), itemLabel)
         case .permanent:
             return nil
         }
@@ -50,17 +50,17 @@ struct DeletionSuccessView: View {
             }
 
             VStack(spacing: 8) {
-                Text("\(result.deletedCount) \(itemLabel) excluídos")
+                Text(String(format: NSLocalizedString("deletion.successCount", comment: ""), result.deletedCount, itemLabel))
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(ColorTokens.primaryText)
 
-                Text("\(result.savedBytes.formattedSize) liberados")
+                Text(String(format: NSLocalizedString("deletion.freedSpace", comment: ""), result.savedBytes.formattedSize))
                     .font(.system(size: 18))
                     .foregroundColor(ColorTokens.successGreen)
             }
 
             if result.failedCount > 0 {
-                Text("\(result.failedCount) \(itemLabel) não puderam ser excluídos")
+                Text(String(format: NSLocalizedString("deletion.failedCount", comment: ""), result.failedCount, itemLabel))
                     .font(.system(size: 14))
                     .foregroundColor(ColorTokens.warningOrange)
             }
@@ -86,7 +86,7 @@ struct DeletionSuccessView: View {
 
             Spacer()
 
-            Button("Concluído") {
+            Button(NSLocalizedString("general.done", comment: "")) {
                 onDismiss()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -98,6 +98,7 @@ struct DeletionSuccessView: View {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.2)) {
                 showCheckmark = true
             }
+            ReviewPromptService.shared.recordDeletionSuccess(itemCount: result.deletedCount)
         }
     }
 }

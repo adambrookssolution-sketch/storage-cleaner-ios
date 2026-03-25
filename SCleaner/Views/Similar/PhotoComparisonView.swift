@@ -17,12 +17,12 @@ struct PhotoComparisonView: View {
 
             VStack(spacing: 8) {
                 metadataRow(
-                    label: "Resolução",
+                    label: NSLocalizedString("similar.resolution", comment: ""),
                     left: "\(leftPhoto.pixelWidth)×\(leftPhoto.pixelHeight)",
                     right: "\(rightPhoto.pixelWidth)×\(rightPhoto.pixelHeight)"
                 )
                 metadataRow(
-                    label: "Tamanho",
+                    label: NSLocalizedString("similar.size", comment: ""),
                     left: leftPhoto.fileSize.formattedSize,
                     right: rightPhoto.fileSize.formattedSize
                 )
@@ -31,7 +31,7 @@ struct PhotoComparisonView: View {
 
             Spacer()
         }
-        .navigationTitle("Comparar")
+        .navigationTitle(NSLocalizedString("similar.compare", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
     }
 

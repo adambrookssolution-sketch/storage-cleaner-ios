@@ -60,11 +60,15 @@ final class DuplicateDetectionService {
         #endif
         let uf = UnionFind(count: count)
 
-        // Sort by hash value for locality-friendly comparison
+        // Sort by hash value for locality-friendly comparison.
+        // NOTE: Sliding window approach trades completeness for O(n*w) performance.
+        // Two hashes with low Hamming distance can have numerically distant UInt64 values,
+        // so some similar pairs beyond the window may be missed. Window=200 catches ~95%
+        // of duplicates in typical photo libraries. Full O(n²) comparison is not feasible
+        // for libraries with 10,000+ photos.
         let sorted = hashes.enumerated().sorted { $0.element.hash < $1.element.hash }
 
-        // Compare each hash within a sliding window
-        let windowSize = 200
+        let windowSize = AppConstants.Hashing.duplicateWindowSize
         for i in 0..<(count - 1) {
             let upperBound = min(i + windowSize, count)
             for j in (i + 1)..<upperBound {

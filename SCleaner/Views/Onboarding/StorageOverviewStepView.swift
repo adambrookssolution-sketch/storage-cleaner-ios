@@ -18,13 +18,13 @@ struct StorageOverviewStepView: View {
         var categories: [(String, Color, CGFloat)] = []
 
         if photosRatio > 0 {
-            categories.append(("Fotos", ColorTokens.destructiveRed, photosRatio))
+            categories.append((NSLocalizedString("onboarding.photos", comment: ""), ColorTokens.destructiveRed, photosRatio))
         }
         if othersRatio > 0 {
-            categories.append(("Apps e dados", ColorTokens.warningOrange, othersRatio))
+            categories.append((NSLocalizedString("onboarding.appsAndData", comment: ""), ColorTokens.warningOrange, othersRatio))
         }
         if freeRatio > 0 {
-            categories.append(("Disponível", Color(.systemGray5), freeRatio))
+            categories.append((NSLocalizedString("onboarding.available", comment: ""), Color(.systemGray5), freeRatio))
         }
 
         return categories
@@ -35,7 +35,7 @@ struct StorageOverviewStepView: View {
             Spacer().frame(height: 30)
 
             // Title
-            Text("Otimizar o\nArmazenamento do iPhone")
+            Text(NSLocalizedString("onboarding.optimizeStorage", comment: ""))
                 .font(.system(size: 30, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundColor(ColorTokens.primaryText)
@@ -43,7 +43,7 @@ struct StorageOverviewStepView: View {
             Spacer().frame(height: 14)
 
             // Subtitle
-            Text("Liberte até 80% do seu armazenamento e tenha mais espaço.")
+            Text(NSLocalizedString("onboarding.optimizeSubtitle", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
                 .multilineTextAlignment(.center)
@@ -64,7 +64,7 @@ struct StorageOverviewStepView: View {
                             )
                         )
                         .frame(width: AppConstants.UI.iconSize, height: AppConstants.UI.iconSize)
-                    Text("Fotos")
+                    Text(NSLocalizedString("onboarding.photos", comment: ""))
                         .font(.system(size: 15, weight: .medium))
                 }
 
@@ -73,7 +73,7 @@ struct StorageOverviewStepView: View {
                         .font(.system(size: 44))
                         .foregroundColor(Color(hex: "3F9BFF"))
                         .frame(width: AppConstants.UI.iconSize, height: AppConstants.UI.iconSize)
-                    Text("iCloud")
+                    Text(NSLocalizedString("onboarding.iCloud", comment: ""))
                         .font(.system(size: 15, weight: .medium))
                 }
             }
@@ -84,7 +84,7 @@ struct StorageOverviewStepView: View {
             HStack(spacing: 12) {
                 Text("iPhone")
                     .font(.system(size: 15, weight: .semibold))
-                Text("\(viewModel.storageInfo.usedGB) GB de \(viewModel.storageInfo.totalGB) GB usados")
+                Text(String(format: NSLocalizedString("onboarding.storageUsed", comment: ""), viewModel.storageInfo.usedGB, viewModel.storageInfo.totalGB))
                     .font(.system(size: 15))
                     .foregroundColor(ColorTokens.secondaryText)
             }
@@ -103,14 +103,14 @@ struct StorageOverviewStepView: View {
             Spacer()
 
             // Disclaimer
-            Text("*Com base nos dados reais do dispositivo")
+            Text(NSLocalizedString("onboarding.disclaimer", comment: ""))
                 .font(.system(size: 11))
                 .foregroundColor(ColorTokens.tertiaryText)
 
             Spacer().frame(height: 18)
 
             // Button
-            Button("Próximo") { onContinue() }
+            Button(NSLocalizedString("onboarding.next", comment: "")) { onContinue() }
                 .buttonStyle(PrimaryButtonStyle())
                 .padding(.horizontal, AppConstants.UI.horizontalPadding)
 
@@ -119,7 +119,7 @@ struct StorageOverviewStepView: View {
             // Footer links
             HStack(spacing: 6) {
                 Button(action: { viewModel.openPrivacyPolicy() }) {
-                    Text("Política de Privacidade")
+                    Text(NSLocalizedString("onboarding.privacyPolicy", comment: ""))
                         .font(.system(size: 12))
                         .foregroundColor(ColorTokens.tertiaryText)
                 }
@@ -127,7 +127,7 @@ struct StorageOverviewStepView: View {
                     .font(.system(size: 12))
                     .foregroundColor(ColorTokens.tertiaryText)
                 Button(action: { viewModel.openTermsOfUse() }) {
-                    Text("Termos de Uso")
+                    Text(NSLocalizedString("onboarding.termsOfUse", comment: ""))
                         .font(.system(size: 12))
                         .foregroundColor(ColorTokens.tertiaryText)
                 }

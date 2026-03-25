@@ -38,37 +38,37 @@ struct MainTabView: View {
                 permissionService: permissionService
             )
             .tabItem {
-                Label("Limpeza", systemImage: "sparkles")
+                Label(NSLocalizedString("tab.cleaning", comment: ""), systemImage: "sparkles")
             }
             .tag(0)
 
             // Tab 2: Contatos (placeholder)
             PlaceholderTabView(
-                title: "Contatos",
+                title: NSLocalizedString("tab.contacts", comment: ""),
                 icon: "person.crop.circle"
             )
             .tabItem {
-                Label("Contatos", systemImage: "person.crop.circle")
+                Label(NSLocalizedString("tab.contacts", comment: ""), systemImage: "person.crop.circle")
             }
             .tag(1)
 
             // Tab 3: E-mails (placeholder)
             PlaceholderTabView(
-                title: "E-mails",
+                title: NSLocalizedString("tab.email", comment: ""),
                 icon: "envelope.fill"
             )
             .tabItem {
-                Label("E-mails", systemImage: "envelope")
+                Label(NSLocalizedString("tab.email", comment: ""), systemImage: "envelope")
             }
             .tag(2)
 
             // Tab 4: Comprimir (placeholder)
             PlaceholderTabView(
-                title: "Comprimir",
+                title: NSLocalizedString("tab.compress", comment: ""),
                 icon: "arrow.down.right.and.arrow.up.left"
             )
             .tabItem {
-                Label("Comprimir", systemImage: "arrow.down.right.and.arrow.up.left")
+                Label(NSLocalizedString("tab.compress", comment: ""), systemImage: "arrow.down.right.and.arrow.up.left")
             }
             .tag(3)
         }

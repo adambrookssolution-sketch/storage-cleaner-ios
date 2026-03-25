@@ -6,6 +6,7 @@ struct VortexCleanerApp: App {
 
     init() {
         SubscriptionService.configure()
+        ReviewPromptService.shared.recordAppLaunch()
     }
 
     var body: some Scene {

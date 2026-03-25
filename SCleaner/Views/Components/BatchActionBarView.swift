@@ -24,12 +24,12 @@ struct BatchActionBarView: View {
             Divider()
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(selectedCount) selecionado(s)")
+                    Text(String(format: NSLocalizedString("general.selectedCount", comment: ""), selectedCount))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(ColorTokens.primaryText)
 
                     if potentialSavings > 0 {
-                        Text("Liberar \(potentialSavings.formattedSize)")
+                        Text(String(format: NSLocalizedString("general.freeSpaceLabel", comment: ""), potentialSavings.formattedSize))
                             .font(.system(size: 13))
                             .foregroundColor(ColorTokens.secondaryText)
                     }
@@ -38,7 +38,7 @@ struct BatchActionBarView: View {
                 Spacer()
 
                 Button(action: onDelete) {
-                    Text("Excluir")
+                    Text(NSLocalizedString("general.delete", comment: ""))
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 24)

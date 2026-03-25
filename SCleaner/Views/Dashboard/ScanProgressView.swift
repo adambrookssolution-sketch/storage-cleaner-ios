@@ -52,17 +52,17 @@ struct ScanProgressView: View {
     private var statusText: String {
         switch progress {
         case .idle:
-            return "Pronto para escanear"
+            return NSLocalizedString("scan.readyToScan", comment: "")
         case .scanning(let processed, let total):
-            return "Escaneando… \(processed) de \(total)"
+            return String(format: NSLocalizedString("scan.scanning", comment: ""), processed, total)
         case .partialResult(let processed, let total, _):
-            return "Escaneando… \(processed) de \(total)"
+            return String(format: NSLocalizedString("scan.scanning", comment: ""), processed, total)
         case .hashing(let processed, let total):
-            return "Analisando fotos… \(processed) de \(total)"
+            return String(format: NSLocalizedString("scan.analyzingPhotos", comment: ""), processed, total)
         case .completed:
-            return "Escaneamento concluído"
+            return NSLocalizedString("scan.completed", comment: "")
         case .failed(let message):
-            return "Erro: \(message)"
+            return String(format: NSLocalizedString("scan.error", comment: ""), message)
         }
     }
 

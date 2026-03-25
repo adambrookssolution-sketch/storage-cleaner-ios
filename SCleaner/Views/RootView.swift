@@ -24,8 +24,8 @@ struct RootView: View {
         .animation(.easeInOut(duration: 0.5), value: appState.hasCompletedOnboarding)
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
-                // Refresh permission status when app comes back to foreground
                 permissionService.refreshStatus()
+                SubscriptionService.shared.revalidateOnForeground()
             }
         }
     }

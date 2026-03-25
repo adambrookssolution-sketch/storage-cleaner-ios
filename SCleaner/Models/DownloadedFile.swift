@@ -17,7 +17,7 @@ struct DownloadedFile: Identifiable, Equatable, Hashable {
     var formattedModificationDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.locale = Locale(identifier: "pt_BR")
+        formatter.locale = Locale.current
         return formatter.string(from: modificationDate)
     }
 

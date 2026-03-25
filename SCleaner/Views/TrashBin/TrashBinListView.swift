@@ -19,25 +19,25 @@ struct TrashBinListView: View {
                 trashActionBar
             }
         }
-        .navigationTitle("Lixeira")
+        .navigationTitle(NSLocalizedString("trashBin.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Voltar") { dismiss() }
+                Button(NSLocalizedString("general.back", comment: "")) { dismiss() }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: { viewModel.selectAll() }) {
-                        Label("Selecionar todos", systemImage: "checkmark.circle.fill")
+                        Label(NSLocalizedString("general.selectAll", comment: ""), systemImage: "checkmark.circle.fill")
                     }
                     Button(action: { viewModel.deselectAll() }) {
-                        Label("Desmarcar todos", systemImage: "circle")
+                        Label(NSLocalizedString("general.deselectAll", comment: ""), systemImage: "circle")
                     }
                     if !viewModel.trashedFiles.isEmpty {
                         Divider()
                         Button(role: .destructive, action: { viewModel.showDeleteConfirmation = true; viewModel.selectAll() }) {
-                            Label("Esvaziar Lixeira", systemImage: "trash.slash.fill")
+                            Label(NSLocalizedString("trashBin.emptyTrash", comment: ""), systemImage: "trash.slash.fill")
                         }
                     }
                 } label: {
@@ -51,7 +51,7 @@ struct TrashBinListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
-                itemLabel: "arquivos",
+                itemLabel: NSLocalizedString("general.files", comment: ""),
                 destination: .permanent,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
@@ -63,7 +63,7 @@ struct TrashBinListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "arquivos", destination: .permanent) {
+                DeletionSuccessView(result: result, itemLabel: NSLocalizedString("general.files", comment: ""), destination: .permanent) {
                     viewModel.showDeleteSuccess = false
                 }
             }
@@ -84,7 +84,7 @@ struct TrashBinListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Processando...")
+                        Text(NSLocalizedString("trashBin.processing", comment: ""))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
                     }
@@ -106,11 +106,11 @@ struct TrashBinListView: View {
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.successGreen)
 
-            Text("Lixeira vazia!")
+            Text(NSLocalizedString("trashBin.empty", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
 
-            Text("Nenhum arquivo na lixeira.")
+            Text(NSLocalizedString("trashBin.noFiles", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
 
@@ -125,15 +125,15 @@ struct TrashBinListView: View {
             VStack(spacing: 12) {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(viewModel.totalCount) arquivos na lixeira")
+                    Text(String(format: NSLocalizedString("trashBin.filesInTrash", comment: ""), viewModel.totalCount))
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.secondaryText)
 
-                    Text("Tamanho total: \(viewModel.totalSize.formattedSize)")
+                    Text(String(format: NSLocalizedString("downloads.totalSize", comment: ""), viewModel.totalSize.formattedSize))
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.tertiaryText)
 
-                    Text("Arquivos são excluídos automaticamente após 30 dias.")
+                    Text(NSLocalizedString("trashBin.autoDeleteWarning", comment: ""))
                         .font(.system(size: 12))
                         .foregroundColor(ColorTokens.warningOrange)
                 }
@@ -164,7 +164,7 @@ struct TrashBinListView: View {
             Divider()
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(viewModel.totalSelectedCount) selecionado(s)")
+                    Text(String(format: NSLocalizedString("general.selectedCount", comment: ""), viewModel.totalSelectedCount))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(ColorTokens.primaryText)
 
@@ -177,7 +177,7 @@ struct TrashBinListView: View {
 
                 // Restore button
                 Button(action: { Task { await viewModel.executeRestore() } }) {
-                    Text("Restaurar")
+                    Text(NSLocalizedString("trashBin.restore", comment: ""))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 18)
@@ -187,7 +187,7 @@ struct TrashBinListView: View {
 
                 // Delete button
                 Button(action: { viewModel.showDeleteConfirmation = true }) {
-                    Text("Excluir")
+                    Text(NSLocalizedString("general.delete", comment: ""))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 18)

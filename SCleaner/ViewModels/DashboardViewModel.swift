@@ -13,7 +13,9 @@ final class DashboardViewModel: ObservableObject {
     @Published var totalFileCount: Int = 0
     @Published var totalSizeFormatted: String = ""
     @Published var categoryData: [CategoryCardData] = []
-    @Published var thumbnailCache: [String: UIImage] = [:]
+    /// Non-reactive thumbnail store for dashboard card previews
+    let thumbnails = ThumbnailStore(maxCount: 50)
+    @Published var thumbnailVersion: Int = 0
 
     // Detected groups for navigation to detail views
     @Published var duplicateGroups: [DuplicateGroup] = []
@@ -33,6 +35,7 @@ final class DashboardViewModel: ObservableObject {
     let thumbnailService: ThumbnailCacheService
     private let permissionService: PermissionService
     private var cancellables = Set<AnyCancellable>()
+    private var scanCancellable: AnyCancellable?
 
     // MARK: - Category Card Data Model
 
@@ -49,11 +52,11 @@ final class DashboardViewModel: ObservableObject {
             let countStr: String
             switch category {
             case .videos, .similarVideos:
-                countStr = "\(count) vídeos"
+                countStr = String(format: NSLocalizedString("videos.countFound", comment: ""), count)
             case .downloads, .trashBin:
-                countStr = "\(count) arquivos"
+                countStr = String(format: NSLocalizedString("downloads.filesFoundCount", comment: ""), count)
             default:
-                countStr = "\(count) fotos"
+                countStr = String(format: NSLocalizedString("duplicates.photosCount", comment: ""), count)
             }
             let sizeStr = "(\(sizeBytes.formattedSize))"
             return "\(countStr)\n\(sizeStr)"
@@ -64,11 +67,11 @@ final class DashboardViewModel: ObservableObject {
             let countStr: String
             switch category {
             case .videos, .similarVideos:
-                countStr = "\(count) vídeos"
+                countStr = String(format: NSLocalizedString("videos.countFound", comment: ""), count)
             case .downloads, .trashBin:
-                countStr = "\(count) arquivos"
+                countStr = String(format: NSLocalizedString("downloads.filesFoundCount", comment: ""), count)
             default:
-                countStr = "\(count) fotos"
+                countStr = String(format: NSLocalizedString("duplicates.photosCount", comment: ""), count)
             }
             return "\(countStr) (\(sizeBytes.formattedSize))"
         }
@@ -108,7 +111,7 @@ final class DashboardViewModel: ObservableObject {
     func rescanAfterDeletion() {
         scanProgress = .idle
         categoryData = []
-        thumbnailCache.removeAll()
+        thumbnails.removeAll()
         startScan()
     }
 
@@ -120,11 +123,15 @@ final class DashboardViewModel: ObservableObject {
 
     func startScan() {
         guard !scanProgress.isScanning else { return }
+        // Don't rescan if already completed — use rescanAfterDeletion() for explicit rescan
+        if case .completed = scanProgress { return }
         guard permissionService.status.hasAccess else { return }
 
         categoryData = []
 
-        photoService.scanLibrary()
+        // Cancel previous scan subscription to prevent accumulation
+        scanCancellable?.cancel()
+        scanCancellable = photoService.scanLibrary()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] progress in
                 guard let self else { return }
@@ -164,12 +171,12 @@ final class DashboardViewModel: ObservableObject {
                         photoLibrarySize: result.photosSizeBytes + result.videosSizeBytes
                     )
                     Task { await self.updateDownloadsData() }
+                    ReviewPromptService.shared.recordScanCompleted()
 
                 default:
                     break
                 }
             }
-            .store(in: &cancellables)
     }
 
     func cancelScan() {
@@ -244,12 +251,13 @@ final class DashboardViewModel: ObservableObject {
         let targetSize = AppConstants.Storage.categoryCardThumbnailSize
         for cardData in categoryData {
             for assetId in cardData.sampleAssetIds {
-                guard thumbnailCache[assetId] == nil else { continue }
+                guard !thumbnails.contains(assetId) else { continue }
                 Task {
                     if let image = await thumbnailService.loadThumbnail(
                         assetId: assetId, targetSize: targetSize
                     ) {
-                        thumbnailCache[assetId] = image
+                        thumbnails[assetId] = image
+                        thumbnailVersion += 1
                     }
                 }
             }

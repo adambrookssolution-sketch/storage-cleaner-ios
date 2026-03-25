@@ -50,23 +50,34 @@ struct VideosListView: View {
             if let msg = viewModel.limitMessage {
                 VStack {
                     Spacer()
-                    Text(msg)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(ColorTokens.primaryBlue.cornerRadius(10))
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 90)
+                    HStack(spacing: 8) {
+                        Text(msg)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                        Button(NSLocalizedString("general.becomePro", comment: "")) {
+                            viewModel.showPaywall = true
+                        }
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(ColorTokens.primaryBlue)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                    }
+                    .padding(12)
+                    .background(ColorTokens.primaryBlue.cornerRadius(10))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 90)
                 }
             }
         }
-        .navigationTitle("Vídeos")
+        .navigationTitle(NSLocalizedString("videos.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button("Selecionar todos") { viewModel.selectAll() }
-                    Button("Desmarcar todos") { viewModel.deselectAll() }
+                    Button(NSLocalizedString("general.selectAll", comment: "")) { viewModel.selectAll() }
+                    Button(NSLocalizedString("general.deselectAll", comment: "")) { viewModel.deselectAll() }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
@@ -79,7 +90,7 @@ struct VideosListView: View {
             DeletionConfirmationView(
                 selectedCount: viewModel.totalSelectedCount,
                 savedBytes: viewModel.totalPotentialSavings,
-                itemLabel: "vídeos",
+                itemLabel: NSLocalizedString("videos.itemLabel", comment: ""),
                 destination: .photoLibrary,
                 onConfirm: {
                     viewModel.showDeleteConfirmation = false
@@ -93,7 +104,7 @@ struct VideosListView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showDeleteSuccess) {
             if let result = viewModel.deleteResult {
-                DeletionSuccessView(result: result, itemLabel: "vídeos", destination: .photoLibrary) {
+                DeletionSuccessView(result: result, itemLabel: NSLocalizedString("videos.itemLabel", comment: ""), destination: .photoLibrary) {
                     viewModel.showDeleteSuccess = false
                 }
             }
@@ -106,10 +117,10 @@ struct VideosListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Excluindo \(viewModel.totalSelectedCount) vídeos...")
+                        Text(String(format: NSLocalizedString("videos.deleting", comment: ""), viewModel.totalSelectedCount))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
-                        Text("O iOS solicitará sua confirmação.")
+                        Text(NSLocalizedString("videos.confirmationNotice", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(.white.opacity(0.7))
                     }
@@ -131,7 +142,7 @@ struct VideosListView: View {
             ZStack(alignment: .topTrailing) {
                 // Thumbnail
                 Group {
-                    if let image = viewModel.thumbnailCache[id] {
+                    if let image = viewModel.thumbnails[id] {
                         Image(uiImage: image)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -219,10 +230,10 @@ struct VideosListView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(viewModel.totalVideoCount) vídeos encontrados")
+            Text(String(format: NSLocalizedString("videos.countFound", comment: ""), viewModel.totalVideoCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
-            Text("Tamanho total: \(viewModel.totalSize.formattedSize)")
+            Text(String(format: NSLocalizedString("videos.totalSize", comment: ""), viewModel.totalSize.formattedSize))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
 
@@ -231,7 +242,7 @@ struct VideosListView: View {
                     Image(systemName: "arrow.down.circle.fill")
                         .font(.system(size: 14))
                         .foregroundColor(ColorTokens.successGreen)
-                    Text("Economize \(viewModel.totalPotentialSavings.formattedSize) excluindo \(viewModel.totalSelectedCount) vídeo(s)")
+                    Text(String(format: NSLocalizedString("videos.savingsMessage", comment: ""), viewModel.totalPotentialSavings.formattedSize, viewModel.totalSelectedCount))
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(ColorTokens.successGreen)
                 }
@@ -239,7 +250,7 @@ struct VideosListView: View {
             }
 
             if !viewModel.assets.isEmpty && viewModel.selectedIds.count > 0 {
-                Text("Os 15 vídeos mais pesados foram pré-selecionados.")
+                Text(NSLocalizedString("videos.preselectedMessage", comment: ""))
                     .font(.system(size: 12))
                     .foregroundColor(ColorTokens.tertiaryText)
             }
@@ -256,10 +267,10 @@ struct VideosListView: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.successGreen)
-            Text("Nenhum vídeo encontrado!")
+            Text(NSLocalizedString("videos.emptyTitle", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
-            Text("Sua biblioteca não contém vídeos.")
+            Text(NSLocalizedString("videos.emptyMessage", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
             Spacer()

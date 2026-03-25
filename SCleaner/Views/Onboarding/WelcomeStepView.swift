@@ -11,7 +11,7 @@ struct WelcomeStepView: View {
             Spacer().frame(height: 60)
 
             // Title
-            Text("Bem-vindo ao\nVortex Cleaner")
+            Text(NSLocalizedString("onboarding.welcomeTitle", comment: ""))
                 .font(.system(size: 34, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundColor(ColorTokens.primaryText)
@@ -31,7 +31,7 @@ struct WelcomeStepView: View {
                             )
                         )
                         .frame(width: AppConstants.UI.iconSize, height: AppConstants.UI.iconSize)
-                    Text("Fotos")
+                    Text(NSLocalizedString("onboarding.photos", comment: ""))
                         .font(.system(size: 15, weight: .medium))
                         .foregroundColor(ColorTokens.primaryText)
                 }
@@ -41,7 +41,7 @@ struct WelcomeStepView: View {
                         .font(.system(size: 44))
                         .foregroundColor(Color(hex: "3F9BFF"))
                         .frame(width: AppConstants.UI.iconSize, height: AppConstants.UI.iconSize)
-                    Text("iCloud")
+                    Text(NSLocalizedString("onboarding.iCloud", comment: ""))
                         .font(.system(size: 15, weight: .medium))
                         .foregroundColor(ColorTokens.primaryText)
                 }
@@ -60,9 +60,9 @@ struct WelcomeStepView: View {
 
             // Privacy text
             VStack(spacing: 6) {
-                Text("O Vortex Cleaner precisa ter acesso às Fotos para liberar armazenamento. ")
+                Text(NSLocalizedString("onboarding.privacyText1", comment: ""))
                     .foregroundColor(ColorTokens.secondaryText)
-                + Text("Queremos fornecer transparência e proteger sua privacidade. Ao iniciar, você concorda com nossos")
+                + Text(NSLocalizedString("onboarding.privacyText2", comment: ""))
                     .foregroundColor(ColorTokens.tertiaryText)
             }
             .font(.system(size: 13))
@@ -74,16 +74,16 @@ struct WelcomeStepView: View {
             // Terms links
             HStack(spacing: 4) {
                 Button(action: { viewModel.openTermsOfUse() }) {
-                    Text("Termos de Uso")
+                    Text(NSLocalizedString("onboarding.termsOfUse", comment: ""))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(ColorTokens.primaryText)
                         .underline()
                 }
-                Text("e nossa")
+                Text(NSLocalizedString("onboarding.andOur", comment: ""))
                     .font(.system(size: 13))
                     .foregroundColor(ColorTokens.tertiaryText)
                 Button(action: { viewModel.openPrivacyPolicy() }) {
-                    Text("Política de Privacidade")
+                    Text(NSLocalizedString("onboarding.privacyPolicy", comment: ""))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(ColorTokens.primaryText)
                         .underline()
@@ -96,7 +96,7 @@ struct WelcomeStepView: View {
             Spacer().frame(height: 24)
 
             // Primary button
-            Button("Começar") { onContinue() }
+            Button(NSLocalizedString("onboarding.getStarted", comment: "")) { onContinue() }
                 .buttonStyle(PrimaryButtonStyle())
                 .padding(.horizontal, AppConstants.UI.horizontalPadding)
 

@@ -2,18 +2,20 @@ import SwiftUI
 import Photos
 
 /// ViewModel for the videos review screen.
-/// Manages a flat list of video assets sorted by size, with selection and deletion.
 @MainActor
 final class VideosViewModel: ObservableObject {
     @Published var assets: [PHAsset]
     @Published var selectedIds: Set<String> = []
-    @Published var thumbnailCache: [String: UIImage] = [:]
     @Published var isDeleting = false
     @Published var deleteResult: DeleteResult?
     @Published var showDeleteConfirmation = false
     @Published var showDeleteSuccess = false
     @Published var showPaywall = false
     @Published var limitMessage: String?
+    @Published var thumbnailVersion: Int = 0
+
+    let thumbnails = ThumbnailStore()
+    private var loadingIds: Set<String> = []
 
     private let thumbnailService: ThumbnailCacheService
     private let deletionService: PhotoDeletionService
@@ -36,58 +38,46 @@ final class VideosViewModel: ObservableObject {
         thumbnailService: ThumbnailCacheService,
         deletionService: PhotoDeletionService
     ) {
-        // Sort by estimated file size descending (heaviest first)
         self.assets = assets.sorted { $0.estimatedFileSize > $1.estimatedFileSize }
         self.thumbnailService = thumbnailService
         self.deletionService = deletionService
-
-        // Pre-select top 15 heaviest videos as recommendation
         let topHeaviest = self.assets.prefix(15)
         self.selectedIds = Set(topHeaviest.map(\.localIdentifier))
     }
 
     func toggleSelection(assetId: String) {
-        if selectedIds.contains(assetId) {
-            selectedIds.remove(assetId)
-        } else {
-            selectedIds.insert(assetId)
-        }
+        if selectedIds.contains(assetId) { selectedIds.remove(assetId) }
+        else { selectedIds.insert(assetId) }
     }
 
-    func selectAll() {
-        for asset in assets {
-            selectedIds.insert(asset.localIdentifier)
-        }
-    }
-
-    func deselectAll() {
-        selectedIds.removeAll()
-    }
+    func selectAll() { for asset in assets { selectedIds.insert(asset.localIdentifier) } }
+    func deselectAll() { selectedIds.removeAll() }
 
     func loadThumbnails(for visibleAssets: [PHAsset]) {
         let targetSize = AppConstants.Storage.thumbnailSize
         for asset in visibleAssets {
             let id = asset.localIdentifier
-            guard thumbnailCache[id] == nil else { continue }
+            guard !thumbnails.contains(id), !loadingIds.contains(id) else { continue }
+            loadingIds.insert(id)
             Task {
-                if let image = await thumbnailService.loadThumbnail(
-                    assetId: id, targetSize: targetSize
-                ) {
-                    thumbnailCache[id] = image
+                if let image = await thumbnailService.loadThumbnail(for: asset, targetSize: targetSize) {
+                    thumbnails[id] = image
+                    thumbnailVersion += 1
                 }
+                loadingIds.remove(id)
             }
         }
+    }
+
+    func evictThumbnails(for assetIds: [String]) {
+        for id in assetIds { thumbnails.remove(id) }
     }
 
     func confirmDeletion() {
         limitMessage = nil
         if !limitService.canDelete(count: totalSelectedCount) {
-            if limitService.isLimitReached {
-                showPaywall = true
-            } else {
-                let remaining = limitService.remainingDeletions
-                limitMessage = "Limite diario: \(remaining) exclusoes restantes. Selecione menos itens ou assine o Premium."
-            }
+            if limitService.isLimitReached { showPaywall = true }
+            else { limitMessage = String(format: NSLocalizedString("general.limitMessage", comment: ""), limitService.remainingDeletions) }
             return
         }
         showDeleteConfirmation = true
@@ -95,10 +85,7 @@ final class VideosViewModel: ObservableObject {
 
     func executeDelete() async {
         let allowed = limitService.allowedCount(requested: totalSelectedCount)
-        if allowed <= 0 && !SubscriptionService.shared.isPremium {
-            showPaywall = true
-            return
-        }
+        if allowed <= 0 && !SubscriptionService.shared.isPremium { showPaywall = true; return }
 
         isDeleting = true
         let idsToDelete = Array(selectedIds.prefix(allowed))
@@ -107,17 +94,11 @@ final class VideosViewModel: ObservableObject {
             let result = try await deletionService.deletePhotos(assetIds: idsToDelete)
             deleteResult = result
             assets = assets.filter { !result.deletedAssetIds.contains($0.localIdentifier) }
-            for id in result.deletedAssetIds {
-                selectedIds.remove(id)
-            }
+            for id in result.deletedAssetIds { selectedIds.remove(id) }
             limitService.recordDeletions(count: result.deletedCount)
             showDeleteSuccess = true
-            NotificationCenter.default.post(
-                name: DashboardViewModel.photosDeletedNotification, object: nil
-            )
-        } catch {
-            // User cancelled or error
-        }
+            NotificationCenter.default.post(name: DashboardViewModel.photosDeletedNotification, object: nil)
+        } catch { }
 
         isDeleting = false
     }

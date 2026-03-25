@@ -27,6 +27,8 @@
 		BB00001800000018 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001800000018 /* PermissionService.swift */; };
 		BB00001900000019 /* StorageAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001900000019 /* StorageAnalysisService.swift */; };
 		BB00002000000020 /* ThumbnailCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00002000000020 /* ThumbnailCacheService.swift */; };
+		BB00010000000100 /* ThumbnailStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00010000000100 /* ThumbnailStore.swift */; };
+		BB00011000000110 /* ReviewPromptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011000000110 /* ReviewPromptService.swift */; };
 		BB00002100000021 /* PhotoLibraryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00002100000021 /* PhotoLibraryService.swift */; };
 		BB00002200000022 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00002200000022 /* DashboardViewModel.swift */; };
 		BB00002300000023 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00002300000023 /* OnboardingViewModel.swift */; };
@@ -121,6 +123,8 @@
 		AA00001800000018 /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
 		AA00001900000019 /* StorageAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageAnalysisService.swift; sourceTree = "<group>"; };
 		AA00002000000020 /* ThumbnailCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCacheService.swift; sourceTree = "<group>"; };
+		AA00010000000100 /* ThumbnailStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailStore.swift; sourceTree = "<group>"; };
+		AA00011000000110 /* ReviewPromptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptService.swift; sourceTree = "<group>"; };
 		AA00002100000021 /* PhotoLibraryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryService.swift; sourceTree = "<group>"; };
 		AA00002200000022 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		AA00002300000023 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
@@ -311,6 +315,8 @@
 				AA00001800000018 /* PermissionService.swift */,
 				AA00001900000019 /* StorageAnalysisService.swift */,
 				AA00002000000020 /* ThumbnailCacheService.swift */,
+				AA00010000000100 /* ThumbnailStore.swift */,
+				AA00011000000110 /* ReviewPromptService.swift */,
 				AA00002100000021 /* PhotoLibraryService.swift */,
 				AA00004700000047 /* HashingService.swift */,
 				AA00004800000048 /* DuplicateDetectionService.swift */,
@@ -553,6 +559,14 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
+				ja,
+				de,
+				fr,
+				es,
+				ko,
+				"zh-Hant",
+				ro,
 			);
 			mainGroup = CC00000000000000;
 			productRefGroup = CC00009100000091 /* Products */;
@@ -604,6 +618,8 @@
 				BB00001800000018 /* PermissionService.swift in Sources */,
 				BB00001900000019 /* StorageAnalysisService.swift in Sources */,
 				BB00002000000020 /* ThumbnailCacheService.swift in Sources */,
+				BB00010000000100 /* ThumbnailStore.swift in Sources */,
+				BB00011000000110 /* ReviewPromptService.swift in Sources */,
 				BB00002100000021 /* PhotoLibraryService.swift in Sources */,
 				BB00002200000022 /* DashboardViewModel.swift in Sources */,
 				BB00002300000023 /* OnboardingViewModel.swift in Sources */,

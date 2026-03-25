@@ -30,7 +30,7 @@ struct DuplicatesListView: View {
                             DuplicateGroupCardView(
                                 group: group,
                                 selectedIds: viewModel.selectedIds,
-                                thumbnailCache: viewModel.thumbnailCache,
+                                thumbnailStore: viewModel.thumbnails,
                                 onToggleSelection: { id in
                                     viewModel.toggleSelection(assetId: id)
                                 },
@@ -62,18 +62,29 @@ struct DuplicatesListView: View {
             if let msg = viewModel.limitMessage {
                 VStack {
                     Spacer()
-                    Text(msg)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(ColorTokens.warningOrange.cornerRadius(10))
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 90)
+                    HStack(spacing: 8) {
+                        Text(msg)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                        Button(NSLocalizedString("general.becomePro", comment: "")) {
+                            viewModel.showPaywall = true
+                        }
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(ColorTokens.warningOrange)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                    }
+                    .padding(12)
+                    .background(ColorTokens.warningOrange.cornerRadius(10))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 90)
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .navigationTitle("Duplicatas")
+        .navigationTitle(NSLocalizedString("duplicates.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
@@ -107,10 +118,10 @@ struct DuplicatesListView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .tint(.white)
-                        Text("Excluindo \(viewModel.totalSelectedCount) fotos...")
+                        Text(String(format: NSLocalizedString("duplicates.deleting", comment: ""), viewModel.totalSelectedCount))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
-                        Text("O iOS solicitará sua confirmação.")
+                        Text(NSLocalizedString("duplicates.confirmationNotice", comment: ""))
                             .font(.system(size: 13))
                             .foregroundColor(.white.opacity(0.7))
                     }
@@ -124,10 +135,10 @@ struct DuplicatesListView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(viewModel.totalGroupCount) grupos encontrados")
+            Text(String(format: NSLocalizedString("duplicates.groupsFound", comment: ""), viewModel.totalGroupCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
-            Text("\(viewModel.totalDuplicateCount) fotos duplicadas")
+            Text(String(format: NSLocalizedString("duplicates.photosCount", comment: ""), viewModel.totalDuplicateCount))
                 .font(.system(size: 14))
                 .foregroundColor(ColorTokens.secondaryText)
         }
@@ -141,10 +152,10 @@ struct DuplicatesListView: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 48))
                 .foregroundColor(ColorTokens.successGreen)
-            Text("Nenhuma duplicata encontrada!")
+            Text(NSLocalizedString("duplicates.emptyTitle", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(ColorTokens.primaryText)
-            Text("Sua biblioteca está organizada.")
+            Text(NSLocalizedString("duplicates.emptyMessage", comment: ""))
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
             Spacer()

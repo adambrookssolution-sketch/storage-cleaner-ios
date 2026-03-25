@@ -16,12 +16,12 @@ struct PhotoHash: Identifiable, Hashable {
     /// Total pixel count for resolution comparison
     var pixelCount: Int { pixelWidth * pixelHeight }
 
-    /// Whether the asset has been edited
+    /// Whether the asset has been edited.
+    /// We cannot reliably detect edits from mediaSubtypes alone.
+    /// Conservatively assume non-screenshot photos are not edited.
+    /// For accurate edit detection, use PHAsset.hasAdjustments (async).
     var isEdited: Bool {
-        let editSubtype = PHAssetMediaSubtype(rawValue: mediaSubtypes)
-        // Check for any adjustments applied to the photo
-        return editSubtype.contains(.photoScreenshot) == false
-            && (mediaSubtypes & 0x10) != 0
+        return false
     }
 
     func hash(into hasher: inout Hasher) {
