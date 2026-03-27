@@ -138,7 +138,7 @@ final class DashboardViewModel: ObservableObject {
                 self.scanProgress = progress
 
                 switch progress {
-                case .scanning(let processed, let total):
+                case .scanning(_, let total):
                     self.totalFileCount = total
                     if self.totalSizeFormatted.isEmpty {
                         self.totalSizeFormatted = "..."

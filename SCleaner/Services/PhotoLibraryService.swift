@@ -207,11 +207,9 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         if Task.isCancelled { return }
 
         // Collect all photo assets for hashing
-        var photoAssets: [PHAsset] = []
-        photoAssets.reserveCapacity(totalPhotos)
-        for i in 0..<totalPhotos {
-            if Task.isCancelled { return }
-            photoAssets.append(photoFetch.object(at: i))
+        let photoAssets: [PHAsset] = (0..<totalPhotos).compactMap { i -> PHAsset? in
+            guard !Task.isCancelled else { return nil }
+            return photoFetch.object(at: i)
         }
 
         await MainActor.run {
