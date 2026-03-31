@@ -1,10 +1,13 @@
 import SwiftUI
 
 /// Full-screen view showing all similar photo groups with batch action bar.
-/// Uses orange accent instead of red (lower urgency than duplicates).
 struct SimilarPhotosListView: View {
     @StateObject private var viewModel: SimilarPhotosViewModel
     @Environment(\.dismiss) private var dismiss
+
+    // Pagination for groups
+    private static let groupPageSize = 20
+    @State private var displayedGroupCount: Int = 20
 
     init(
         groups: [SimilarGroup],
@@ -18,6 +21,10 @@ struct SimilarPhotosListView: View {
         ))
     }
 
+    private var displayedGroups: [SimilarGroup] {
+        Array(viewModel.groups.prefix(displayedGroupCount))
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             if viewModel.groups.isEmpty {
@@ -27,10 +34,11 @@ struct SimilarPhotosListView: View {
                     LazyVStack(spacing: AppConstants.UI.cardSpacing) {
                         headerView
 
-                        ForEach(viewModel.groups) { group in
+                        ForEach(displayedGroups) { group in
                             similarGroupCard(group)
                                 .onAppear {
                                     viewModel.loadThumbnails(for: group)
+                                    loadMoreGroupsIfNeeded(current: group)
                                 }
                         }
 
@@ -73,6 +81,10 @@ struct SimilarPhotosListView: View {
         }
         .navigationTitle(NSLocalizedString("similar.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
+        .onDisappear {
+            let allIds = viewModel.groups.flatMap { $0.photos.map(\.id) }
+            viewModel.evictThumbnails(for: allIds)
+        }
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
         }
@@ -120,7 +132,18 @@ struct SimilarPhotosListView: View {
         }
     }
 
-    // MARK: - Similar Group Card (inline since structure is similar to DuplicateGroupCardView)
+    // MARK: - Pagination
+
+    private func loadMoreGroupsIfNeeded(current group: SimilarGroup) {
+        guard displayedGroupCount < viewModel.groups.count else { return }
+        let threshold = max(0, displayedGroupCount - 5)
+        if let index = viewModel.groups.firstIndex(where: { $0.id == group.id }),
+           index >= threshold {
+            displayedGroupCount = min(displayedGroupCount + Self.groupPageSize, viewModel.groups.count)
+        }
+    }
+
+    // MARK: - Similar Group Card
 
     private func similarGroupCard(_ group: SimilarGroup) -> some View {
         VStack(alignment: .leading, spacing: 12) {

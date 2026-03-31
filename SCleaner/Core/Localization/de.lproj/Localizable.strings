@@ -149,7 +149,7 @@
 
 /* === DELETION === */
 "deletion.confirmTitle" = "%d %@ löschen?";
-"deletion.descriptionPhotoLibrary" = "%@ Speicherplatz freigeben.\nDie %@ werden für 30 Tage in „Zuletzt gelöscht" von iOS verschoben.";
+"deletion.descriptionPhotoLibrary" = "%@ Speicherplatz freigeben.\nDie %@ werden für 30 Tage in >>Zuletzt gelöscht<< von iOS verschoben.";
 "deletion.descriptionAppTrash" = "%@ Speicherplatz freigeben.\nDie %@ werden für 30 Tage in den Papierkorb der App verschoben.";
 "deletion.descriptionPermanent" = "%@ Speicherplatz freigeben.\nDie %@ werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.";
 "deletion.deletePermanently" = "Dauerhaft löschen";
@@ -157,7 +157,7 @@
 "deletion.successCount" = "%d %@ gelöscht";
 "deletion.freedSpace" = "%@ freigegeben";
 "deletion.failedCount" = "%d %@ konnten nicht gelöscht werden";
-"deletion.guidancePhotoLibrary" = "Sie können die %@ unter „Fotos" > „Alben" > „Zuletzt gelöscht" bis zu 30 Tage lang wiederherstellen.";
+"deletion.guidancePhotoLibrary" = "Sie können die %@ unter >>Fotos<< > >>Alben<< > >>Zuletzt gelöscht<< bis zu 30 Tage lang wiederherstellen.";
 "deletion.guidanceAppTrash" = "Die %@ wurden in den Papierkorb der App verschoben. Sie können sie bis zu 30 Tage lang wiederherstellen.";
 
 /* === RESTORE === */
@@ -251,13 +251,13 @@
 "faq.q2.title" = "Werden meine Fotos an einen Server gesendet?";
 "faq.q2.answer" = "Nein. Die gesamte Verarbeitung erfolgt lokal auf Ihrem Gerät. Ihre Fotos verlassen niemals Ihr iPhone.";
 "faq.q3.title" = "Was passiert, wenn ich Fotos lösche?";
-"faq.q3.answer" = "Gelöschte Fotos werden in „Zuletzt gelöscht" von iOS verschoben. Dort bleiben sie 30 Tage lang verfügbar, bevor sie dauerhaft entfernt werden.";
+"faq.q3.answer" = "Gelöschte Fotos werden in >>Zuletzt gelöscht<< von iOS verschoben. Dort bleiben sie 30 Tage lang verfügbar, bevor sie dauerhaft entfernt werden.";
 "faq.q4.title" = "Was ist der Papierkorb der App?";
 "faq.q4.answer" = "Der Papierkorb ist ein interner Bereich, in dem Downloads-Dateien 30 Tage lang aufbewahrt werden, bevor sie dauerhaft gelöscht werden. So können Sie sie bei Bedarf wiederherstellen.";
 "faq.q5.title" = "Wie funktioniert das Abonnement?";
 "faq.q5.answer" = "Wir bieten Wochen- und Monatspläne an. Abonnenten haben unbegrenzten Zugriff auf alle Funktionen. Sie können jederzeit in den iPhone-Einstellungen kündigen.";
 "faq.q6.title" = "Kann ich mein Abonnement kündigen?";
-"faq.q6.answer" = "Ja. Gehen Sie auf Ihrem iPhone zu „Einstellungen" > „Ihr Name" > „Abonnements". Der Premium-Zugang bleibt bis zum Ende des bezahlten Zeitraums bestehen.";
+"faq.q6.answer" = "Ja. Gehen Sie auf Ihrem iPhone zu >>Einstellungen<< > >>Ihr Name<< > >>Abonnements<<. Der Premium-Zugang bleibt bis zum Ende des bezahlten Zeitraums bestehen.";
 "faq.q7.title" = "Funktioniert die App ohne Internet?";
 "faq.q7.answer" = "Ja. Scannen und Löschen funktionieren vollständig offline. Eine Internetverbindung wird nur für die Verwaltung von Abonnements benötigt.";
 

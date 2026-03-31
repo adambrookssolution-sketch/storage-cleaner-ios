@@ -59,6 +59,8 @@ struct ScanProgressView: View {
             return String(format: NSLocalizedString("scan.scanning", comment: ""), processed, total)
         case .hashing(let processed, let total):
             return String(format: NSLocalizedString("scan.analyzingPhotos", comment: ""), processed, total)
+        case .detecting:
+            return NSLocalizedString("scan.analyzingPhotos", comment: "")
         case .completed:
             return NSLocalizedString("scan.completed", comment: "")
         case .failed(let message):

@@ -167,15 +167,21 @@ struct DashboardView: View {
         case .videos:
             VideosListView(
                 assets: viewModel.videoAssets,
+                fileSizeCache: viewModel.photoService.fileSizeCache,
                 thumbnailService: thumbnailService,
-                deletionService: deletionService
+                deletionService: deletionService,
+                scanProgress: viewModel.scanProgress
             )
+            .id(viewModel.videoAssets.count)
         case .screenshots:
             ScreenshotsListView(
                 assets: viewModel.screenshotAssets,
+                fileSizeCache: viewModel.photoService.fileSizeCache,
                 thumbnailService: thumbnailService,
-                deletionService: deletionService
+                deletionService: deletionService,
+                scanProgress: viewModel.scanProgress
             )
+            .id(viewModel.screenshotAssets.count)
         case .downloads:
             DownloadsListView()
         case .trashBin:

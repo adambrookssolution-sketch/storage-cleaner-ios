@@ -28,5 +28,9 @@ struct RootView: View {
                 SubscriptionService.shared.revalidateOnForeground()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didReceiveMemoryWarningNotification)) { _ in
+            // On memory pressure: post notification so active ViewModels can clear caches
+            NotificationCenter.default.post(name: .memoryWarningClearCaches, object: nil)
+        }
     }
 }

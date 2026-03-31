@@ -65,30 +65,46 @@ final class SimilarPhotoDetectionService {
             groupMap[root, default: []].append(i)
         }
 
-        return groupMap.values
-            .filter { $0.count >= 2 }
-            .map { indices in
-                let photos = indices.map { candidates[$0] }
+        // Cap individual groups at 20 photos to prevent memory explosion in the UI.
+        // If a group has more, split into sub-groups of 20.
+        let maxGroupSize = 20
+        var allGroups: [SimilarGroup] = []
 
-                // Calculate average Hamming distance within group
+        for indices in groupMap.values where indices.count >= 2 {
+            let photos = indices.map { candidates[$0] }
+
+            // Split large groups into manageable chunks
+            let chunks: [[PhotoHash]]
+            if photos.count > maxGroupSize {
+                chunks = stride(from: 0, to: photos.count, by: maxGroupSize).map {
+                    Array(photos[$0..<min($0 + maxGroupSize, photos.count)])
+                }.filter { $0.count >= 2 }
+            } else {
+                chunks = [photos]
+            }
+
+            for chunk in chunks {
+                let samplePhotos = chunk.count > 10 ? Array(chunk.prefix(10)) : chunk
                 var totalDist = 0
                 var pairCount = 0
-                for a in 0..<photos.count {
-                    for b in (a + 1)..<photos.count {
-                        totalDist += UIImage.hammingDistance(photos[a].hash, photos[b].hash)
+                for a in 0..<samplePhotos.count {
+                    for b in (a + 1)..<samplePhotos.count {
+                        totalDist += UIImage.hammingDistance(samplePhotos[a].hash, samplePhotos[b].hash)
                         pairCount += 1
                     }
                 }
                 let avgDist = pairCount > 0 ? totalDist / pairCount : 0
-                let bestIndex = bestResultSelector.selectBestResult(from: photos)
+                let bestIndex = bestResultSelector.selectBestResult(from: chunk)
 
-                return SimilarGroup(
+                allGroups.append(SimilarGroup(
                     id: UUID(),
-                    photos: photos,
+                    photos: chunk,
                     bestResultIndex: bestIndex,
                     averageDistance: avgDist
-                )
+                ))
             }
-            .sorted { $0.totalSize > $1.totalSize }
+        }
+
+        return allGroups.sorted { $0.totalSize > $1.totalSize }
     }
 }

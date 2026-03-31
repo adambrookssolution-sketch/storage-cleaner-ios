@@ -14,6 +14,10 @@ final class VideosViewModel: ObservableObject {
     @Published var limitMessage: String?
     @Published var thumbnailVersion: Int = 0
 
+    // Pagination
+    private static let pageSize = 100
+    @Published var displayedCount: Int = 0
+
     let thumbnails = ThumbnailStore()
     private var loadingIds: Set<String> = []
 
@@ -21,28 +25,53 @@ final class VideosViewModel: ObservableObject {
     private let deletionService: PhotoDeletionService
     private let limitService = DeletionLimitService.shared
 
+    /// File size cache: pre-computed during scan, passed in from PhotoLibraryService.
+    /// Zero disk reads at ViewModel level.
+    private var fileSizeCache: [String: Int64]
+
     var totalSelectedCount: Int { selectedIds.count }
     var totalVideoCount: Int { assets.count }
 
+    /// Displayed page of assets (pagination)
+    var displayedAssets: [PHAsset] { Array(assets.prefix(displayedCount)) }
+
     var totalPotentialSavings: Int64 {
-        assets.filter { selectedIds.contains($0.localIdentifier) }
-            .reduce(Int64(0)) { $0 + $1.estimatedFileSize }
+        selectedIds.reduce(Int64(0)) { $0 + (fileSizeCache[$1] ?? 0) }
     }
 
     var totalSize: Int64 {
-        assets.reduce(Int64(0)) { $0 + $1.estimatedFileSize }
+        assets.reduce(Int64(0)) { $0 + (fileSizeCache[$1.localIdentifier] ?? 0) }
+    }
+
+    func fileSize(for asset: PHAsset) -> Int64 {
+        fileSizeCache[asset.localIdentifier] ?? 0
     }
 
     init(
         assets: [PHAsset],
+        fileSizeCache: [String: Int64],
         thumbnailService: ThumbnailCacheService,
         deletionService: PhotoDeletionService
     ) {
-        self.assets = assets.sorted { $0.estimatedFileSize > $1.estimatedFileSize }
+        self.fileSizeCache = fileSizeCache
+        self.assets = assets.sorted {
+            (fileSizeCache[$0.localIdentifier] ?? 0) > (fileSizeCache[$1.localIdentifier] ?? 0)
+        }
         self.thumbnailService = thumbnailService
         self.deletionService = deletionService
+        self.displayedCount = min(Self.pageSize, assets.count)
+
         let topHeaviest = self.assets.prefix(15)
         self.selectedIds = Set(topHeaviest.map(\.localIdentifier))
+    }
+
+    func loadNextPageIfNeeded(currentAsset: PHAsset) {
+        guard displayedCount < assets.count else { return }
+        let threshold = max(0, displayedCount - 20)
+        if let index = assets.firstIndex(where: { $0.localIdentifier == currentAsset.localIdentifier }),
+           index >= threshold {
+            displayedCount = min(displayedCount + Self.pageSize, assets.count)
+        }
     }
 
     func toggleSelection(assetId: String) {
@@ -94,7 +123,11 @@ final class VideosViewModel: ObservableObject {
             let result = try await deletionService.deletePhotos(assetIds: idsToDelete)
             deleteResult = result
             assets = assets.filter { !result.deletedAssetIds.contains($0.localIdentifier) }
-            for id in result.deletedAssetIds { selectedIds.remove(id) }
+            for id in result.deletedAssetIds {
+                selectedIds.remove(id)
+                fileSizeCache.removeValue(forKey: id)
+            }
+            displayedCount = min(displayedCount, assets.count)
             limitService.recordDeletions(count: result.deletedCount)
             showDeleteSuccess = true
             NotificationCenter.default.post(name: DashboardViewModel.photosDeletedNotification, object: nil)

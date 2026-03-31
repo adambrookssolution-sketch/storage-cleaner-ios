@@ -53,6 +53,10 @@ final class DashboardViewModel: ObservableObject {
             switch category {
             case .videos, .similarVideos:
                 countStr = String(format: NSLocalizedString("videos.countFound", comment: ""), count)
+            case .screenshots, .similarScreenshots:
+                countStr = String(format: NSLocalizedString("screenshots.count", comment: ""), count)
+            case .similar:
+                countStr = String(format: NSLocalizedString("similar.photosCount", comment: ""), count)
             case .downloads, .trashBin:
                 countStr = String(format: NSLocalizedString("downloads.filesFoundCount", comment: ""), count)
             default:
@@ -68,6 +72,10 @@ final class DashboardViewModel: ObservableObject {
             switch category {
             case .videos, .similarVideos:
                 countStr = String(format: NSLocalizedString("videos.countFound", comment: ""), count)
+            case .screenshots, .similarScreenshots:
+                countStr = String(format: NSLocalizedString("screenshots.count", comment: ""), count)
+            case .similar:
+                countStr = String(format: NSLocalizedString("similar.photosCount", comment: ""), count)
             case .downloads, .trashBin:
                 countStr = String(format: NSLocalizedString("downloads.filesFoundCount", comment: ""), count)
             default:
@@ -95,7 +103,7 @@ final class DashboardViewModel: ObservableObject {
         NotificationCenter.default.publisher(for: Self.photosDeletedNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.rescanAfterDeletion()
+                self?.refreshAfterDeletion()
             }
             .store(in: &cancellables)
 
@@ -107,12 +115,44 @@ final class DashboardViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Re-triggers a full scan after photos have been deleted
-    func rescanAfterDeletion() {
-        scanProgress = .idle
-        categoryData = []
-        thumbnails.removeAll()
-        startScan()
+    /// Refresh dashboard data after deletion WITHOUT re-scanning.
+    /// Removes deleted assets from local state and rebuilds category cards.
+    func refreshAfterDeletion() {
+        // Update assets from photoService (already filtered by PhotoDeletionService)
+        videoAssets = photoService.videoAssets
+        screenshotAssets = photoService.screenshotAssets
+        duplicateGroups = photoService.duplicateGroups
+        similarGroups = photoService.similarGroups
+
+        // Rebuild category data with updated counts
+        if case .completed(let result) = scanProgress {
+            // Recalculate counts from actual data
+            let updatedResult = ScanResult(
+                totalAssets: result.totalAssets,
+                totalPhotos: result.totalPhotos,
+                totalVideos: videoAssets.count,
+                totalScreenshots: screenshotAssets.count,
+                totalSizeBytes: result.totalSizeBytes,
+                photosSizeBytes: result.photosSizeBytes,
+                videosSizeBytes: result.videosSizeBytes,
+                screenshotsSizeBytes: result.screenshotsSizeBytes,
+                duplicateGroupCount: duplicateGroups.count,
+                duplicatePhotoCount: duplicateGroups.reduce(0) { $0 + $1.count },
+                duplicateSizeBytes: duplicateGroups.reduce(Int64(0)) { $0 + $1.totalSize },
+                similarGroupCount: similarGroups.count,
+                similarPhotoCount: similarGroups.reduce(0) { $0 + $1.count },
+                similarSizeBytes: similarGroups.reduce(Int64(0)) { $0 + $1.totalSize },
+                downloadFileCount: result.downloadFileCount,
+                downloadSizeBytes: result.downloadSizeBytes,
+                trashFileCount: TrashBinService.shared.totalTrashCount,
+                trashSizeBytes: TrashBinService.shared.totalTrashSize
+            )
+            scanResult = updatedResult
+            buildCategoryData(from: updatedResult)
+        }
+
+        // Update storage info
+        storageInfo = storageService.getDeviceStorageInfo()
     }
 
     // MARK: - Actions
@@ -154,7 +194,7 @@ final class DashboardViewModel: ObservableObject {
                     self.buildCategoryData(from: result)
                     self.loadSampleThumbnails()
 
-                case .hashing:
+                case .hashing, .detecting:
                     break // Progress bar handles display
 
                 case .completed(let result):

@@ -5,32 +5,45 @@ import Photos
 struct VideosListView: View {
     @StateObject private var viewModel: VideosViewModel
     @Environment(\.dismiss) private var dismiss
+    let scanProgress: ScanProgress
 
     init(
         assets: [PHAsset],
+        fileSizeCache: [String: Int64],
         thumbnailService: ThumbnailCacheService,
-        deletionService: PhotoDeletionService
+        deletionService: PhotoDeletionService,
+        scanProgress: ScanProgress = .idle
     ) {
         _viewModel = StateObject(wrappedValue: VideosViewModel(
             assets: assets,
+            fileSizeCache: fileSizeCache,
             thumbnailService: thumbnailService,
             deletionService: deletionService
         ))
+        self.scanProgress = scanProgress
     }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            if viewModel.assets.isEmpty {
+            if viewModel.assets.isEmpty && !scanProgress.isScanning {
                 emptyState
             } else {
                 ScrollView {
                     LazyVStack(spacing: AppConstants.UI.cardSpacing) {
+                        // Scan progress banner while scan is still running
+                        if scanProgress.isScanning {
+                            ScanProgressView(progress: scanProgress)
+                                .padding(.horizontal, AppConstants.UI.horizontalPadding)
+                                .transition(.opacity)
+                        }
+
                         headerView
 
-                        ForEach(viewModel.assets, id: \.localIdentifier) { asset in
+                        ForEach(viewModel.displayedAssets, id: \.localIdentifier) { asset in
                             videoItemCard(asset)
                                 .onAppear {
                                     viewModel.loadThumbnails(for: [asset])
+                                    viewModel.loadNextPageIfNeeded(currentAsset: asset)
                                 }
                         }
 
@@ -82,6 +95,10 @@ struct VideosListView: View {
                     Image(systemName: "ellipsis.circle")
                 }
             }
+        }
+        .onDisappear {
+            // Evict thumbnails of assets no longer visible to free cache space
+            viewModel.evictThumbnails(for: viewModel.assets.map(\.localIdentifier))
         }
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
@@ -190,9 +207,9 @@ struct VideosListView: View {
                 .padding(4)
             }
 
-            // Metadata
+            // Metadata — file size from cache (no disk read)
             VStack(alignment: .leading, spacing: 4) {
-                Text(asset.estimatedFileSize.formattedSize)
+                Text(viewModel.fileSize(for: asset).formattedSize)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(ColorTokens.primaryText)
 

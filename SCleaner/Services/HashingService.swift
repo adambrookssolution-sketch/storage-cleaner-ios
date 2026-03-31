@@ -29,7 +29,11 @@ final class HashingService {
 
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
+        // Use highQualityFormat to guarantee a single non-degraded callback.
+        // fastFormat can deliver a degraded image first, then a final image second —
+        // with the old logic this caused continuation to never resume on the first
+        // callback (isDegraded=true), hanging the Task indefinitely on large libraries.
+        options.deliveryMode = .highQualityFormat
         options.resizeMode = .fast
         options.isNetworkAccessAllowed = false
         options.isSynchronous = false
@@ -57,11 +61,19 @@ final class HashingService {
                         contentMode: .aspectFill,
                         options: options
                     ) { image, info in
+                        // Guard against double-resume (PHImageManager can call back twice
+                        // in opportunistic/fastFormat mode)
                         guard !hasResumed else { return }
-                        let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
+
                         let isCancelled = (info?[PHImageCancelledKey] as? Bool) ?? false
-                        let error = info?[PHImageErrorKey] as? Error
-                        if !isDegraded || isCancelled || error != nil {
+                        let hasError = info?[PHImageErrorKey] as? Error != nil
+
+                        // With highQualityFormat, this callback fires exactly once with
+                        // the final image (or nil on error/cancel). Always resume here.
+                        if isCancelled || hasError {
+                            hasResumed = true
+                            continuation.resume(returning: nil)
+                        } else {
                             hasResumed = true
                             continuation.resume(returning: image)
                         }
@@ -89,8 +101,9 @@ final class HashingService {
 
             progressHandler(min(batchEnd, total), total)
 
-            // Yield between batches to reduce memory pressure and prevent watchdog kill
-            try? await Task.sleep(nanoseconds: 50_000_000) // 50ms pause between batches
+            // Yield between batches so the scheduler can process UI events
+            // and prevent the watchdog from killing the app on slower devices.
+            await Task.yield()
         }
 
         #if DEBUG

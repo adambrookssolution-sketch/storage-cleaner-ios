@@ -4,6 +4,7 @@ import UIKit
 /// Wraps PHCachingImageManager for efficient thumbnail loading.
 /// Uses an LRU cache with a hard limit to prevent memory explosion on large libraries.
 /// Throttles concurrent image requests to avoid saturating the system.
+@MainActor
 final class ThumbnailCacheService {
     private let cachingManager = PHCachingImageManager()
     private let requestOptions: PHImageRequestOptions
@@ -14,7 +15,8 @@ final class ThumbnailCacheService {
     private var accessOrder: [String] = []
     private let maxCacheCount = 200
 
-    /// Semaphore to limit concurrent image requests (prevents system resource exhaustion)
+    /// Semaphore to limit concurrent image requests (prevents system resource exhaustion).
+    /// @MainActor isolation guarantees these are always accessed from one thread.
     private let concurrencyLimit: Int = 6
     private var activeRequests = 0
     private var pendingContinuations: [CheckedContinuation<Void, Never>] = []
@@ -32,7 +34,6 @@ final class ThumbnailCacheService {
     /// Returns cached thumbnail if available, without loading
     func cachedThumbnail(for assetId: String) -> UIImage? {
         if let image = cache[assetId] {
-            // Move to end of access order (most recently used)
             if let index = accessOrder.firstIndex(of: assetId) {
                 accessOrder.remove(at: index)
             }
@@ -61,7 +62,6 @@ final class ThumbnailCacheService {
 
     /// Loads thumbnail for a PHAsset local identifier, with concurrency throttling and LRU caching.
     func loadThumbnail(assetId: String, targetSize: CGSize) async -> UIImage? {
-        // Return from cache if available
         if let cached = cachedThumbnail(for: assetId) {
             return cached
         }
@@ -79,12 +79,10 @@ final class ThumbnailCacheService {
     func loadThumbnail(for asset: PHAsset, targetSize: CGSize) async -> UIImage? {
         let assetId = asset.localIdentifier
 
-        // Return from cache if available
         if let cached = cachedThumbnail(for: assetId) {
             return cached
         }
 
-        // Throttle: wait if too many concurrent requests
         await acquireSlot()
 
         let image = await withCheckedContinuation { (continuation: CheckedContinuation<UIImage?, Never>) in
@@ -95,21 +93,28 @@ final class ThumbnailCacheService {
                 contentMode: .aspectFill,
                 options: requestOptions
             ) { image, info in
-                guard !hasResumed else { return }
+                // opportunistic mode fires twice: once degraded, once final.
+                // Only resume on the final (non-degraded) callback, or on error/cancel.
                 let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
                 let isCancelled = (info?[PHImageCancelledKey] as? Bool) ?? false
-                let error = info?[PHImageErrorKey] as? Error
+                let hasError = info?[PHImageErrorKey] as? Error != nil
 
-                if !isDegraded || isCancelled || error != nil {
+                guard !hasResumed else { return }
+
+                if isCancelled || hasError {
+                    hasResumed = true
+                    continuation.resume(returning: nil)
+                } else if !isDegraded {
+                    // Final high-quality image delivered — resume now
                     hasResumed = true
                     continuation.resume(returning: image)
                 }
+                // isDegraded=true with no error/cancel: skip, wait for final callback
             }
         }
 
         releaseSlot()
 
-        // Store in LRU cache
         if let image {
             storeThumbnail(image, forKey: assetId)
         }
@@ -120,14 +125,12 @@ final class ThumbnailCacheService {
     // MARK: - LRU Eviction
 
     private func storeThumbnail(_ image: UIImage, forKey key: String) {
-        // If already in cache, just update access order
         if cache[key] != nil {
             accessOrder.removeAll { $0 == key }
             accessOrder.append(key)
             return
         }
 
-        // Evict oldest if at capacity
         while cache.count >= maxCacheCount, let oldest = accessOrder.first {
             cache.removeValue(forKey: oldest)
             accessOrder.removeFirst()
@@ -145,7 +148,6 @@ final class ThumbnailCacheService {
             return
         }
 
-        // Wait for a slot to open
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             pendingContinuations.append(continuation)
         }

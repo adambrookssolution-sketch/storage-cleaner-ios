@@ -5,6 +5,10 @@ struct DuplicatesListView: View {
     @StateObject private var viewModel: DuplicatesViewModel
     @Environment(\.dismiss) private var dismiss
 
+    // Pagination for groups
+    private static let groupPageSize = 20
+    @State private var displayedGroupCount: Int = 20
+
     init(
         groups: [DuplicateGroup],
         thumbnailService: ThumbnailCacheService,
@@ -17,6 +21,10 @@ struct DuplicatesListView: View {
         ))
     }
 
+    private var displayedGroups: [DuplicateGroup] {
+        Array(viewModel.groups.prefix(displayedGroupCount))
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             if viewModel.groups.isEmpty {
@@ -26,7 +34,7 @@ struct DuplicatesListView: View {
                     LazyVStack(spacing: AppConstants.UI.cardSpacing) {
                         headerView
 
-                        ForEach(viewModel.groups) { group in
+                        ForEach(displayedGroups) { group in
                             DuplicateGroupCardView(
                                 group: group,
                                 selectedIds: viewModel.selectedIds,
@@ -43,6 +51,7 @@ struct DuplicatesListView: View {
                             )
                             .onAppear {
                                 viewModel.loadThumbnails(for: group)
+                                loadMoreGroupsIfNeeded(current: group)
                             }
                         }
 
@@ -86,6 +95,10 @@ struct DuplicatesListView: View {
         }
         .navigationTitle(NSLocalizedString("duplicates.title", comment: ""))
         .navigationBarTitleDisplayMode(.large)
+        .onDisappear {
+            let allIds = viewModel.groups.flatMap { $0.photos.map(\.id) }
+            viewModel.evictThumbnails(for: allIds)
+        }
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
         }
@@ -130,6 +143,17 @@ struct DuplicatesListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
             }
+        }
+    }
+
+    // MARK: - Pagination
+
+    private func loadMoreGroupsIfNeeded(current group: DuplicateGroup) {
+        guard displayedGroupCount < viewModel.groups.count else { return }
+        let threshold = max(0, displayedGroupCount - 5)
+        if let index = viewModel.groups.firstIndex(where: { $0.id == group.id }),
+           index >= threshold {
+            displayedGroupCount = min(displayedGroupCount + Self.groupPageSize, viewModel.groups.count)
         }
     }
 

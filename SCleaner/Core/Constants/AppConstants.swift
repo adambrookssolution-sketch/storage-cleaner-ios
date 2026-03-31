@@ -43,7 +43,9 @@ enum AppConstants {
         /// Sliding window size for duplicate comparison. Larger = more accurate but slower.
         static let duplicateWindowSize = 200
         /// Sliding window size for similar photo comparison.
-        static let similarWindowSize = 300
+        /// Sliding window size for similar photo comparison.
+        /// Reduced from 300 to 100 to prevent memory explosion on large libraries.
+        static let similarWindowSize = 100
     }
 
     enum Downloads {
@@ -90,6 +92,6 @@ enum AppConstants {
     enum AppInfo {
         static let appName = "Vortex Cleaner"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2"
-        static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "2"
+        static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "7"
     }
 }

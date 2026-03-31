@@ -6,7 +6,9 @@ struct VortexCleanerApp: App {
 
     init() {
         SubscriptionService.configure()
-        ReviewPromptService.shared.recordAppLaunch()
+        Task { @MainActor in
+            ReviewPromptService.shared.recordAppLaunch()
+        }
     }
 
     var body: some Scene {

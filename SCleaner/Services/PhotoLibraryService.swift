@@ -2,13 +2,15 @@ import Photos
 import Combine
 import UIKit
 
-/// Core scan engine — v1.1 with progressive real-time scan + memory-safe hashing.
+/// Core scan engine — v2.0 with progressive real-time scan, memory-safe hashing,
+/// file-size caching, and background-threaded duplicate/similar detection.
 ///
 /// Phase 1: Instant counts via PHFetchResult (zero memory) → publishes partial results
 ///          so dashboard cards appear and update in real-time.
-/// Phase 2: Collect assets for detail views.
+/// Phase 2: Collect assets for detail views (with autoreleasepool + size caching).
 /// Phase 3: Memory-safe hashing for duplicate/similar detection.
-/// Phase 4: Final results with duplicate/similar groups.
+/// Phase 4: Detect duplicates and similar in detached background task.
+/// Phase 5: Final results with duplicate/similar groups.
 final class PhotoLibraryService: PhotoLibraryServicing {
     private let thumbnailService: ThumbnailCacheService
     private let hashingService: HashingService
@@ -23,6 +25,10 @@ final class PhotoLibraryService: PhotoLibraryServicing {
     private(set) var similarGroups: [SimilarGroup] = []
     private(set) var videoAssets: [PHAsset] = []
     private(set) var screenshotAssets: [PHAsset] = []
+
+    /// Pre-computed file sizes keyed by asset localIdentifier.
+    /// Populated during Phase 2 so ViewModels never touch disk for sizes.
+    private(set) var fileSizeCache: [String: Int64] = [:]
 
     init(thumbnailService: ThumbnailCacheService) {
         self.thumbnailService = thumbnailService
@@ -69,7 +75,6 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         // ═══════════════════════════════════════════════════════════
         // Phase 1: Instant counts via PHFetchResult (zero memory)
-        // Cards appear immediately on dashboard
         // ═══════════════════════════════════════════════════════════
 
         let allFetchOptions = PHFetchOptions()
@@ -87,7 +92,6 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             self.progressSubject.send(.scanning(processed: 0, total: totalCount))
         }
 
-        // Fetch photos, videos, screenshots separately (instant)
         let photoOptions = PHFetchOptions()
         photoOptions.sortDescriptors = sortByDate
         let photoFetch = PHAsset.fetchAssets(with: .image, options: photoOptions)
@@ -109,16 +113,16 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         if Task.isCancelled { return }
 
-        // Estimate sizes from samples (fast, ~95% accuracy)
+        // Estimate sizes from samples
         let sampleSize = 50
         let photosSize = estimateTotalSize(fetch: photoFetch, sampleCount: sampleSize)
         let videosSize = estimateTotalSize(fetch: videoFetch, sampleCount: sampleSize)
         let screenshotsSize = estimateTotalSize(fetch: screenshotFetch, sampleCount: sampleSize)
-        let totalSize = photosSize + videosSize
+        let totalSize = photosSize + videosSize + screenshotsSize
 
         if Task.isCancelled { return }
 
-        // Collect sample thumbnails for cards
+        // Collect sample thumbnails for dashboard cards
         var screenshotSamples: [PHAsset] = []
         for i in 0..<min(4, screenshotFetch.count) {
             screenshotSamples.append(screenshotFetch.object(at: i))
@@ -175,16 +179,31 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         // ═══════════════════════════════════════════════════════════
         // Phase 2: Collect ALL assets for detail views
-        // PHAsset objects are lightweight (~100 bytes each)
+        // Uses autoreleasepool batches to prevent ObjC object buildup.
+        // Computes file sizes inline and stores in fileSizeCache.
         // ═══════════════════════════════════════════════════════════
 
+        var sizeCache: [String: Int64] = [:]
+        sizeCache.reserveCapacity(totalScreenshots + totalVideos)
+
+        // --- Screenshots ---
         var collectedScreenshots: [PHAsset] = []
         collectedScreenshots.reserveCapacity(totalScreenshots)
-        for i in 0..<totalScreenshots {
+        let screenshotBatchSize = 500
+        for batchStart in stride(from: 0, to: totalScreenshots, by: screenshotBatchSize) {
             if Task.isCancelled { return }
-            collectedScreenshots.append(screenshotFetch.object(at: i))
+            autoreleasepool {
+                let batchEnd = min(batchStart + screenshotBatchSize, totalScreenshots)
+                for j in batchStart..<batchEnd {
+                    let asset = screenshotFetch.object(at: j)
+                    collectedScreenshots.append(asset)
+                    let resources = PHAssetResource.assetResources(for: asset)
+                    if let size = resources.first?.value(forKey: "fileSize") as? Int64 {
+                        sizeCache[asset.localIdentifier] = size
+                    }
+                }
+            }
         }
-
         self.screenshotAssets = collectedScreenshots
 
         await MainActor.run {
@@ -195,22 +214,43 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             ))
         }
 
+        // --- Videos ---
         var collectedVideos: [PHAsset] = []
         collectedVideos.reserveCapacity(totalVideos)
-        for i in 0..<totalVideos {
+        let videoBatchSize = 500
+        for batchStart in stride(from: 0, to: totalVideos, by: videoBatchSize) {
             if Task.isCancelled { return }
-            collectedVideos.append(videoFetch.object(at: i))
+            autoreleasepool {
+                let batchEnd = min(batchStart + videoBatchSize, totalVideos)
+                for j in batchStart..<batchEnd {
+                    let asset = videoFetch.object(at: j)
+                    collectedVideos.append(asset)
+                    let resources = PHAssetResource.assetResources(for: asset)
+                    if let size = resources.first?.value(forKey: "fileSize") as? Int64 {
+                        sizeCache[asset.localIdentifier] = size
+                    }
+                }
+            }
         }
-
         self.videoAssets = collectedVideos
+        self.fileSizeCache = sizeCache
 
         if Task.isCancelled { return }
 
-        // Collect all photo assets for hashing
-        let photoAssets: [PHAsset] = (0..<totalPhotos).compactMap { i -> PHAsset? in
-            guard !Task.isCancelled else { return nil }
-            return photoFetch.object(at: i)
+        // --- Photos (no size cache needed, hashing stores size in PhotoHash) ---
+        var photoAssets: [PHAsset] = []
+        photoAssets.reserveCapacity(totalPhotos)
+        let photoBatchSize = 500
+        for batchStart in stride(from: 0, to: totalPhotos, by: photoBatchSize) {
+            if Task.isCancelled { break }
+            autoreleasepool {
+                let batchEnd = min(batchStart + photoBatchSize, totalPhotos)
+                for j in batchStart..<batchEnd {
+                    photoAssets.append(photoFetch.object(at: j))
+                }
+            }
         }
+        if Task.isCancelled { return }
 
         await MainActor.run {
             self.progressSubject.send(.partialResult(
@@ -224,8 +264,9 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         // Phase 3: Hash all photo assets (memory-safe)
         // ═══════════════════════════════════════════════════════════
 
+        let photoAssetCount = photoAssets.count
         await MainActor.run {
-            self.progressSubject.send(.hashing(processed: 0, total: photoAssets.count))
+            self.progressSubject.send(.hashing(processed: 0, total: photoAssetCount))
         }
 
         let hashes = await hashingService.hashAssets(photoAssets) { [weak self] processed, total in
@@ -239,14 +280,25 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         // ═══════════════════════════════════════════════════════════
         // Phase 4: Detect duplicates and similar photos
+        // Runs on a detached background task so the UI stays responsive.
+        // Publishes .detecting state so progress bar keeps moving.
         // ═══════════════════════════════════════════════════════════
 
-        let detectedDuplicates = duplicateDetectionService.findDuplicates(from: hashes)
-        let duplicateIds = Set(detectedDuplicates.flatMap { $0.photos.map(\.id) })
-        let detectedSimilar = similarDetectionService.findSimilarGroups(
-            from: hashes,
-            excludingDuplicateIds: duplicateIds
-        )
+        await MainActor.run {
+            self.progressSubject.send(.detecting(processed: 0, total: hashes.count))
+        }
+
+        let dupService = self.duplicateDetectionService
+        let simService = self.similarDetectionService
+        let (detectedDuplicates, detectedSimilar) = await Task.detached(priority: .userInitiated) {
+            let duplicates = dupService.findDuplicates(from: hashes)
+            let duplicateIds = Set(duplicates.flatMap { $0.photos.map(\.id) })
+            let similar = simService.findSimilarGroups(
+                from: hashes,
+                excludingDuplicateIds: duplicateIds
+            )
+            return (duplicates, similar)
+        }.value
 
         self.duplicateGroups = detectedDuplicates
         self.similarGroups = detectedSimilar
@@ -288,18 +340,36 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
     // MARK: - Size Estimation
 
-    /// Estimate total size by sampling a small number of assets.
-    /// 50 samples gives ~95% accuracy. Much faster than scanning all.
     private func estimateTotalSize(fetch: PHFetchResult<PHAsset>, sampleCount: Int) -> Int64 {
         let count = fetch.count
         guard count > 0 else { return 0 }
 
+        // For small collections, measure all items exactly
+        if count <= sampleCount * 2 {
+            var exactTotal: Int64 = 0
+            autoreleasepool {
+                for i in 0..<count {
+                    let asset = fetch.object(at: i)
+                    let resources = PHAssetResource.assetResources(for: asset)
+                    if let resource = resources.first,
+                       let size = resource.value(forKey: "fileSize") as? Int64 {
+                        exactTotal += size
+                    }
+                }
+            }
+            return exactTotal
+        }
+
+        // For large collections, sample evenly across the entire range
+        // (not just first N) to account for size distribution variance
         let actualSampleCount = min(sampleCount, count)
+        let step = count / actualSampleCount
         var sampleTotalSize: Int64 = 0
 
         autoreleasepool {
-            for i in 0..<actualSampleCount {
-                let asset = fetch.object(at: i)
+            for s in 0..<actualSampleCount {
+                let idx = min(s * step, count - 1)
+                let asset = fetch.object(at: idx)
                 let resources = PHAssetResource.assetResources(for: asset)
                 if let resource = resources.first,
                    let size = resource.value(forKey: "fileSize") as? Int64 {

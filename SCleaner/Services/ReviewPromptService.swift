@@ -1,9 +1,10 @@
 import StoreKit
 import Foundation
+import UIKit
 
 /// Requests App Store reviews at appropriate moments, respecting Apple's rate limits.
 /// Apple allows a maximum of 3 review prompts per year, per app version.
-/// We trigger on: 1st completed scan, 5th app launch, post-deletion success.
+/// We trigger on: 1st and 2nd completed scan, 5th app launch, post-deletion success.
 final class ReviewPromptService {
 
     static let shared = ReviewPromptService()
@@ -33,11 +34,11 @@ final class ReviewPromptService {
 
     // MARK: - Public Triggers
 
-    /// Call each time the app finishes a scan. Prompts after the 1st and 3rd scan.
+    /// Call each time the app finishes a scan. Prompts after the 1st and 2nd scan.
     func recordScanCompleted() {
         let count = UserDefaults.standard.integer(forKey: Keys.scanCompletionCount) + 1
         UserDefaults.standard.set(count, forKey: Keys.scanCompletionCount)
-        if count == 1 || count == 3 {
+        if count == 1 || count == 2 {
             requestReviewIfEligible()
         }
     }
@@ -60,6 +61,15 @@ final class ReviewPromptService {
     // MARK: - Private
 
     private func requestReviewIfEligible() {
+        #if DEBUG
+        // In debug builds, always show the prompt immediately for testing
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            guard let scene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
+            else { return }
+            SKStoreReviewController.requestReview(in: scene)
+        }
+        #else
         guard canShowPrompt() else { return }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -70,6 +80,7 @@ final class ReviewPromptService {
             SKStoreReviewController.requestReview(in: scene)
             self.recordPromptShown()
         }
+        #endif
     }
 
     private func canShowPrompt() -> Bool {

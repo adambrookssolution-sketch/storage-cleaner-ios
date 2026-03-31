@@ -5,6 +5,7 @@ import Photos
 struct ScreenshotsListView: View {
     @StateObject private var viewModel: ScreenshotsViewModel
     @Environment(\.dismiss) private var dismiss
+    let scanProgress: ScanProgress
 
     private let columns = [
         GridItem(.flexible(), spacing: 8),
@@ -14,30 +15,42 @@ struct ScreenshotsListView: View {
 
     init(
         assets: [PHAsset],
+        fileSizeCache: [String: Int64],
         thumbnailService: ThumbnailCacheService,
-        deletionService: PhotoDeletionService
+        deletionService: PhotoDeletionService,
+        scanProgress: ScanProgress = .idle
     ) {
         _viewModel = StateObject(wrappedValue: ScreenshotsViewModel(
             assets: assets,
+            fileSizeCache: fileSizeCache,
             thumbnailService: thumbnailService,
             deletionService: deletionService
         ))
+        self.scanProgress = scanProgress
     }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            if viewModel.assets.isEmpty {
+            if viewModel.assets.isEmpty && !scanProgress.isScanning {
                 emptyState
             } else {
                 ScrollView {
                     VStack(spacing: AppConstants.UI.cardSpacing) {
+                        // Scan progress banner while scan is still running
+                        if scanProgress.isScanning {
+                            ScanProgressView(progress: scanProgress)
+                                .padding(.horizontal, AppConstants.UI.horizontalPadding)
+                                .transition(.opacity)
+                        }
+
                         headerView
 
                         LazyVGrid(columns: columns, spacing: 8) {
-                            ForEach(viewModel.assets, id: \.localIdentifier) { asset in
+                            ForEach(viewModel.displayedAssets, id: \.localIdentifier) { asset in
                                 screenshotCell(asset)
                                     .onAppear {
                                         viewModel.loadThumbnails(for: [asset])
+                                        viewModel.loadNextPageIfNeeded(currentAsset: asset)
                                     }
                             }
                         }
@@ -90,6 +103,10 @@ struct ScreenshotsListView: View {
                     Image(systemName: "ellipsis.circle")
                 }
             }
+        }
+        .onDisappear {
+            // Evict thumbnails when leaving this screen to free cache for other screens
+            viewModel.evictThumbnails(for: viewModel.assets.map(\.localIdentifier))
         }
         .sheet(isPresented: $viewModel.showPaywall) {
             PaywallView()
@@ -181,11 +198,11 @@ struct ScreenshotsListView: View {
             }
             .padding(6)
 
-            // File size badge
+            // File size badge — from cache, no disk read
             VStack {
                 Spacer()
                 HStack {
-                    Text(asset.estimatedFileSize.formattedSize)
+                    Text(viewModel.fileSize(for: asset).formattedSize)
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 6)

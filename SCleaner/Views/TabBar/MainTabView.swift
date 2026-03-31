@@ -1,5 +1,9 @@
 import SwiftUI
 
+extension Notification.Name {
+    static let memoryWarningClearCaches = Notification.Name("VortexCleaner.memoryWarningClearCaches")
+}
+
 /// Main tab bar with 4 tabs: Limpeza (active), Contatos, E-mails, Comprimir
 struct MainTabView: View {
     @State private var selectedTab = 0
@@ -73,5 +77,11 @@ struct MainTabView: View {
             .tag(3)
         }
         .tint(ColorTokens.primaryBlue)
+        .onReceive(NotificationCenter.default.publisher(for: .memoryWarningClearCaches)) { _ in
+            Task { @MainActor in
+                thumbnailService.clearCache()
+                thumbnailService.stopAllCaching()
+            }
+        }
     }
 }

@@ -100,6 +100,7 @@
 		BB00006200000062 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006200000062 /* PhotosUI.framework */; };
 		BB00006300000063 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00006300000063 /* StoreKit.framework */; };
 		BB00009900000099 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = PP00000100000001 /* RevenueCat */; };
+		RR00000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = LL00000200000002 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -197,7 +198,35 @@
 		AA00006200000062 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		AA00006300000063 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		DD00000100000001 /* SCleaner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCleaner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF00000000000020 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000021 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		FF00000000000022 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000023 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000024 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000025 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000026 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF00000000000027 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		FF00000000000028 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+/* Begin PBXVariantGroup section */
+		LL00000200000002 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF00000000000020 /* en */,
+				FF00000000000021 /* pt-BR */,
+				FF00000000000022 /* ja */,
+				FF00000000000023 /* de */,
+				FF00000000000024 /* fr */,
+				FF00000000000025 /* es */,
+				FF00000000000026 /* ko */,
+				FF00000000000027 /* zh-Hant */,
+				FF00000000000028 /* ro */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 
 /* Begin PBXFrameworksBuildPhase section */
 		EE00000100000001 /* Frameworks */ = {
@@ -246,9 +275,18 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		LL00000100000001 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				LL00000200000002 /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
 		CC00002000000020 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				LL00000100000001 /* Localization */,
 				CC00002100000021 /* Constants */,
 				CC00002200000022 /* Extensions */,
 				CC00002300000023 /* Protocols */,
@@ -539,6 +577,7 @@
 		};
 /* End PBXNativeTarget section */
 
+
 /* Begin PBXProject section */
 		FF00000200000002 /* Project object */ = {
 			isa = PBXProject;
@@ -586,6 +625,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				RR00000100000001 /* Localizable.strings in Resources */,
 				BB00005000000050 /* Assets.xcassets in Resources */,
 				BB00009000000090 /* VortexCleaner.storekit in Resources */,
 			);

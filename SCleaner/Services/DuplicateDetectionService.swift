@@ -89,22 +89,34 @@ final class DuplicateDetectionService {
             groupMap[root, default: []].append(i)
         }
 
-        // Filter to groups of 2+ and build DuplicateGroup structs
+        // Filter to groups of 2+ and build DuplicateGroup structs.
+        // Cap groups at 20 photos to prevent UI memory explosion.
+        let maxGroupSize = 20
         let multiGroups = groupMap.values.filter { $0.count >= 2 }
         #if DEBUG
         print("[DuplicateDetection] Found \(multiGroups.count) groups with 2+ photos")
         #endif
-        return multiGroups
-            .map { indices in
-                let photos = indices.map { hashes[$0] }
-                let bestIndex = selectBestResult(from: photos)
-                return DuplicateGroup(
-                    id: UUID(),
-                    photos: photos,
-                    bestResultIndex: bestIndex
-                )
+        var allGroups: [DuplicateGroup] = []
+        for indices in multiGroups {
+            let photos = indices.map { hashes[$0] }
+            let chunks: [[PhotoHash]]
+            if photos.count > maxGroupSize {
+                chunks = stride(from: 0, to: photos.count, by: maxGroupSize).map {
+                    Array(photos[$0..<min($0 + maxGroupSize, photos.count)])
+                }.filter { $0.count >= 2 }
+            } else {
+                chunks = [photos]
             }
-            .sorted { $0.totalSize > $1.totalSize }
+            for chunk in chunks {
+                let bestIndex = selectBestResult(from: chunk)
+                allGroups.append(DuplicateGroup(
+                    id: UUID(),
+                    photos: chunk,
+                    bestResultIndex: bestIndex
+                ))
+            }
+        }
+        return allGroups.sorted { $0.totalSize > $1.totalSize }
     }
 
     // MARK: - Best Result Selection

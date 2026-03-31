@@ -7,10 +7,12 @@ enum ScanProgress: Equatable {
     /// Partial result emitted during scan so dashboard cards update in real-time
     case partialResult(processed: Int, total: Int, result: ScanResult)
     case hashing(processed: Int, total: Int)
+    /// Duplicate/similar detection phase — can take several seconds for large libraries
+    case detecting(processed: Int, total: Int)
     case completed(ScanResult)
     case failed(String)
 
-    /// Progress fraction from 0.0 to 1.0 (combined: scanning 0-40%, hashing 40-90%)
+    /// Progress fraction from 0.0 to 1.0 (combined: scanning 0-40%, hashing 40-85%, detecting 85-100%)
     var progressFraction: Double {
         switch self {
         case .scanning(let processed, let total):
@@ -21,7 +23,9 @@ enum ScanProgress: Equatable {
             return Double(processed) / Double(total) * 0.4
         case .hashing(let processed, let total):
             guard total > 0 else { return 0.4 }
-            return 0.4 + Double(processed) / Double(total) * 0.5
+            return 0.4 + Double(processed) / Double(total) * 0.45
+        case .detecting:
+            return 0.90
         case .completed:
             return 1.0
         default:
@@ -32,7 +36,7 @@ enum ScanProgress: Equatable {
     /// Whether a scan is currently in progress
     var isScanning: Bool {
         switch self {
-        case .scanning, .partialResult, .hashing: return true
+        case .scanning, .partialResult, .hashing, .detecting: return true
         default: return false
         }
     }
@@ -58,6 +62,8 @@ enum ScanProgress: Equatable {
         case (.partialResult(let lp, let lt, _), .partialResult(let rp, let rt, _)):
             return lp == rp && lt == rt
         case (.hashing(let lp, let lt), .hashing(let rp, let rt)):
+            return lp == rp && lt == rt
+        case (.detecting(let lp, let lt), .detecting(let rp, let rt)):
             return lp == rp && lt == rt
         case (.completed(let lr), .completed(let rr)):
             return lr == rr
