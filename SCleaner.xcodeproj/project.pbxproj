@@ -90,7 +90,7 @@
 		BB00008400000084 /* RestoreSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008400000084 /* RestoreSuccessView.swift */; };
 		BB00008500000085 /* SubscriptionProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008500000085 /* SubscriptionProduct.swift */; };
 		BB00008600000086 /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008600000086 /* SubscriptionService.swift */; };
-		BB00009900000099 /* DeletionLimitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009900000099 /* DeletionLimitService.swift */; };
+		BB00009800000098 /* DeletionLimitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009900000099 /* DeletionLimitService.swift */; };
 		BB00008700000087 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008700000087 /* PaywallView.swift */; };
 		BB00008800000088 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008800000088 /* FAQView.swift */; };
 		BB00008900000089 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008900000089 /* AboutView.swift */; };
@@ -721,7 +721,7 @@
 				BB00008400000084 /* RestoreSuccessView.swift in Sources */,
 				BB00008500000085 /* SubscriptionProduct.swift in Sources */,
 				BB00008600000086 /* SubscriptionService.swift in Sources */,
-				BB00009900000099 /* DeletionLimitService.swift in Sources */,
+				BB00009800000098 /* DeletionLimitService.swift in Sources */,
 				BB00008700000087 /* PaywallView.swift in Sources */,
 				BB00008800000088 /* FAQView.swift in Sources */,
 				BB00008900000089 /* AboutView.swift in Sources */,
