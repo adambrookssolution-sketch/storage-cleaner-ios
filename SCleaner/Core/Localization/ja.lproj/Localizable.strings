@@ -146,6 +146,7 @@
 "trashBin.daysRemaining" = "残り %d 日";
 "trashBin.restore" = "復元";
 "trashBin.processing" = "処理中...";
+"trashBin.openRecentlyDeleted" = "最近削除した項目を開く";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "%d 件の%@を削除しますか？";

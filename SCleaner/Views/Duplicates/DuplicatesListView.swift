@@ -4,6 +4,7 @@ import SwiftUI
 struct DuplicatesListView: View {
     @StateObject private var viewModel: DuplicatesViewModel
     @Environment(\.dismiss) private var dismiss
+    let scanProgress: ScanProgress
 
     // Pagination for groups
     private static let groupPageSize = 20
@@ -12,13 +13,15 @@ struct DuplicatesListView: View {
     init(
         groups: [DuplicateGroup],
         thumbnailService: ThumbnailCacheService,
-        deletionService: PhotoDeletionService
+        deletionService: PhotoDeletionService,
+        scanProgress: ScanProgress = .idle
     ) {
         _viewModel = StateObject(wrappedValue: DuplicatesViewModel(
             groups: groups,
             thumbnailService: thumbnailService,
             deletionService: deletionService
         ))
+        self.scanProgress = scanProgress
     }
 
     private var displayedGroups: [DuplicateGroup] {
@@ -27,11 +30,17 @@ struct DuplicatesListView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            if viewModel.groups.isEmpty {
+            if viewModel.groups.isEmpty && !scanProgress.isScanning {
                 emptyState
             } else {
                 ScrollView {
                     LazyVStack(spacing: AppConstants.UI.cardSpacing) {
+                        if scanProgress.isScanning {
+                            ScanProgressView(progress: scanProgress)
+                                .padding(.horizontal, AppConstants.UI.horizontalPadding)
+                                .transition(.opacity)
+                        }
+
                         headerView
 
                         ForEach(displayedGroups) { group in

@@ -118,7 +118,20 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         let photosSize = estimateTotalSize(fetch: photoFetch, sampleCount: sampleSize)
         let videosSize = estimateTotalSize(fetch: videoFetch, sampleCount: sampleSize)
         let screenshotsSize = estimateTotalSize(fetch: screenshotFetch, sampleCount: sampleSize)
-        let totalSize = photosSize + videosSize + screenshotsSize
+
+        // Include iOS Recently Deleted album in total size calculation
+        var recentlyDeletedSize: Int64 = 0
+        var recentlyDeletedCount: Int = 0
+        let recentlyDeletedCollections = PHAssetCollection.fetchAssetCollections(
+            with: .smartAlbum, subtype: .smartAlbumRecentlyDeleted, options: nil
+        )
+        if let recentlyDeleted = recentlyDeletedCollections.firstObject {
+            let rdFetch = PHAsset.fetchAssets(in: recentlyDeleted, options: nil)
+            recentlyDeletedCount = rdFetch.count
+            recentlyDeletedSize = estimateTotalSize(fetch: rdFetch, sampleCount: sampleSize)
+        }
+
+        let totalSize = photosSize + videosSize + screenshotsSize + recentlyDeletedSize
 
         if Task.isCancelled { return }
 
@@ -148,6 +161,9 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         // Publish FIRST partial result — cards appear on dashboard!
         // ═══════════════════════════════════════════════════════════
 
+        let appTrashCount = TrashBinService.shared.totalTrashCount
+        let appTrashSize = TrashBinService.shared.totalTrashSize
+
         let partialResult = ScanResult(
             totalAssets: totalCount,
             totalPhotos: totalPhotos,
@@ -165,8 +181,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             similarSizeBytes: 0,
             downloadFileCount: 0,
             downloadSizeBytes: 0,
-            trashFileCount: TrashBinService.shared.totalTrashCount,
-            trashSizeBytes: TrashBinService.shared.totalTrashSize
+            trashFileCount: appTrashCount + recentlyDeletedCount,
+            trashSizeBytes: appTrashSize + recentlyDeletedSize
         )
 
         await MainActor.run {
@@ -184,7 +200,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         // ═══════════════════════════════════════════════════════════
 
         var sizeCache: [String: Int64] = [:]
-        sizeCache.reserveCapacity(totalScreenshots + totalVideos)
+        sizeCache.reserveCapacity(totalScreenshots + totalVideos + totalPhotos)
 
         // --- Screenshots ---
         var collectedScreenshots: [PHAsset] = []
@@ -233,11 +249,10 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             }
         }
         self.videoAssets = collectedVideos
-        self.fileSizeCache = sizeCache
 
         if Task.isCancelled { return }
 
-        // --- Photos (no size cache needed, hashing stores size in PhotoHash) ---
+        // --- Photos (with size caching to avoid disk reads during hashing) ---
         var photoAssets: [PHAsset] = []
         photoAssets.reserveCapacity(totalPhotos)
         let photoBatchSize = 500
@@ -246,10 +261,16 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             autoreleasepool {
                 let batchEnd = min(batchStart + photoBatchSize, totalPhotos)
                 for j in batchStart..<batchEnd {
-                    photoAssets.append(photoFetch.object(at: j))
+                    let asset = photoFetch.object(at: j)
+                    photoAssets.append(asset)
+                    let resources = PHAssetResource.assetResources(for: asset)
+                    if let size = resources.first?.value(forKey: "fileSize") as? Int64 {
+                        sizeCache[asset.localIdentifier] = size
+                    }
                 }
             }
         }
+        self.fileSizeCache = sizeCache
         if Task.isCancelled { return }
 
         await MainActor.run {
@@ -269,7 +290,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             self.progressSubject.send(.hashing(processed: 0, total: photoAssetCount))
         }
 
-        let hashes = await hashingService.hashAssets(photoAssets) { [weak self] processed, total in
+        let hashes = await hashingService.hashAssets(photoAssets, fileSizeCache: sizeCache) { [weak self] processed, total in
             guard let self else { return }
             Task { @MainActor in
                 self.progressSubject.send(.hashing(processed: processed, total: total))
@@ -329,8 +350,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             similarSizeBytes: simSize,
             downloadFileCount: 0,
             downloadSizeBytes: 0,
-            trashFileCount: TrashBinService.shared.totalTrashCount,
-            trashSizeBytes: TrashBinService.shared.totalTrashSize
+            trashFileCount: appTrashCount + recentlyDeletedCount,
+            trashSizeBytes: appTrashSize + recentlyDeletedSize
         )
 
         await MainActor.run {

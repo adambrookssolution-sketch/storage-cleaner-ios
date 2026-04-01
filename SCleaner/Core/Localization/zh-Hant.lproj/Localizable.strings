@@ -146,6 +146,7 @@
 "trashBin.daysRemaining" = "剩餘 %d 天";
 "trashBin.restore" = "復原";
 "trashBin.processing" = "處理中...";
+"trashBin.openRecentlyDeleted" = "打開最近刪除";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "確定要刪除 %d 個%@嗎？";

@@ -9,6 +9,7 @@ final class HashingService {
     /// Only processes images (skips videos).
     func hashAssets(
         _ assets: [PHAsset],
+        fileSizeCache: [String: Int64] = [:],
         progressHandler: @escaping (Int, Int) -> Void
     ) async -> [PhotoHash] {
         let total = assets.count
@@ -87,7 +88,7 @@ final class HashingService {
                         id: asset.localIdentifier,
                         hash: hashValue,
                         creationDate: asset.creationDate,
-                        fileSize: asset.estimatedFileSize,
+                        fileSize: fileSizeCache[asset.localIdentifier] ?? 0,
                         pixelWidth: asset.pixelWidth,
                         pixelHeight: asset.pixelHeight,
                         isFavorite: asset.isFavorite,

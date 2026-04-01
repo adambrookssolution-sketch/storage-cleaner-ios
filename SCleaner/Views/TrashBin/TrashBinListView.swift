@@ -102,9 +102,9 @@ struct TrashBinListView: View {
         VStack(spacing: 16) {
             Spacer()
 
-            Image(systemName: "sparkles")
+            Image(systemName: "trash")
                 .font(.system(size: 48))
-                .foregroundColor(ColorTokens.successGreen)
+                .foregroundColor(ColorTokens.destructiveRed.opacity(0.6))
 
             Text(NSLocalizedString("trashBin.empty", comment: ""))
                 .font(.system(size: 18, weight: .semibold))
@@ -114,7 +114,31 @@ struct TrashBinListView: View {
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
 
+            // Button to open iPhone's Recently Deleted in Photos app
+            Button(action: openPhotosRecentlyDeleted) {
+                HStack(spacing: 8) {
+                    Image(systemName: "photo.on.rectangle.angled")
+                    Text(NSLocalizedString("trashBin.openRecentlyDeleted", comment: ""))
+                }
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .background(Capsule().fill(ColorTokens.primaryBlue))
+            }
+            .padding(.top, 8)
+
             Spacer()
+        }
+    }
+
+    private func openPhotosRecentlyDeleted() {
+        if let url = URL(string: "photos-redirect://") {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else if let photosUrl = URL(string: "photos://") {
+                UIApplication.shared.open(photosUrl)
+            }
         }
     }
 

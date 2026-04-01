@@ -146,6 +146,7 @@
 "trashBin.daysRemaining" = "%d일 남음";
 "trashBin.restore" = "복원";
 "trashBin.processing" = "처리 중...";
+"trashBin.openRecentlyDeleted" = "최근 삭제된 항목 열기";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "%d개 %@ 삭제하시겠습니까?";

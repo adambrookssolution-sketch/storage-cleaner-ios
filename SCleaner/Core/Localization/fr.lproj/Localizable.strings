@@ -146,6 +146,7 @@
 "trashBin.daysRemaining" = "%d jours restants";
 "trashBin.restore" = "Restaurer";
 "trashBin.processing" = "Traitement en cours...";
+"trashBin.openRecentlyDeleted" = "Ouvrir les suppressions récentes";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "Supprimer %d %@ ?";

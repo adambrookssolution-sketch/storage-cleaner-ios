@@ -36,20 +36,19 @@ enum AppConstants {
     enum Hashing {
         static let hashImageWidth = 9
         static let hashImageHeight = 8
-        static let duplicateThreshold = 10
-        static let similarThreshold = 20
+        static let duplicateThreshold = 12
+        static let similarThreshold = 22
         static let hashBatchSize = 100
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
         /// Sliding window size for duplicate comparison. Larger = more accurate but slower.
-        static let duplicateWindowSize = 200
+        static let duplicateWindowSize = 400
         /// Sliding window size for similar photo comparison.
-        /// Sliding window size for similar photo comparison.
-        /// Reduced from 300 to 100 to prevent memory explosion on large libraries.
-        static let similarWindowSize = 100
+        /// Balanced between accuracy and memory usage for large libraries.
+        static let similarWindowSize = 200
     }
 
     enum Downloads {
-        static let minimumFileSizeBytes: Int64 = 10 * 1_048_576
+        static let minimumFileSizeBytes: Int64 = 1 * 1_048_576
         static let staleMonths = 6
         static let bookmarkKey = "SCleaner_DownloadsFolderBookmark"
     }

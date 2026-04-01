@@ -156,13 +156,15 @@ struct DashboardView: View {
             DuplicatesListView(
                 groups: viewModel.duplicateGroups,
                 thumbnailService: thumbnailService,
-                deletionService: deletionService
+                deletionService: deletionService,
+                scanProgress: viewModel.scanProgress
             )
         case .similar:
             SimilarPhotosListView(
                 groups: viewModel.similarGroups,
                 thumbnailService: thumbnailService,
-                deletionService: deletionService
+                deletionService: deletionService,
+                scanProgress: viewModel.scanProgress
             )
         case .videos:
             VideosListView(
