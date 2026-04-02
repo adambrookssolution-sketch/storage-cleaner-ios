@@ -36,15 +36,15 @@ enum AppConstants {
     enum Hashing {
         static let hashImageWidth = 9
         static let hashImageHeight = 8
-        static let duplicateThreshold = 12
-        static let similarThreshold = 22
+        static let duplicateThreshold = 13
+        static let similarThreshold = 23
         static let hashBatchSize = 100
         static let hashThumbnailSize = CGSize(width: 72, height: 72)
         /// Sliding window size for duplicate comparison. Larger = more accurate but slower.
-        static let duplicateWindowSize = 400
+        static let duplicateWindowSize = 600
         /// Sliding window size for similar photo comparison.
         /// Balanced between accuracy and memory usage for large libraries.
-        static let similarWindowSize = 200
+        static let similarWindowSize = 250
     }
 
     enum Downloads {

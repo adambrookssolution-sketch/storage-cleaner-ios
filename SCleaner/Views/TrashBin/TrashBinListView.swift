@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 /// Trash Bin management screen with restore and permanent delete.
 struct TrashBinListView: View {
@@ -115,29 +114,17 @@ struct TrashBinListView: View {
                 .font(.system(size: 15))
                 .foregroundColor(ColorTokens.secondaryText)
 
-            // Button to open iPhone's Recently Deleted in Photos app
-            Button(action: openPhotosRecentlyDeleted) {
-                HStack(spacing: 8) {
-                    Image(systemName: "photo.on.rectangle.angled")
-                    Text(NSLocalizedString("trashBin.openRecentlyDeleted", comment: ""))
-                }
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-                .background(Capsule().fill(ColorTokens.primaryBlue))
+            // Guide user to iPhone's Recently Deleted album
+            VStack(spacing: 6) {
+                Text(NSLocalizedString("trashBin.recentlyDeletedHint", comment: ""))
+                    .font(.system(size: 13))
+                    .foregroundColor(ColorTokens.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 30)
             }
             .padding(.top, 8)
 
             Spacer()
-        }
-    }
-
-    private func openPhotosRecentlyDeleted() {
-        // Open the Photos app — iOS does not expose a deep link to Recently Deleted,
-        // but opening Photos is the closest we can get without private API.
-        if let url = URL(string: "photos://"), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
         }
     }
 

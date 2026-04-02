@@ -146,7 +146,7 @@
 "trashBin.daysRemaining" = "%d zile rămase";
 "trashBin.restore" = "Restaurați";
 "trashBin.processing" = "Se procesează...";
-"trashBin.openRecentlyDeleted" = "Deschide șterse recent";
+"trashBin.recentlyDeletedHint" = "Pentru a elibera mai mult spațiu, deschide Poze → Albume → Șterse recent";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "Ștergeți %d %@?";

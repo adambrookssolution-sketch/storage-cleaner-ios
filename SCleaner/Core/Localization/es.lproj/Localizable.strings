@@ -146,7 +146,7 @@
 "trashBin.daysRemaining" = "%d días restantes";
 "trashBin.restore" = "Restaurar";
 "trashBin.processing" = "Procesando...";
-"trashBin.openRecentlyDeleted" = "Abrir eliminados recientes";
+"trashBin.recentlyDeletedHint" = "Para liberar más espacio, abre Fotos → Álbumes → Eliminados recientes";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "¿Eliminar %d %@?";

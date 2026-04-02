@@ -113,25 +113,16 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         if Task.isCancelled { return }
 
-        // Estimate sizes from samples
+        // Estimate sizes from samples (Phase 1 quick estimate for partial results)
+        // NOTE: photoFetch (.image) already includes screenshots, so do NOT add screenshotsSize
+        // to avoid double-counting. screenshotsSize is tracked separately for the category card.
         let sampleSize = 50
         let photosSize = estimateTotalSize(fetch: photoFetch, sampleCount: sampleSize)
         let videosSize = estimateTotalSize(fetch: videoFetch, sampleCount: sampleSize)
         let screenshotsSize = estimateTotalSize(fetch: screenshotFetch, sampleCount: sampleSize)
 
-        // Include iOS Recently Deleted album in total size calculation
-        var recentlyDeletedSize: Int64 = 0
-        var recentlyDeletedCount: Int = 0
-        let recentlyDeletedCollections = PHAssetCollection.fetchAssetCollections(
-            with: .smartAlbum, subtype: .smartAlbumRecentlyDeleted, options: nil
-        )
-        if let recentlyDeleted = recentlyDeletedCollections.firstObject {
-            let rdFetch = PHAsset.fetchAssets(in: recentlyDeleted, options: nil)
-            recentlyDeletedCount = rdFetch.count
-            recentlyDeletedSize = estimateTotalSize(fetch: rdFetch, sampleCount: sampleSize)
-        }
-
-        let totalSize = photosSize + videosSize + screenshotsSize + recentlyDeletedSize
+        // photos already includes screenshots, so total = photos + videos only
+        let totalSize = photosSize + videosSize
 
         if Task.isCancelled { return }
 
@@ -161,9 +152,6 @@ final class PhotoLibraryService: PhotoLibraryServicing {
         // Publish FIRST partial result — cards appear on dashboard!
         // ═══════════════════════════════════════════════════════════
 
-        let appTrashCount = TrashBinService.shared.totalTrashCount
-        let appTrashSize = TrashBinService.shared.totalTrashSize
-
         let partialResult = ScanResult(
             totalAssets: totalCount,
             totalPhotos: totalPhotos,
@@ -181,8 +169,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             similarSizeBytes: 0,
             downloadFileCount: 0,
             downloadSizeBytes: 0,
-            trashFileCount: appTrashCount + recentlyDeletedCount,
-            trashSizeBytes: appTrashSize + recentlyDeletedSize
+            trashFileCount: TrashBinService.shared.totalTrashCount,
+            trashSizeBytes: TrashBinService.shared.totalTrashSize
         )
 
         await MainActor.run {
@@ -221,6 +209,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             }
         }
         self.screenshotAssets = collectedScreenshots
+        self.fileSizeCache = sizeCache
 
         await MainActor.run {
             self.progressSubject.send(.partialResult(
@@ -249,6 +238,7 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             }
         }
         self.videoAssets = collectedVideos
+        self.fileSizeCache = sizeCache
 
         if Task.isCancelled { return }
 
@@ -331,17 +321,29 @@ final class PhotoLibraryService: PhotoLibraryServicing {
 
         // ═══════════════════════════════════════════════════════════
         // Phase 5: Final result with everything
+        // Use exact file sizes from sizeCache instead of Phase 1 estimates.
         // ═══════════════════════════════════════════════════════════
+
+        let exactTotalSize = sizeCache.values.reduce(Int64(0), +)
+
+        // Compute exact per-category sizes from sizeCache
+        let exactScreenshotsSize = collectedScreenshots.reduce(Int64(0)) {
+            $0 + (sizeCache[$1.localIdentifier] ?? 0)
+        }
+        let exactVideosSize = collectedVideos.reduce(Int64(0)) {
+            $0 + (sizeCache[$1.localIdentifier] ?? 0)
+        }
+        let exactPhotosSize = exactTotalSize - exactVideosSize
 
         let finalResult = ScanResult(
             totalAssets: totalCount,
             totalPhotos: totalPhotos,
             totalVideos: totalVideos,
             totalScreenshots: totalScreenshots,
-            totalSizeBytes: totalSize,
-            photosSizeBytes: photosSize,
-            videosSizeBytes: videosSize,
-            screenshotsSizeBytes: screenshotsSize,
+            totalSizeBytes: exactTotalSize,
+            photosSizeBytes: exactPhotosSize,
+            videosSizeBytes: exactVideosSize,
+            screenshotsSizeBytes: exactScreenshotsSize,
             duplicateGroupCount: detectedDuplicates.count,
             duplicatePhotoCount: dupPhotoCount,
             duplicateSizeBytes: dupSize,
@@ -350,8 +352,8 @@ final class PhotoLibraryService: PhotoLibraryServicing {
             similarSizeBytes: simSize,
             downloadFileCount: 0,
             downloadSizeBytes: 0,
-            trashFileCount: appTrashCount + recentlyDeletedCount,
-            trashSizeBytes: appTrashSize + recentlyDeletedSize
+            trashFileCount: TrashBinService.shared.totalTrashCount,
+            trashSizeBytes: TrashBinService.shared.totalTrashSize
         )
 
         await MainActor.run {

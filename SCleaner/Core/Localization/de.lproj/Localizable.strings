@@ -146,7 +146,7 @@
 "trashBin.daysRemaining" = "%d Tage verbleibend";
 "trashBin.restore" = "Wiederherstellen";
 "trashBin.processing" = "Wird verarbeitet...";
-"trashBin.openRecentlyDeleted" = "Zuletzt gelöscht öffnen";
+"trashBin.recentlyDeletedHint" = "Um mehr Speicher freizugeben, öffne Fotos → Alben → Zuletzt gelöscht";
 
 /* === DELETION === */
 "deletion.confirmTitle" = "%d %@ löschen?";
